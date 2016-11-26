@@ -1,5 +1,6 @@
 // ==UserScript==
 // @name       Custom Header
+// @author xadamxk
 // @namespace  https://github.com/xadamxk/HF-Scripts
 // @version    1.2
 // @description  Adds various shortcuts to the HF toolbar. (Leave strings blank to exclude)
