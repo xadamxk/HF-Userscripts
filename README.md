@@ -16,7 +16,7 @@ US managers (ex. <a href="https://tampermonkey.net/">TamperMonkey</a>) allow use
 <h3><b><big>Scripts</big></b></h3>
 <ul><li>Below are the scripts listed under this repository along with a short description.
 
-<ul><li><b><a href="https://github.com/xadamxk/HF-Userscripts/tree/master/Custom%20Header">Custom Header</a>:</b> Adds various shortcuts to the HF toolbar.</li></ul>
+<ul><li><b><a href="https://github.com/xadamxk/HF-Userscripts/tree/master/Custom%20Header">Custom Header</a> (<a href="https://github.com/xadamxk/HF-Userscripts/raw/master/Custom%20Header/Custom%20Header.user.js">Install</a>):</b> Adds various shortcuts to the HF toolbar.</li></ul>
 <ul><li><b><a href="https://github.com/xadamxk/HF-Userscripts">Script 2</a>:</b> Description.</li></ul>
 <ul><li><b><a href="https://github.com/xadamxk/HF-Userscripts">Script 3</a>:</b> Description.</li></ul>
 <ul><li><b><a href ="https://github.com/xadamxk/HF-Userscripts">Script 4</a>:</b> Description.</li></ul>
