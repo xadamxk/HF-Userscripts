@@ -1,11 +1,12 @@
 // ==UserScript==
 // @name       Custom Header
 // @namespace  https://github.com/xadamxk/HF-Scripts
-// @version    1.1
+// @version    1.2
 // @description  Adds various shortcuts to the HF toolbar. (Leave strings blank to exclude)
 // @match      *://hackforums.net/*
 // @copyright  2016+
 // @updateURL https://github.com/xadamxk/HF-Userscripts/raw/master/Custom%20Header/Custom%20Header.user.js
+// @icon https://github.com/xadamxk/HF-Userscripts/blob/master/scripticon.jpg
 // ==/UserScript==
 var section1_label = "Lounge";
 var section1_fid = "25";
