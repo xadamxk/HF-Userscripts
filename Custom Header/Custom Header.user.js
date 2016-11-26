@@ -5,6 +5,7 @@
 // @description  Adds various shortcuts to the HF toolbar. (Leave strings blank to exclude)
 // @match      *://hackforums.net/*
 // @copyright  2016+
+// @updateURL https://github.com/xadamxk/HF-Userscripts/raw/master/Custom%20Header/Custom%20Header.user.js
 // ==/UserScript==
 var section1_label = "Lounge";
 var section1_fid = "25";
