@@ -2,7 +2,9 @@
 <p align="center">
 A list of <a href="https://hackforums.net/">HF</a> userscripts created by myself.
 <br />
-Userscripts allow users to modify web pages locally using JS libraries. US managers (ex. <a href="https://tampermonkey.net/">TamperMonkey</a>) allow users to install and manage their userscripts in modern browsers.
+Userscripts allow users to modify web pages locally using JS libraries. 
+<br />
+US managers (ex. <a href="https://tampermonkey.net/">TamperMonkey</a>) allow users to install and manage their userscripts in modern browsers.
 <br />
 <a href=""><img src="https://github.com/xadamxk/HF-Userscripts/blob/master/projecticon.png" width="150" height="150" title="Project Icon"  /></a>
 <br />
