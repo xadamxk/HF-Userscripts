@@ -2,7 +2,7 @@
 // @name       Group Management Links 2.0
 // @author xadamxk
 // @namespace  https://github.com/xadamxk/HF-Scripts
-// @version    2.3
+// @version    2.3.1
 // @description  Adds group management links to the HF toolbar (automated - scraps group info)
 // @require http://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js
 // @match      *://hackforums.net/*
@@ -26,15 +26,11 @@ else{
     // Check for previous group info
     prevInfo = GM_getValue("groupInfo", false);
     // Grab group info
-    if (!prevInfo){
-        //window.open("https://hackforums.net/usercp.php?action=usergroups");
+    if (!prevInfo)
         getGroupInfo();
-        
-    }
     // Load previously saved info
-    else{
+    else
         setGroupInfo();
-    }
 }
 
 // Show Button on hackforums.net/usercp.php?action=usergroups
@@ -75,9 +71,6 @@ function getGroupInfo(){
         }
     });
 }
-
-
-
 
 // Write "groupInfo" to HTML
 function setGroupInfo(){
