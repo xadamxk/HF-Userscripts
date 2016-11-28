@@ -2,12 +2,12 @@
 // @name       Group Management Profile Manager
 // @author xadamxk
 // @namespace  https://github.com/xadamxk/HF-Scripts
-// @version    0.1
+// @version    1.0
 // @description  Adds group management buttons to profiles (add/remove) for HF leaders
 // @require http://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js
-// @match      *hackforums.net/member.php?action=profile&uid=*
+// @match      *://hackforums.net/member.php?action=profile&uid=*
 // @copyright  2016+
-// @updateURL 
+// @updateURL https://github.com/xadamxk/HF-Userscripts/raw/master/Group%20Management%20Profile%20Manager/Group%20Management%20Profile%20Manager.user.js
 // @iconURL https://raw.githubusercontent.com/xadamxk/HF-Userscripts/master/scripticon.jpg
 // @grant       GM_getValue
 // @grant       GM_setValue
@@ -15,12 +15,9 @@
 // WIP
 // ------------------------------ ON PAGE LOAD ------------------------------
 var prevInfo;
-const GM_ValAddr = "groupsInfo";
+const GM_ValAddr = "groupsInfo"; // Can change
 var uid = $(location).attr('href').replace(/[^0-9]/g, '');
 var username = $("span[class*='group']").text();
-
-
-
 
 // Check for previous group info
     prevInfo = GM_getValue(GM_ValAddr, false);
@@ -28,14 +25,14 @@ var username = $("span[class*='group']").text();
     if (!prevInfo)
         getGroupInfo();
     // Load previously saved info
-    else{
+    else
         generateButtons();
-    }
-
 
 // ------------------------------ METHODS ------------------------------
 function addUser(gid){
-    $.post("https://www.hackforums.net/managegroup.php",
+    // Debug purposes
+    //window.alert(my_post_key+","+gid+","+username);
+    $.post("/managegroup.php",
     {
         "my_post_key": my_post_key,
         "action": "do_add",
@@ -43,13 +40,12 @@ function addUser(gid){
         "username": username
     },
         function(data,status){
-        console.log("Data: " + data + "\nStatus: " + status);
+        //console.log("Data: " + data + "\nStatus: " + status);
         location.reload();
     });
 }
-
 function removeUser(gid){
-    $.post("https://www.hackforums.net/managegroup.php",
+    $.post("/managegroup.php",
     {
         "my_post_key": my_post_key,
         "action": "do_manageusers",
@@ -57,7 +53,7 @@ function removeUser(gid){
         "removeuser[0]": uid
     },
         function(data,status){
-        console.log("Data: " + data + "\nStatus: " + status);
+        //console.log("Data: " + data + "\nStatus: " + status);
         location.reload();
     });
 }
@@ -74,15 +70,16 @@ function generateButtons(){
         }
         // ID
         else if(i%3 === 1){
+            var tempGID = infoArray[i].toString();
            // Group name found via userbar "img[src*=Product]"
             if($("img[src*="+tempName+"]").length >= 1) {
                 $("strong:contains('Forum Info')").append($("<button>").text("Remove from "+capitalizeFirstLetter(tempName)).attr("id", tempName).addClass("button").css("margin-left", "20px"));
-                $("body").on("click", "#"+tempName, function() { addUser(infoArray[i]);});
+                $("body").on("click", "#"+tempName, function() { removeUser(tempGID);});
             }
             // Else (userbar not found)
             else {
                 $("strong:contains('Forum Info')").append($("<button>").text("Add to "+capitalizeFirstLetter(tempName)).attr("id", tempName).addClass("button").css("margin-left", "20px"));
-                $("body").on("click", "#"+tempName, function() { removeUser(infoArray[i]);});
+                $("body").on("click", "#"+tempName, function() { addUser(tempGID);});
             }
         }
     }
