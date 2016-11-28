@@ -6,8 +6,8 @@
 // @description  Adds group management links to the HF toolbar (hardcoded - change GID accordingly)
 // @match      *://hackforums.net/*
 // @copyright  2016+
-// @updateURL 
-// @iconURL https://github.com/xadamxk/HF-Userscripts/blob/master/scripticon.jpg
+// @updateURL https://github.com/xadamxk/HF-Userscripts/raw/master/Group%20Management%20Links/Group%20Management%20Links.user.js
+// @iconURL https://raw.githubusercontent.com/xadamxk/HF-Userscripts/master/scripticon.jpg
 // ==/UserScript==
 
 var gid = "";

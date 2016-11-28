@@ -7,7 +7,7 @@
 // @match      *://hackforums.net/*
 // @copyright  2016+
 // @updateURL https://github.com/xadamxk/HF-Userscripts/raw/master/Custom%20Header/Custom%20Header.user.js
-// @iconURL https://github.com/xadamxk/HF-Userscripts/blob/master/scripticon.jpg
+// @iconURL https://raw.githubusercontent.com/xadamxk/HF-Userscripts/master/scripticon.jpg
 // ==/UserScript==
 var section1_label = "Lounge";
 var section1_fid = "25";
