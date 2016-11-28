@@ -2,11 +2,7 @@
 // @name       Group Management Links 2.0
 // @author xadamxk
 // @namespace  https://github.com/xadamxk/HF-Scripts
-<<<<<<< HEAD
 // @version    2.2
-=======
-// @version    2.1
->>>>>>> origin/master
 // @description  Adds group management links to the HF toolbar (automated - scraps group info)
 // @require http://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js
 // @match      *://hackforums.net/*
@@ -89,9 +85,5 @@ function setGroupInfo(){
                 "</a> &mdash; <a href='http://www.hackforums.net/managegroup.php?action=joinrequests&gid="+idTemp+"'><strong>"+nameTemp+" Requests</strong></a>";
     }
     // Set string
-<<<<<<< HEAD
     $("#panel").html($("#panel").html().replace(regex,revised));
-=======
-    document.getElementById('panel').innerHTML= document.getElementById('panel').innerHTML.replace(regex,revised);
->>>>>>> origin/master
 }
