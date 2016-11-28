@@ -3,7 +3,7 @@
 // @author xadamxk
 // @namespace  https://github.com/xadamxk/HF-Scripts
 // @version    2.0
-// @description  Adds group management links to the HF toolbar (automated - grabs group info)
+// @description  Adds group management links to the HF toolbar (automated - scraps group info)
 // @require http://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js
 // @match      *://hackforums.net/*
 // @copyright  2016+
