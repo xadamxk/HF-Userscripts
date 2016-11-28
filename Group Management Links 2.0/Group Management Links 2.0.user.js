@@ -47,7 +47,7 @@ if (~window.location.href.indexOf("//hackforums.net/usercp.php?action=usergroups
 function getGroupInfo(){
     // Snorlax OP
     var groupInfoArray = []; // (Name, ID, Requests)
-    if (!$("a:contains('View Members')")){
+    if (((document.documentElement.textContent || document.documentElement.innerText).indexOf('View Members') > -1)){
     window.alert("Group Management Links 2.0 FAILED!\nGroup privledges not found!");
     }
     else{
