@@ -2,7 +2,7 @@
 // @name       Group Management Links 2.0
 // @author xadamxk
 // @namespace  https://github.com/xadamxk/HF-Scripts
-// @version    2.0
+// @version    2.2
 // @description  Adds group management links to the HF toolbar (automated - scraps group info)
 // @require http://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js
 // @match      *://hackforums.net/*
@@ -47,7 +47,7 @@ if (~window.location.href.indexOf("//hackforums.net/usercp.php?action=usergroups
 function getGroupInfo(){
     // Snorlax OP
     var groupInfoArray = []; // (Name, ID, Requests)
-    if (((document.documentElement.textContent || document.documentElement.innerText).indexOf('View Members') > -1)){
+    if (((document.documentElement.innerText).indexOf('Groups You Lead') < 1)){
     window.alert("Group Management Links 2.0 FAILED!\nGroup privledges not found!");
     }
     else{
@@ -85,5 +85,5 @@ function setGroupInfo(){
                 "</a> &mdash; <a href='http://www.hackforums.net/managegroup.php?action=joinrequests&gid="+idTemp+"'><strong>"+nameTemp+" Requests</strong></a>";
     }
     // Set string
-    document.getElementById('panel').innerHTML= document.getElementById('panel').innerHTML.replace(regex,revised);
+    $("#panel").html($("#panel").html().replace(regex,revised));
 }
