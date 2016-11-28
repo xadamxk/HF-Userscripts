@@ -2,7 +2,7 @@
 // @name       Group Management Links
 // @author xadamxk
 // @namespace  https://github.com/xadamxk/HF-Scripts
-// @version    1.1
+// @version    1.3
 // @description  Adds group management links to the HF toolbar (hardcoded - change GID accordingly)
 // @match      *://hackforums.net/*
 // @copyright  2016+
