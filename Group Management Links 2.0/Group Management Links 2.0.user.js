@@ -2,7 +2,7 @@
 // @name       Group Management Links 2.0
 // @author xadamxk
 // @namespace  https://github.com/xadamxk/HF-Scripts
-// @version    2.3.1
+// @version    2.3.2
 // @description  Adds group management links to the HF toolbar (automated - scraps group info)
 // @require http://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js
 // @match      *://hackforums.net/*
@@ -13,6 +13,7 @@
 // @grant       GM_setValue
 // @grant       GM_deleteValue
 // ==/UserScript==
+// TODO: Bug when click "Update Groups" - adds same links.
 // ------------------------------ ON PAGE LOAD ------------------------------
 var debug = false;
 var prevInfo;
