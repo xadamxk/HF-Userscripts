@@ -2,12 +2,12 @@
 // @name       HF News Notifier
 // @author xadamxk
 // @namespace  https://github.com/xadamxk/HF-Scripts
-// @version    1.0
+// @version    1.0.1
 // @description  Alerts users of new HF News editions (checks on /usercp.php)
 // @require http://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js
 // @match      *://hackforums.net/usercp.php
 // @copyright  2016+
-// @updateURL //
+// @updateURL https://github.com/xadamxk/HF-Userscripts/raw/master/HF%20News%20Notifier/HF%20News%20Notifier.user.js
 // @iconURL https://raw.githubusercontent.com/xadamxk/HF-Userscripts/master/scripticon.jpg
 // @grant       GM_getValue
 // @grant       GM_setValue
@@ -18,7 +18,7 @@
 var debug = true;
 var sectionURL = "https://hackforums.net/forumdisplay.php?fid=162";
 
-// Grab most recent news thread title
+// Grab most recent news thread title(s)
 $.ajax({
     url: sectionURL,
     cache: false,
@@ -55,24 +55,31 @@ $.ajax({
         }
         // Forum Title
         forumTitle = $(response).find(".navigation").find("span").text();
+        // Alert HTML Heading
+        newsThreadName = "<strong>New '"+forumTitle+"' Thread(s):</strong><br/>";
+        // Alert HTML Body
+        for (i=0; i < threadLinkArray.length; i++){
+            // Edition or Numbers in title
+            if (threadTitleArray[i].includes("Edition") || threadTitleArray[i].match(/\d+/g)){
+                newsThreadName += "<a href='"+threadLinkArray[i]+"'>"+threadTitleArray[i]+"</a><br/>";
+            }
+        }
+        // Some fancy string insertion
+        substring = "</div><div>";
+        position = html.indexOf(substring)+(substring).length;
+        html = [html.slice(0, position), newsThreadName, html.slice(position)].join('');
+        // If new threads => Append HTML
+        if (threadLinkArray.length > 0)
+            $(html).insertBefore("#content");
+
         if (debug){
             console.log("Forum Name: "+forumTitle);
             console.log("link: "+threadLinkArray[0]);
             console.log("title: "+threadTitleArray[0]);
             console.log("rows: "+rows.length);
             console.log("New Threads Found: "+threadLinkArray.length);
-        }
-        newsThreadName = "<strong>New '"+forumTitle+"' Thread(s):</strong><br/>";
-        for (i=0; i < threadLinkArray.length; i++)
-            newsThreadName += "<a href='"+threadLinkArray[i]+"'>"+threadTitleArray[i]+"</a><br/>";
-        if (debug){
             console.log("Alert HTML: "+newsThreadName);
         }
-        substring = "</div><div>";
-        position = html.indexOf(substring)+(substring).length;
-        html = [html.slice(0, position), newsThreadName, html.slice(position)].join('');
-        if (threadLinkArray.length > 0)
-            $(html).insertBefore("#content");
     }
 });
 
