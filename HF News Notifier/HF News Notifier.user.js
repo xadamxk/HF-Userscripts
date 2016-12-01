@@ -2,7 +2,7 @@
 // @name       HF News Notifier
 // @author xadamxk
 // @namespace  https://github.com/xadamxk/HF-Scripts
-// @version    1.1.0
+// @version    1.1.1
 // @description  Alerts users of new HF News editions (checks on /usercp.php)
 // @require https://code.jquery.com/jquery-3.1.1.js
 // @match      *://hackforums.net/usercp.php
@@ -29,7 +29,7 @@ var titleFilter = "Edition"; // seperate keywords by commas ex."PP,BTC"
 // Debug: Show console.log statements for debugging purposes
 var debug = false;
 // Alert Note: Note at bottom of alert
-var alertNote = "<span id='alertCSS'>(Post on Thread to Dismiss Alert)</span>";
+var alertNote = "<span id='alertCSS'>(Will fix this bug soon, have a good day.)</span>";
 var alertNoteCSS = "<style>#alertCSS{color:red}</style>";
 // ------------------------------ ON PAGE LOAD ------------------------------
 // Grab most recent news thread title(s)
