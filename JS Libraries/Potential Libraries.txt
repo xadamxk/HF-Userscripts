@@ -1,0 +1,30 @@
+infiniscroll: https://github.com/pklauzinski/jscroll
+fog: https://github.com/nbartlomiej/foggy
+console: https://greasyfork.org/en/scripts/408-wm-debug-console/code
+config interface: https://greasyfork.org/en/scripts/410-wm-config-interface/code
+config: https://greasyfork.org/en/scripts/1884-gm-config/code
+datejs: https://github.com/datejs/Datejs
+jscolor: https://github.com/EastDesire/jscolor
+jspdf: https://github.com/MrRio/jsPDF
+floatingscroll: https://github.com/Amphiluke/floating-scroll
+jszip: https://github.com/Stuk/jszip
+perfect scrollbar: https://github.com/noraesae/perfect-scrollbar
+simple colorpicker: https://github.com/tkrotoff/jquery-simplecolorpicker
+adv colorpicker: https://github.com/PitPik/colorPicker
+html2bbcode: https://github.com/simon2k/html2bbcode
+
+Offlinejs (handle offline data): https://github.com/hubspot/offline
+Shinejs (shadow elements based on mouse location): https://github.com/bigspaceship/shine.js
+Logerr (adv console logs): https://github.com/i-break-codes/logerr
+Datedropper (date/time elements): https://github.com/felicegattuso/datedropper
+notie (top of screen notification for alerts, input, etc): https://github.com/jaredreich/notie
+progressbar (adv progress bars): https://github.com/kimmobrunfeldt/progressbar.js
+headroom (header that only shows on top of page): http://wicky.nillia.ms/headroom.js/
+staticman (user generated content on static pages): https://github.com/eduardoboucas/staticman
+howelerjs (easy to embed audio files): https://github.com/goldfire/howler.js
+ionicons (huge icon font library): https://github.com/driftyco/ionicons
+superembed (control size of embeded videos): https://github.com/corbindavenport/superembed.js
+grade (2 complement colors based on image colors): http://benhowdle.im/grade/
+push (desktop notifications): https://github.com/Nickersoft/push.js
+intense images (full screen pane view for images): https://github.com/tholman/intense-images
+imissyoujs (change icon when in diff tab): https://github.com/Bahlaouane-Hamza/I-Miss-You
