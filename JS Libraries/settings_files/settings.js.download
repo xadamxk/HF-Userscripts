@@ -1,3 +1,5 @@
+// +@insert          after:end
+
 var SettingsTest = function(){
 	console.log('jMod.Settings Test');
 	
@@ -444,7 +446,7 @@ var SettingsTest = function(){
 		// (optional) Change the order of the tabs. Tabs left out will be added after in the order they are referenced by your settings
 		tabOrder: ['About', 'Tab Name 1'],
 		// (optional) Set the active tab
-		activeTab: 'Tab Name 1',
+		activeTab: 'Tab Name 2',
 		// (optional) callback that fires before the settings dialog closes
 		onBeforeHide: function(e){
 			console.log('Settings on before hide');
@@ -453,7 +455,7 @@ var SettingsTest = function(){
 	
 	jMod.Settings(SettingOptions);
 	
-	/*
+	
 	setTimeout(function(){
 		// Show the settings dialog
 		console.log('Show jMod Settings');
@@ -461,13 +463,6 @@ var SettingsTest = function(){
 		console.log('Setting 1 Value: ', jMod.Settings.get('Setting 1'));
 		console.log('Setting 1 Default: ', jMod.Settings.getDefault('Setting 1'));
 	},100);
-	*/
-	$('#btn-show-settings').click(function(e){
-		jMod.Settings.show();
-		e.preventDefault();
-		e.stopPropagation();
-		return false;
-	});
 		
 	//setTimeout(function(){
 		//var settingsNav = document.querySelector('.jMod-settings .nav-tabs');
