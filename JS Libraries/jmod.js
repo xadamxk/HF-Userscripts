@@ -462,7 +462,7 @@ var SettingsTest = function(){
 		console.log('Setting 1 Default: ', jMod.Settings.getDefault('Setting 1'));
 	},100);
 	*/
-	$('#btn-show-settings').click(function(e){
+	$('#scriptMenuButton').click(function(e){
 		jMod.Settings.show();
 		e.preventDefault();
 		e.stopPropagation();
