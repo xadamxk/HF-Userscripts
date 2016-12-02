@@ -1,9 +1,29 @@
 // ==UserScript==
-// @name           jmod Menu Panl
-// @namespace      xadamxk
-// @description    Core for settings panel
-// @include        *//hackforums.net/*
-// @version        1.0
+// @name             jmodMenu
+// @namespace        http://downloadurl.com/user/user_name
+// @description      script description
+// @author           xadamxk
+// @downloadURL      http://downloadurl.com/script/script_name.user.js
+// @updateURL        http://downloadurl.com/script/script_name.meta.js
+// @homepage         http://downloadurl.com/script/script_name
+// @include          ://hackforums.net/*
+// @require          http://myuserjs.org/API/0.0.16/jMod.js
+// @version          0.0.1
+// @grant            unsafeWindow
+// @grant            GM_info
+// @grant            GM_log
+// @grant            GM_addStyle
+// @grant            GM_getMetadata
+// @grant            GM_xmlhttpRequest
+// @grant            GM_registerMenuCommand
+// @grant            GM_getValue
+// @grant            GM_setValue
+// @grant            GM_listValues
+// @grant            GM_deleteValue
+// @unwrap
+// @noframes
+// @run-at           document-start
+// @jMod             {"API": {"log": {"debug": true}}}
 // ==/UserScript==
 
 var SettingsTest = function(){
