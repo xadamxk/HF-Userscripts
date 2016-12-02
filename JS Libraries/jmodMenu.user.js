@@ -1,3 +1,11 @@
+// ==UserScript==
+// @name           jmod Menu Panl
+// @namespace      xadamxk
+// @description    Core for settings panel
+// @include        *//hackforums.net/*
+// @version        1.0
+// ==/UserScript==
+
 var SettingsTest = function(){
 	console.log('jMod.Settings Test');
 	
