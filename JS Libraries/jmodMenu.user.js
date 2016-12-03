@@ -1,30 +1,4 @@
-// ==UserScript==
-// @name             jmodMenu
-// @namespace        http://downloadurl.com/user/user_name
-// @description      script description
-// @author           xadamxk
-// @downloadURL      http://downloadurl.com/script/script_name.user.js
-// @updateURL        http://downloadurl.com/script/script_name.meta.js
-// @homepage         http://downloadurl.com/script/script_name
-// @include          ://hackforums.net/*
-// @require          http://myuserjs.org/API/0.0.16/jMod.js
-// @version          0.0.1
-// @grant            unsafeWindow
-// @grant            GM_info
-// @grant            GM_log
-// @grant            GM_addStyle
-// @grant            GM_getMetadata
-// @grant            GM_xmlhttpRequest
-// @grant            GM_registerMenuCommand
-// @grant            GM_getValue
-// @grant            GM_setValue
-// @grant            GM_listValues
-// @grant            GM_deleteValue
-// @unwrap
-// @noframes
-// @run-at           document-start
-// @jMod             {"API": {"log": {"debug": true}}}
-// ==/UserScript==
+// +@insert          after:end
 
 var SettingsTest = function(){
 	console.log('jMod.Settings Test');
@@ -472,7 +446,7 @@ var SettingsTest = function(){
 		// (optional) Change the order of the tabs. Tabs left out will be added after in the order they are referenced by your settings
 		tabOrder: ['About', 'Tab Name 1'],
 		// (optional) Set the active tab
-		activeTab: 'Tab Name 1',
+		activeTab: 'Tab Name 2',
 		// (optional) callback that fires before the settings dialog closes
 		onBeforeHide: function(e){
 			console.log('Settings on before hide');
@@ -481,7 +455,7 @@ var SettingsTest = function(){
 	
 	jMod.Settings(SettingOptions);
 	
-	/*
+	
 	setTimeout(function(){
 		// Show the settings dialog
 		console.log('Show jMod Settings');
@@ -489,13 +463,6 @@ var SettingsTest = function(){
 		console.log('Setting 1 Value: ', jMod.Settings.get('Setting 1'));
 		console.log('Setting 1 Default: ', jMod.Settings.getDefault('Setting 1'));
 	},100);
-	*/
-	$('#scriptMenuButton').click(function(e){
-		jMod.Settings.show();
-		e.preventDefault();
-		e.stopPropagation();
-		return false;
-	});
 		
 	//setTimeout(function(){
 		//var settingsNav = document.querySelector('.jMod-settings .nav-tabs');
