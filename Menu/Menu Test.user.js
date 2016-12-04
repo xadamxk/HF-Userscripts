@@ -2,7 +2,7 @@
 // @name       Menu Test
 // @author xadamxk
 // @namespace  https://github.com/xadamxk/HF-Scripts
-// @version    1.0
+// @version    1.0.1
 // @description  Add's button to page
 // @require https://code.jquery.com/jquery-3.1.1.js
 // @require https://raw.githubusercontent.com/xadamxk/myUserJS-API/master/jMod/jmod.js
@@ -490,6 +490,5 @@ $( "#scriptMenuButton" ).click(function showMenu(){
 
 });
 
-}
 
 
