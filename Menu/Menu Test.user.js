@@ -2,7 +2,7 @@
 // @name       Menu Test
 // @author xadamxk
 // @namespace  https://github.com/xadamxk/HF-Scripts
-// @version    1.0.1
+// @version    1.0.2
 // @description  Add's button to page
 // @require https://code.jquery.com/jquery-3.1.1.js
 // @require https://raw.githubusercontent.com/xadamxk/myUserJS-API/master/jMod/jmod.js
@@ -15,12 +15,9 @@
 
 $("strong:contains('Menu')").append($("<button>").text("Settings").attr("id", "scriptMenuButton").addClass("button").css("margin-left", "20px"));
 $( "#scriptMenuButton" ).click(function showMenu(){
-    console.log("here are settings");
-    // +@insert          after:end
-
     var SettingsTest = function(){
-        console.log('jMod.Settings Test');
-
+        console.log('jMod.Settings Found');
+        // BEGINNING OF SETTINGS
         var SettingOptions = {
             title: 'Example Title',
             settings: [
@@ -470,9 +467,10 @@ $( "#scriptMenuButton" ).click(function showMenu(){
                 console.log('Settings on before hide');
             }
         };
+        // END OF SETTINGS
 
+        // Show Settings
         jMod.Settings(SettingOptions);
-
 
         setTimeout(function(){
             // Show the settings dialog
@@ -484,11 +482,25 @@ $( "#scriptMenuButton" ).click(function showMenu(){
     };
     console.log('addGlyphicons');
     jMod.API.addGlyphicons();
-
     jMod.onReady = SettingsTest;
-    //removeElementsByClass("brn btn-default");
+
+    // Check & Remove Additional Tabs from prototype.js bug
+    var filterArray = ['clear','clone','compact','detect','each','eachSlice','filter','first','flatten','forEach','grep','inGroupsOf','include',
+                       'inject','inspect','intersect','invoke','last','max','min','partition','pluck','reject','reverse','size','sortBy','uniq','without','zip']; //29
+    console.log("Prototype length: "+filterArray.length);
+    var menuArray = $('.modal-body div ul li a').toArray();
+    console.log("Menu Length: "+menuArray.length);
+
+    for (i = 0; i < filterArray.length; i++){
+        for (j = 0; j < menuArray.length; j++){
+            // Check menu text for filter text
+            if ($(menuArray[j]).text().includes(filterArray[i])){
+                //console.log('removed :'+prototypeMethods[i]);
+                $(menuArray[j]).parent().remove();
+            }
+        }
+    }
+
 
 });
-
-
 
