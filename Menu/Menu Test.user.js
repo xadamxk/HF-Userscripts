@@ -2,7 +2,7 @@
 // @name       Menu Test
 // @author xadamxk
 // @namespace  https://github.com/xadamxk/HF-Scripts
-// @version    1.0.2
+// @version    1.0.3
 // @description  Add's button to page
 // @require https://code.jquery.com/jquery-3.1.1.js
 // @require https://raw.githubusercontent.com/xadamxk/myUserJS-API/master/jMod/jmod.js
@@ -15,11 +15,13 @@
 
 $("strong:contains('Menu')").append($("<button>").text("Settings").attr("id", "scriptMenuButton").addClass("button").css("margin-left", "20px"));
 $( "#scriptMenuButton" ).click(function showMenu(){
+    console.log('jMod.Settings Found');
+    // BEGINNING OF SETTINGS
     var SettingsTest = function(){
-        console.log('jMod.Settings Found');
-        // BEGINNING OF SETTINGS
+        console.log('jMod.Settings Test');
+
         var SettingOptions = {
-            title: 'Example Title',
+            title: 'xScript Settings',
             settings: [
                 {
                     name: 'Setting 1',
@@ -35,14 +37,14 @@ $( "#scriptMenuButton" ).click(function showMenu(){
                             placement: 'right'
                         }
                     },
-                    tab: 'Tab Name 1',
+                    tab: 'Tab 1',
                     section: 'Other',
                     type: 'input',
                     'default': 'foo bar'
                 },
                 {
                     name: 'element example',
-                    tab: 'Tab Name 1',
+                    tab: 'Tab 1',
                     section: 'Other',
                     type: 'element',
                     innerHTML: [
@@ -103,7 +105,7 @@ $( "#scriptMenuButton" ).click(function showMenu(){
                             }
                         }
                     },
-                    tab: 'Tab Name 1',
+                    tab: 'Tab 1',
                     section: 'Other',
                     type: 'toggle',
                     'default': 'val3,val4'
@@ -114,7 +116,7 @@ $( "#scriptMenuButton" ).click(function showMenu(){
                         innerHTML: 'Select Left Tooltip',
                         placement: 'left'
                     },
-                    tab: 'Tab Name 1',
+                    tab: 'Tab 1',
                     section: 'Other',
                     type: 'select',
                     options: {
@@ -141,14 +143,14 @@ $( "#scriptMenuButton" ).click(function showMenu(){
                     style: {
                         minHeight: '100px'
                     },
-                    tab: 'Tab Name 1',
+                    tab: 'Tab 1',
                     section: 'Other',
                     type: 'textarea',
                     'default': 'taco'
                 },
                 {
                     name: 'Checkboxes',
-                    tab: 'Tab Name 1',
+                    tab: 'Tab 1',
                     tooltip: {
                         innerHTML: 'Top Label Tooltip',
                         placement: 'top-left',
@@ -195,7 +197,7 @@ $( "#scriptMenuButton" ).click(function showMenu(){
                 {
                     name: 'Depend Checkbox',
                     description: 'Depend on Value of Checkboxes',
-                    tab: 'Tab Name 1',
+                    tab: 'Tab 1',
                     section: 'Other2',
                     type: 'input',
                     'default': 'Depend Checkbox',
@@ -205,7 +207,7 @@ $( "#scriptMenuButton" ).click(function showMenu(){
                 },
                 {
                     name: 'Radio',
-                    tab: 'Tab Name 1',
+                    tab: 'Tab 1',
                     tooltip: {
                         innerHTML: 'Bottom Label Tooltip',
                         placement: 'bottom-left'
@@ -249,7 +251,7 @@ $( "#scriptMenuButton" ).click(function showMenu(){
                 {
                     name: 'Depend 1',
                     description: 'Depend on Value of Radio',
-                    tab: 'Tab Name 1',
+                    tab: 'Tab 1',
                     section: 'Other2',
                     type: 'input',
                     'default': 'Depend 1',
@@ -260,7 +262,7 @@ $( "#scriptMenuButton" ).click(function showMenu(){
                 {
                     name: 'Depend 2',
                     description: 'Depend on Value of Radio',
-                    tab: 'Tab Name 1',
+                    tab: 'Tab 1',
                     section: 'Other2',
                     type: 'input',
                     'default': 'Depend 2',
@@ -280,20 +282,20 @@ $( "#scriptMenuButton" ).click(function showMenu(){
                         innerHTML: 'Slider tooltip',
                         placement: 'top',
                     },
-                    tab: 'Tab Name 1',
+                    tab: 'Tab 1',
                     section: 'Other',
                     type: 'range',
                     'default': '50'
                 },
                 {
                     name: 'Setting 6',
-                    tab: 'Tab Name 2',
+                    tab: 'Tab 2',
                     section: 'Other',
                     type: 'input'
                 },
                 {
                     name: 'Setting 7',
-                    tab: 'Tab Name 2',
+                    tab: 'Tab 2',
                     section: 'Other',
                     type: 'input'
                 },
@@ -307,14 +309,14 @@ $( "#scriptMenuButton" ).click(function showMenu(){
                         innerHTML: 'Image File Tooltip',
                         placement: 'left'
                     },
-                    tab: 'Tab Name 2',
+                    tab: 'Tab 2',
                     section: 'Other',
                     type: 'imagefile',
                     'default': ''
                 },
                 {
                     name: 'Notification_Examples',
-                    tab: 'Tab Name 2',
+                    tab: 'Tab 2',
                     section: 'Other',
                     type: 'element',
                     innerHTML: [
@@ -442,35 +444,24 @@ $( "#scriptMenuButton" ).click(function showMenu(){
                         },
                         {
                             type: 'p',
-                            innerHTML: 'about example'
+                            innerHTML: 'Coming Soon.'
                         }
                     ]
                 },
                 // (optional) Adding information about a tab referenced by a setting
-                {
-                    name: 'Tab Name 1',
-                    displayName: 'Tab 1 displayName',
-                    content: {
-                        footer: {
-                            type: 'div',
-                            innerHTML: '<b>Tab 1 Footer foo bar</b>'
-                        }
-                    }
-                }
             ],
             // (optional) Change the order of the tabs. Tabs left out will be added after in the order they are referenced by your settings
-            tabOrder: ['About', 'Tab Name 1'],
+            tabOrder: ['About', 'Tab 1'],
             // (optional) Set the active tab
-            activeTab: 'Tab Name 2',
+            activeTab: 'About',
             // (optional) callback that fires before the settings dialog closes
             onBeforeHide: function(e){
                 console.log('Settings on before hide');
             }
         };
-        // END OF SETTINGS
 
-        // Show Settings
         jMod.Settings(SettingOptions);
+
 
         setTimeout(function(){
             // Show the settings dialog
@@ -480,10 +471,9 @@ $( "#scriptMenuButton" ).click(function showMenu(){
             console.log('Setting 1 Default: ', jMod.Settings.getDefault('Setting 1'));
         },100);
     };
-    console.log('addGlyphicons');
     jMod.API.addGlyphicons();
-    jMod.onReady = SettingsTest;
 
+    jMod.onReady = SettingsTest;
     // Check & Remove Additional Tabs from prototype.js bug
     var filterArray = ['clear','clone','compact','detect','each','eachSlice','filter','first','flatten','forEach','grep','inGroupsOf','include',
                        'inject','inspect','intersect','invoke','last','max','min','partition','pluck','reject','reverse','size','sortBy','uniq','without','zip']; //29
@@ -500,7 +490,12 @@ $( "#scriptMenuButton" ).click(function showMenu(){
             }
         }
     }
-
-
+    // TODO: Close button fix or temp reoad page fix
+    //location.reload();
+    //$("#scriptMenuButton").text("Reload Page").attr("#scriptMenuButton","#reloadPage");
+    //$( "#reloadPage" ).click(function reloadPage(){
+        //location.reload();
+    //});
 });
+
 
