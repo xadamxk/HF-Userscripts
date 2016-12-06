@@ -2,7 +2,7 @@
 // @name       Menu Test
 // @author xadamxk
 // @namespace  https://github.com/xadamxk/HF-Scripts
-// @version    1.0.4
+// @version    1.0.5
 // @description  Add's button to page
 // @require https://code.jquery.com/jquery-3.1.1.js
 // @require https://raw.githubusercontent.com/xadamxk/myUserJS-API/master/jMod/jmod.js
@@ -12,40 +12,40 @@
 // @iconURL https://raw.githubusercontent.com/xadamxk/HF-Userscripts/master/scripticon.jpg
 // EXAMPLE: http://myuserjs.org/API/Demo/settings.html
 // ==/UserScript==
+// 'onBeforeClose': tOnBeforeCloseCB, // Optional
+// 'onAfterClose': tOnAfterCloseCB // Optional
 
 $("strong:contains('Menu')").append($("<button>").text("Settings").attr("id", "scriptMenuButton").addClass("button").css("margin-left", "20px"));
 $( "#scriptMenuButton" ).click(function showMenu(){
-    console.log('jMod.Settings Found');
     // BEGINNING OF SETTINGS
     var SettingsTest = function(){
-        console.log('jMod.Settings Test');
 
         var SettingOptions = {
             title: 'xScript Settings',
             settings: [
                 {
-                    name: 'Setting 1',
-                    description: 'Section URL',
+                    name: 'HFNN_SectionFID',
+                    description: 'Section/ FID',
                     tooltip: {
-                        innerHTML: 'Which section to search',
+                        innerHTML: 'Forum ID to Search (#s only)',
                         placement: 'top'
                     },
                     icon: {
-                        name: 'fa-microphone',
+                        name: 'fa-newspaper-o',
                         tooltip: {
-                            innerHTML: 'icon tooltip',
-                            placement: 'right'
+                            innerHTML: '(Default:162)',
+                            placement: 'left'
                         }
                     },
                     tab: 'HF News Notifier',
-                    section: 'Settings',
+                    section: 'HF News Notifier Settings',
                     type: 'input',
-                    'default': 'https://hackforums.net/forumdisplay.php?fid=162'
+                    'default': jMod.Settings.get('HFNN_SectionFID'),
                 },
                 {
-                    name: 'Element 1',
+                    name: 'HFNN_PreviewImage',
                     tab: 'HF News Notifier',
-                    section: 'Settings',
+                    section: 'HF News Notifier Settings',
                     type: 'element',
                     innerHTML: [
                         'Image Example: ',
@@ -56,45 +56,56 @@ $( "#scriptMenuButton" ).click(function showMenu(){
                                 height: "75px"
                             }
                         },
-                        {
-                            type: 'span',
-                            className: 'glyphicon glyphicon-plus'
-                        }
                     ]
                 },
                 {
-                    name: 'Title Filter Toggle',
+                    name: 'HFNN_TitleFilterToggle',
                     description: 'Title Filter',
                     options: {
-                        'val1': {
+                        'TRUE': {
                             label: 'Filter unread thread results by keyword',
                             on: 'ON',
                             off: 'OFF',
-                            tooltip: {
-                                innerHTML: 'Title Filter Search',
-                                placement: 'left'
-                            }
                         },
                     },
                     tab: 'HF News Notifier',
-                    section: 'Settings',
+                    section: 'HF News Notifier Settings',
                     type: 'toggle',
-                    'default': 'val1'
+                    'default': jMod.Settings.get('HFNN_TitleFilterToggle'),
                 },
                 {
-                    name: '',
-                    description: '',
+                    name: 'HFNN_FilterString',
+                    description: 'Filter String(s)',
                     tooltip: {
-                        innerHTML: 'Seperate keywords by commas ex.PP,BTC',
+                        innerHTML: 'Seperate keywords by commas example: PP,BTC',
                         placement: 'top'
                     },
+                    icon: {
+                        name: 'fa-filter',
+                        tooltip: {
+                            innerHTML: '(Default:Edition)',
+                            placement: 'left'
+                        }
+                    },
                     tab: 'HF News Notifier',
-                    section: 'Settings',
+                    section: 'HF News Notifier Settings',
                     type: 'input',
-                    'default': 'Edition',
-                    depend: {
-                        'Title Filter Toggle': ['val1']
-                    }
+                    'default': jMod.Settings.get('HFNN_FilterString'),
+                },
+                {
+                    name: 'HFNN_DebugConsoleToggle',
+                    description: 'Debug Toggle',
+                    options: {
+                        'TRUE': {
+                            label: ' Show console.log statements for debugging purposes',
+                            on: 'ON',
+                            off: 'OFF',
+                        },
+                    },
+                    tab: 'HF News Notifier',
+                    section: 'HF News Notifier Settings',
+                    type: 'toggle',
+                    'default': jMod.Settings.get('HFNN_TitleFilterBool'),
                 },
             ],
             tabs: [
@@ -121,23 +132,26 @@ $( "#scriptMenuButton" ).click(function showMenu(){
             // (optional) callback that fires before the settings dialog closes
             onBeforeHide: function(e){
                 // Save vals here?
-                console.log('Settings on before hide');
+                console.log('Section URL: ', jMod.Settings.get('Section FID'));
+                console.log('Title Filter: ', jMod.Settings.get('TitleFilterBool'));
+                console.log('Filter Strings:', jMod.Settings.get('Filter String'));
+                console.log('Debug: ', jMod.Settings.get('Debug Console Toggle'));
             }
         };
-
+        // Load JSON into settings
         jMod.Settings(SettingOptions);
+        // ?
+        //jMod.API.addGlyphicons();
 
 
         setTimeout(function(){
-            // Show the settings dialog
+            // Show menuthe settings dialog
             console.log('Show jMod Settings');
             jMod.Settings.show();
-            console.log('Setting 1 Value: ', jMod.Settings.get('Setting 1'));
-            console.log('Setting 1 Default: ', jMod.Settings.getDefault('Setting 1'));
         },100);
     };
-    jMod.API.addGlyphicons();
 
+    // ?
     jMod.onReady = SettingsTest;
     // Check & Remove Additional Tabs from prototype.js bug
     var filterArray = ['clear','clone','compact','detect','each','eachSlice','filter','first','flatten','forEach','grep','inGroupsOf','include',
@@ -155,12 +169,6 @@ $( "#scriptMenuButton" ).click(function showMenu(){
             }
         }
     }
-    // TODO: Close button fix or temp reoad page fix
-    //location.reload();
-    //$("#scriptMenuButton").text("Reload Page").attr("#scriptMenuButton","#reloadPage");
-    //$( "#reloadPage" ).click(function reloadPage(){
-    //location.reload();
-    //});
 });
 
 
