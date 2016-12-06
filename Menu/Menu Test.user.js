@@ -2,7 +2,7 @@
 // @name       Menu Test
 // @author xadamxk
 // @namespace  https://github.com/xadamxk/HF-Scripts
-// @version    1.0.5
+// @version    1.0.6
 // @description  Add's button to page
 // @require https://code.jquery.com/jquery-3.1.1.js
 // @require https://raw.githubusercontent.com/xadamxk/myUserJS-API/master/jMod/jmod.js
@@ -12,8 +12,7 @@
 // @iconURL https://raw.githubusercontent.com/xadamxk/HF-Userscripts/master/scripticon.jpg
 // EXAMPLE: http://myuserjs.org/API/Demo/settings.html
 // ==/UserScript==
-// 'onBeforeClose': tOnBeforeCloseCB, // Optional
-// 'onAfterClose': tOnAfterCloseCB // Optional
+// TODO: Search each script if settings exist, if so, set vals
 
 $("strong:contains('Menu')").append($("<button>").text("Settings").attr("id", "scriptMenuButton").addClass("button").css("margin-left", "20px"));
 $( "#scriptMenuButton" ).click(function showMenu(){
@@ -53,7 +52,7 @@ $( "#scriptMenuButton" ).click(function showMenu(){
                             type: 'img',
                             attributes: {
                                 src: "https://raw.githubusercontent.com/xadamxk/HF-Userscripts/master/HF%20News%20Notifier/HFNNCapture2.png",
-                                height: "75px"
+                                height: "50px"
                             }
                         },
                     ]
@@ -119,8 +118,8 @@ $( "#scriptMenuButton" ).click(function showMenu(){
                         },
                         {
                             type: 'p',
-                            innerHTML: 'Coming Soon.'
-                        }
+                            innerHTML: 'Coming Soon.<br />jmod version: '+jMod.version,
+                        } // next line?
                     ]
                 },
                 // (optional) Adding information about a tab referenced by a setting
