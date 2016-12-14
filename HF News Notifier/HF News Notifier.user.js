@@ -2,7 +2,7 @@
 // @name       HF News Notifier
 // @author xadamxk
 // @namespace  https://github.com/xadamxk/HF-Scripts
-// @version    1.1.1
+// @version    1.1.2
 // @description  Alerts users of new HF News editions (checks on /usercp.php)
 // @require https://code.jquery.com/jquery-3.1.1.js
 // @match      *://hackforums.net/usercp.php
@@ -13,23 +13,24 @@
 // @grant       GM_setValue
 // ==/UserScript==
 // ------------------------------ Change Log ----------------------------
-// version 1.1.0: Using jquery3 now, Added Settings & Changelog block, Added Thread Title Filters, Added Alert Notice Note,
+// version 1.1.2: Fixed empty alert bug mentioned in v1.1.1
+// version 1.1.1: Added alert notice note "Will fix this bug soon, have a good day." in regards to bug with Title Filters.
+// version 1.1.0: Using jquery3 now, Added Settings & Changelog block, Added Thread Title Filters, Added Alert Notice Note functionality,
 //      Added Multi-Section functionality, Bug Fix: Alert Notice w/out content is fixed, Bug Fix: Alert notice dismissal now works
 // version 1.0.1: Added updateURL, Fixed occasional title bug
 // version 1.0.0: Initial Release
 // ------------------------------ Dev Notes -----------------------------
-// TODO: Dismiss alert history
-// TODO: Thread history ex.(unread -> read -> new post -> unread)
+// TODO: cookie containing thread title, if == then hide, else, show. close alert -> save cookie, load usercp -> check cookie
 // ------------------------------ SETTINGS ------------------------------
 // Section: Which section to search
-var sectionURL = "https://hackforums.net/forumdisplay.php?fid=162";
+var sectionURL = "https://hackforums.net/forumdisplay.php?fid=25";
 // Filter Title: Filter unread thread results by keyword 
 var titleFilterBool = true; // (true = ON, false = OFF)
-var titleFilter = "Edition"; // seperate keywords by commas ex."PP,BTC"
+var titleFilter = "Official"; // seperate keywords by commas ex."PP,BTC"
 // Debug: Show console.log statements for debugging purposes
-var debug = false;
-// Alert Note: Note at bottom of alert
-var alertNote = "<span id='alertCSS'>(Will fix this bug soon, have a good day.)</span>";
+var debug = true;
+// Alert Note: Note at bottom of alert (note text goes between spans)
+var alertNote = "<span id='alertCSS'></span>";
 var alertNoteCSS = "<style>#alertCSS{color:red}</style>";
 // ------------------------------ ON PAGE LOAD ------------------------------
 // Grab most recent news thread title(s)
@@ -82,6 +83,7 @@ $.ajax({
         }
         // Alert HTML Heading
         newsThreadName = "<strong class='.thead'><u>New '<a href='"+sectionURL+"'>"+forumTitle+"</a>' Thread(s):</u></strong><br/>";
+        var foundNewFilter = false;
         // Alert HTML Body
         for (i=0; i < threadLinkArray.length; i++){
             // Title filter
@@ -89,8 +91,10 @@ $.ajax({
                 // For loop for filters
                 var titleFilterArray = titleFilter.split(',');
                 for(j = 0; j < titleFilterArray.length; j++){
-                    if (threadTitleArray[i].includes(titleFilterArray[j]))
+                    if (threadTitleArray[i].includes(titleFilterArray[j])){
+                        foundNewFilter = true;
                         newsThreadName += "<a href='"+threadLinkArray[i]+"'>"+threadTitleArray[i]+"</a><br/>";
+                    }
                 }
             }
             // No title filter
@@ -102,10 +106,13 @@ $.ajax({
         position = html.indexOf(substring)+(substring).length;
         newsThreadName += alertNote + alertNoteCSS;
         html = [html.slice(0, position), newsThreadName, html.slice(position)].join('');
-        // If new threads => Append HTML
-        if (threadLinkArray.length > 0)
+        // If new threads (Filter and Found) => Append HTML
+        if (titleFilterBool && foundNewFilter)
             $(html).insertBefore("#content");
-
+        // If new threads (all) => Append HTML
+        if (!titleFilterBool)
+            $(html).insertBefore("#content");
+        // Debug
         if (debug){
             console.log("rows: "+rows.length);
             console.log("New Threads Found: "+threadLinkArray.length);
