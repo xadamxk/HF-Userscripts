@@ -2,7 +2,7 @@
 // @name       HF News Notifier
 // @author xadamxk
 // @namespace  https://github.com/xadamxk/HF-Scripts
-// @version    1.1.2
+// @version    1.2.0
 // @description  Alerts users of new HF News editions (checks on /usercp.php)
 // @require https://code.jquery.com/jquery-3.1.1.js
 // @match      *://hackforums.net/usercp.php
@@ -13,6 +13,7 @@
 // @grant       GM_setValue
 // ==/UserScript==
 // ------------------------------ Change Log ----------------------------
+// version 1.2.0: Implemented dismiss-cookie functionality - Hide alert if previously dismissed, until new thread is found.
 // version 1.1.2: Fixed empty alert bug mentioned in v1.1.1
 // version 1.1.1: Added alert notice note "Will fix this bug soon, have a good day." in regards to bug with Title Filters.
 // version 1.1.0: Using jquery3 now, Added Settings & Changelog block, Added Thread Title Filters, Added Alert Notice Note functionality,
@@ -20,19 +21,22 @@
 // version 1.0.1: Added updateURL, Fixed occasional title bug
 // version 1.0.0: Initial Release
 // ------------------------------ Dev Notes -----------------------------
-// TODO: cookie containing thread title, if == then hide, else, show. close alert -> save cookie, load usercp -> check cookie
+// 
 // ------------------------------ SETTINGS ------------------------------
-// Section: Which section to search
-var sectionURL = "https://hackforums.net/forumdisplay.php?fid=25";
+// Section: Which section to search (News: 162)
+var sectionURL = "https://hackforums.net/forumdisplay.php?fid=162";
 // Filter Title: Filter unread thread results by keyword 
 var titleFilterBool = true; // (true = ON, false = OFF)
-var titleFilter = "Official"; // seperate keywords by commas ex."PP,BTC"
+var titleFilter = "Edition"; // seperate keywords by commas ex."PP,BTC"
 // Debug: Show console.log statements for debugging purposes
-var debug = true;
+var debug = false;
 // Alert Note: Note at bottom of alert (note text goes between spans)
 var alertNote = "<span id='alertCSS'></span>";
 var alertNoteCSS = "<style>#alertCSS{color:red}</style>";
 // ------------------------------ ON PAGE LOAD ------------------------------
+// Cookie variables
+var threadTitles = "";
+var showAlert = true;
 // Grab most recent news thread title(s)
 $.ajax({
     url: sectionURL,
@@ -41,10 +45,7 @@ $.ajax({
         // Static Variables
         var newsThreadName;
         var newThreadImage = "newfolder.gif";
-        var hotThreadImage = "newhotfolder.gif";
-        var html = "<div class='pm_alert' id='news_alert'><div class='float_right'><a href='javascript:$(\"news_alert\").remove();' title='Dismiss this notice'>"+
-            "<img src='https://hackforums.net/images/modern_bl/dismiss_notice.gif' style='cursor:pointer' alt='Dismiss this notice'  title='[x]'></a>"+
-            "</div><div></div></div>";
+        var hotThreadImage = "newhotfolder.gif"; // href='javascript:$(\"news_alert\").remove();'
         var threadLinkArray = [];
         var threadTitleArray = [];
         var forumTitle;
@@ -94,24 +95,58 @@ $.ajax({
                     if (threadTitleArray[i].includes(titleFilterArray[j])){
                         foundNewFilter = true;
                         newsThreadName += "<a href='"+threadLinkArray[i]+"'>"+threadTitleArray[i]+"</a><br/>";
+                        // Cookie string
+                        threadTitles = threadTitles + threadTitleArray[i] + ",";
                     }
                 }
             }
             // No title filter
-            else
+            else{
                 newsThreadName += "<a href='"+threadLinkArray[i]+"'>"+threadTitleArray[i]+"</a><br/>";
+                // Cookie string
+                threadTitles = threadTitles + threadTitleArray[i] + ",";
+            }
         }
+        // Cookie logic
+        var addCookieAlert = "";
+        // Make cookie if doesn't already exist
+        if (document.cookie.replace(/(?:(?:^|.*;\s*)HFNNCookie\s*\=\s*([^;]*).*$)|^.*$/, "$1") === undefined)
+            document.cookie = 'HFNNCookie=';
+        // Debug Cookie and Current thread titles
+        if (debug){
+            console.log("Cookie: '"+document.cookie.replace(/(?:(?:^|.*;\s*)HFNNCookie\s*\=\s*([^;]*).*$)|^.*$/, "$1") +
+                        "'\nThread: '" +threadTitles+"'");
+            if(document.cookie.replace(/(?:(?:^|.*;\s*)HFNNCookie\s*\=\s*([^;]*).*$)|^.*$/, "$1") == threadTitles)
+                console.log("Titles Match: true");
+            else
+                console.log("Titles Match: false");
+        }
+        // Cookie title matches (Hide alert)
+        if(document.cookie.replace(/(?:(?:^|.*;\s*)HFNNCookie\s*\=\s*([^;]*).*$)|^.*$/, "$1") == threadTitles)
+            showAlert = false;
+        // No match (Inject HTML to show alert)
+        else
+            addCookieAlert = "document.cookie = 'HFNNCookie="+threadTitles+"'; $(\"news_alert\").remove();";
+
+        // Alert notice html
+        var html = "<div class='pm_alert' id='news_alert'><div class='float_right'><a href='javascript:closeAlert();'  title='Dismiss this notice'>"+
+            "<img src='https://hackforums.net/images/modern_bl/dismiss_notice.gif' style='cursor:pointer' alt='Dismiss this notice'  title='Dismiss'></a>"+
+            "</div><div></div></div><script>function closeAlert(){var confirmAlert = confirm('Dismiss alert? Doing so will hide it until new threads are found.');"+
+            " if(confirmAlert){"+addCookieAlert+"}}</script>";
         // Some fancy string insertion
         substring = "</div><div>";
         position = html.indexOf(substring)+(substring).length;
         newsThreadName += alertNote + alertNoteCSS;
         html = [html.slice(0, position), newsThreadName, html.slice(position)].join('');
         // If new threads (Filter and Found) => Append HTML
-        if (titleFilterBool && foundNewFilter)
-            $(html).insertBefore("#content");
-        // If new threads (all) => Append HTML
-        if (!titleFilterBool)
-            $(html).insertBefore("#content");
+        // Runs if titles don't match
+        if (showAlert){
+            if (titleFilterBool && foundNewFilter)
+                $(html).insertBefore("#content");
+            // If new threads (all) => Append HTML
+            if (!titleFilterBool)
+                $(html).insertBefore("#content");
+        }
         // Debug
         if (debug){
             console.log("rows: "+rows.length);
@@ -120,3 +155,5 @@ $.ajax({
         }
     }
 });
+
+
