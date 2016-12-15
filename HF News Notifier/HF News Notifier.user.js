@@ -2,7 +2,7 @@
 // @name       HF News Notifier
 // @author xadamxk
 // @namespace  https://github.com/xadamxk/HF-Scripts
-// @version    1.2.0
+// @version    1.2.1
 // @description  Alerts users of new HF News editions (checks on /usercp.php)
 // @require https://code.jquery.com/jquery-3.1.1.js
 // @match      *://hackforums.net/usercp.php
@@ -13,6 +13,7 @@
 // @grant       GM_setValue
 // ==/UserScript==
 // ------------------------------ Change Log ----------------------------
+// version 1.2.1: Bug Fix: thread titles with ("',) no longer break the alert (removes them)
 // version 1.2.0: Implemented dismiss-cookie functionality - Hide alert if previously dismissed, until new thread is found.
 // version 1.1.2: Fixed empty alert bug mentioned in v1.1.1
 // version 1.1.1: Added alert notice note "Will fix this bug soon, have a good day." in regards to bug with Title Filters.
@@ -29,7 +30,7 @@ var sectionURL = "https://hackforums.net/forumdisplay.php?fid=162";
 var titleFilterBool = true; // (true = ON, false = OFF)
 var titleFilter = "Edition"; // seperate keywords by commas ex."PP,BTC"
 // Debug: Show console.log statements for debugging purposes
-var debug = false;
+var debug = true;
 // Alert Note: Note at bottom of alert (note text goes between spans)
 var alertNote = "<span id='alertCSS'></span>";
 var alertNoteCSS = "<style>#alertCSS{color:red}</style>";
@@ -78,7 +79,7 @@ $.ajax({
             temp = $(rows[i]).find('td:eq(0)').find('img').attr('src');
             if (temp!== undefined && (temp.includes(newThreadImage) || temp.includes(hotThreadImage))){
                 threadLinkArray[count] = $(rows[i]).find(column2).attr('href');
-                threadTitleArray[count] = $(rows[i]).find(column2).text();
+                threadTitleArray[count] = $(rows[i]).find(column2).text().replace(/["',]/g, ""); // Remove chars("',) from string
                 count++;
             }
         }
