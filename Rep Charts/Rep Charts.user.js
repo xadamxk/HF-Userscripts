@@ -2,17 +2,19 @@
 // @name       Rep Charts
 // @author xadamxk
 // @namespace  https://github.com/xadamxk/HF-Scripts
-// @version    1.1.0
+// @version    1.1.1
 // @description  Display graphical information on reputation.php
 // @require https://code.jquery.com/jquery-3.1.1.js
 // @require https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.4.0/Chart.bundle.min.js
-// @match      *hackforums.net/reputation.php?uid=*
+// @match      *://hackforums.net/reputation.php?uid=*
+// @match      *://hackforums.net/repsgiven.php?uid=*
 // @copyright  2016+
 // @updateURL https://github.com/xadamxk/HF-Userscripts/raw/master/Rep%20Charts/Rep%20Charts.user.js
 // @iconURL https://raw.githubusercontent.com/xadamxk/HF-Userscripts/master/scripticon.jpg
 // ==/UserScript==
 // ------------------------------ Change Log ----------------------------
-// version 1.10: Added Rep Timeline chart, bug fixes, auto-scale
+// version 1.1.1: Added support for repsgiven.php
+// version 1.1.0: Added Rep Timeline chart, bug fixes, auto-scale
 // version 1.0.1: Added percentes to legend/tooltips
 // version 1.0.0: Initial Release
 // ------------------------------ Dev Notes -----------------------------
