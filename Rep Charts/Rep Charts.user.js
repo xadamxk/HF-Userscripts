@@ -2,7 +2,7 @@
 // @name       Rep Charts
 // @author xadamxk
 // @namespace  https://github.com/xadamxk/HF-Scripts
-// @version    1.0.0
+// @version    1.0.1
 // @description  Display graphical information on reputation.php
 // @require https://code.jquery.com/jquery-3.1.1.js
 // @require https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.4.0/Chart.bundle.min.js
@@ -30,6 +30,7 @@ var username = $(".largetext strong span").text();
 var posRepTotal = parseInt($(".smalltext a:eq(0)").text());
 var neuRepTotal = parseInt($(".smalltext a:eq(1)").text());
 var negRepTotal = parseInt($(".smalltext a:eq(2)").text());
+var totRepTotal = (posRepTotal + neuRepTotal + negRepTotal);
 // Debug info
 if (debug){
     console.log("Username: "+username);
@@ -55,7 +56,9 @@ var repChartTotalCanvas = document.getElementById('repCanvas').getContext('2d');
 var repChartTotal = new Chart(repChartTotalCanvas, {
     type: 'pie',
     data: {
-        labels: ["Positives", "Neutrals", "Negatives"],
+        labels: ["Positives ("+((posRepTotal/totRepTotal)*100).toFixed(1)+"%)", 
+                 "Neutrals ("+((neuRepTotal/totRepTotal)*100).toFixed(1)+"%)", 
+                 "Negatives ("+((negRepTotal/totRepTotal)*100).toFixed(1)+"%)"],
         datasets: [{
             backgroundColor: [
                 posRepColor,
