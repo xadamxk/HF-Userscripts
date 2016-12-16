@@ -8,7 +8,7 @@
 // @require https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.4.0/Chart.bundle.min.js
 // @match      *hackforums.net/reputation.php?uid=*
 // @copyright  2016+
-// @updateURL 
+// @updateURL https://github.com/xadamxk/HF-Userscripts/raw/master/Rep%20Charts/Rep%20Charts.user.js
 // @iconURL https://raw.githubusercontent.com/xadamxk/HF-Userscripts/master/scripticon.jpg
 // ==/UserScript==
 // ------------------------------ Change Log ----------------------------
@@ -16,7 +16,7 @@
 // ------------------------------ Dev Notes -----------------------------
 // TODO: Add table row for more graphs?
 // TODO: Implement graph with post activity?
-// TODO: Tooltips
+// TODO: Tooltip summaries?
 // ------------------------------ SETTINGS ------------------------------
 // Debug
 var debug = false; // Default: false
