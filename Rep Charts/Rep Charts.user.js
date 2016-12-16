@@ -12,6 +12,7 @@
 // @iconURL https://raw.githubusercontent.com/xadamxk/HF-Userscripts/master/scripticon.jpg
 // ==/UserScript==
 // ------------------------------ Change Log ----------------------------
+// version 1.0.1: Added percentages to legend/tooltips
 // version 1.0.0: Initial Release
 // ------------------------------ Dev Notes -----------------------------
 // TODO: Add table row for more graphs?
