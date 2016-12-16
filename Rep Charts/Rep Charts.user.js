@@ -2,7 +2,7 @@
 // @name       Rep Charts
 // @author xadamxk
 // @namespace  https://github.com/xadamxk/HF-Scripts
-// @version    1.0.1
+// @version    1.1.0
 // @description  Display graphical information on reputation.php
 // @require https://code.jquery.com/jquery-3.1.1.js
 // @require https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.4.0/Chart.bundle.min.js
@@ -12,15 +12,15 @@
 // @iconURL https://raw.githubusercontent.com/xadamxk/HF-Userscripts/master/scripticon.jpg
 // ==/UserScript==
 // ------------------------------ Change Log ----------------------------
-// version 1.0.1: Added percentages to legend/tooltips
+// version 1.10: Added Rep Timeline chart, bug fixes, auto-scale
+// version 1.0.1: Added percentes to legend/tooltips
 // version 1.0.0: Initial Release
 // ------------------------------ Dev Notes -----------------------------
-// TODO: Add table row for more graphs?
 // TODO: Implement graph with post activity?
 // TODO: Tooltip summaries?
 // ------------------------------ SETTINGS ------------------------------
 // Debug
-var debug = false; // Default: false
+var debug = true; // Default: false
 // Rep text colors
 var posRepColor = "#32CD32"; // Default: ##32CD32
 var neuRepColor = "#666666"; // Default: #666666
@@ -42,14 +42,15 @@ if (debug){
 // Table D
 var tableDTotal = document.createElement('td');
 tableDTotal.id = "insertedTableD";
-//$(tableD).css("width","450");
+//$(tableDTotal).css("background","#393939");
+//$(tableDTotal).css("height","250");
 $(tableDTotal).css("float","left");
 $(".trow1 table:eq(0) tbody:eq(0) tr:eq(0) td:eq(0)").after(tableDTotal);
 // Canvas
 var canvasTotal = document.createElement('canvas');
 canvasTotal.id = "repCanvas";
-$(canvasTotal).css("margin", "auto");
-$(canvasTotal).css("display", "block");
+//$(canvasTotal).css("margin", "auto");
+$(canvaslastRep).css("vertical-align", "middle");
 $("#insertedTableD").append(canvasTotal);
 // Canvas instance
 var repChartTotalCanvas = document.getElementById('repCanvas').getContext('2d');
@@ -84,11 +85,158 @@ var repChartTotal = new Chart(repChartTotalCanvas, {
         legend: {
             display: true,
             fullWidth: true,
-            position: 'left',
+            position: 'top',
             labels: {
                 boxWidth: 20,
                 fontSize: 12,
             }
         },
     }
+});
+
+// lastRep Pie Chart
+var weekPos = parseInt($(".tborder tbody tr:eq(2) td table tbody tr td:eq(2) table tbody tr:eq(1) td:eq(1) span").text());
+var weekNeu = parseInt($(".tborder tbody tr:eq(2) td table tbody tr td:eq(2) table tbody tr:eq(1) td:eq(2) span").text());
+var weekNeg = parseInt($(".tborder tbody tr:eq(2) td table tbody tr td:eq(2) table tbody tr:eq(1) td:eq(3) span").text());
+var weekTot = (weekPos + weekNeu + weekNeg);
+var monthPos = parseInt($(".tborder tbody tr:eq(2) td table tbody tr td:eq(2) table tbody tr:eq(2) td:eq(1) span").text());
+var monthNeu = parseInt($(".tborder tbody tr:eq(2) td table tbody tr td:eq(2) table tbody tr:eq(2) td:eq(2) span").text());
+var monthNeg = parseInt($(".tborder tbody tr:eq(2) td table tbody tr td:eq(2) table tbody tr:eq(2) td:eq(3) span").text());
+var monthTot = (monthPos + monthNeu + monthNeg);
+var sixmonthPos = parseInt($(".tborder tbody tr:eq(2) td table tbody tr td:eq(2) table tbody tr:eq(3) td:eq(1) span").text());
+var sixmonthNeu = parseInt($(".tborder tbody tr:eq(2) td table tbody tr td:eq(2) table tbody tr:eq(3) td:eq(2) span").text());
+var sixmonthNeg = parseInt($(".tborder tbody tr:eq(2) td table tbody tr td:eq(2) table tbody tr:eq(3) td:eq(3) span").text());
+var sixmonthTot = (sixmonthPos + sixmonthNeu + sixmonthNeg);
+if(debug){
+    console.log("Week Vals: " + weekPos + ", " + weekNeu + ", " + weekNeg + ", " + weekTot);
+    console.log("Month Vals: " + monthPos + ", " + monthNeu + ", " + monthNeg+ ", " + monthTot);
+    console.log("Six Month Vals: " + sixmonthPos + ", " + sixmonthNeu + ", " + sixmonthNeg+ ", " + sixmonthTot);
+}
+// Table Row (created new table row above "Comments" - removed
+//var tableRowlastRep = document.createElement('tr');
+//tableRowlastRep.id = "insertedTableRowlastRep";
+//$(".quick_keys tr:eq(2)").after(tableRowlastRep);
+
+// Table D
+var tableDlastRep = document.createElement('td');
+tableDlastRep.id = "insertedTableDlastRep";
+//$(tableDlastRep).css("background","#393939");
+$(tableDlastRep).css("height", "250");
+$("#insertedTableD").after(tableDlastRep); //$("#insertedTableRowlastRep").append(tableDlastRep);
+// Canvas
+var canvaslastRep = document.createElement('canvas');
+canvaslastRep.id = "repCanvaslastRep";
+$(canvaslastRep).css("vertical-align", "middle");
+$("#insertedTableDlastRep").append(canvaslastRep);
+// Canvas instance
+var repChartlastRepCanvas = document.getElementById('repCanvaslastRep').getContext('2d');
+var barOptions_stacked = {
+    title: {
+        display: true,
+        fontColor: "#cccccc",
+        text:'Timeline'
+    },
+    tooltips: {
+        enabled: true
+    },
+    hover :{
+        animationDuration: 100
+    },
+    scales: {
+        // Bottom-Labels (Rep)
+        xAxes: [{
+            ticks: {
+                display: true,
+                beginAtZero:true,
+                fontFamily: "'Open Sans Bold', sans-serif",
+                fontSize:11,
+
+            },
+            scaleLabel:{
+                display:true
+            },
+            gridLines: {
+            }, 
+            stacked: true
+        }],
+        // Left-Labels (Time)
+        yAxes: [{
+            gridLines: {
+                display:false,
+                color: "#fff",
+                zeroLineColor: "#fff",
+                zeroLineWidth: 0
+            },
+            ticks: {
+                display: true,
+                fontFamily: "'Open Sans Bold', sans-serif",
+                fontSize:11
+            },
+            stacked: true
+        }]
+    },
+    legend:{
+        display:true,
+        fullWidth: true,
+        labels: {
+            boxWidth: 20,
+            fontSize: 12,
+        }
+    },
+    // Data labels 
+    //animation: {
+    //onComplete: function () {
+    //var chartInstance = this.chart;
+    //var ctx = chartInstance.ctx;
+    //ctx.font = "9px Open Sans";
+    //ctx.fillStyle = "#fff";
+
+    //Chart.helpers.each(this.data.datasets.forEach(function (dataset, i) {
+    //var meta = chartInstance.controller.getDatasetMeta(i);
+    //Chart.helpers.each(meta.data.forEach(function (bar, index) {
+    //data = dataset.data[index];
+    //if(i===0){
+    //ctx.fillText(data, 70, bar._model.y+4);
+    //} else {
+    //ctx.fillText(data, bar._model.x-10, bar._model.y+4);
+    //}
+    //}),this);
+    //}),this);
+    //}
+    //},
+    //pointLabelFontFamily : "Quadon Extra Bold",
+    //scaleFontFamily : "Quadon Extra Bold",
+};
+var repChartlastRep = new Chart(repChartlastRepCanvas, {
+    type: 'horizontalBar',
+    data: {
+        labels: ["Week", "Month", "6 Months"],
+        datasets: [{
+            backgroundColor: [
+                posRepColor,
+                posRepColor,
+                posRepColor
+            ],
+            data: [weekPos, monthPos, sixmonthPos],
+            label: "Positives"
+        },{
+            backgroundColor: [
+                neuRepColor,
+                neuRepColor,
+                neuRepColor
+            ],
+            data: [weekNeu, monthNeu, sixmonthNeu],
+            label: "Neutrals"
+        },{
+            backgroundColor: [
+                negRepColor,
+                negRepColor,
+                negRepColor
+            ],
+            data: [weekNeg, monthNeg, sixmonthNeg],
+            label: "Negatives"
+        }]
+    },
+
+    options: barOptions_stacked,
 });
