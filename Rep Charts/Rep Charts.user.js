@@ -2,7 +2,7 @@
 // @name       Rep Charts
 // @author xadamxk
 // @namespace  https://github.com/xadamxk/HF-Scripts
-// @version    1.1.1
+// @version    1.1.2
 // @description  Display graphical information on reputation.php
 // @require https://code.jquery.com/jquery-3.1.1.js
 // @require https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.4.0/Chart.bundle.min.js
@@ -13,13 +13,14 @@
 // @iconURL https://raw.githubusercontent.com/xadamxk/HF-Userscripts/master/scripticon.jpg
 // ==/UserScript==
 // ------------------------------ Change Log ----------------------------
+// version 1.1.2: Added hyperlink support for total rep chart (pos,neut,neg) now take you to the appropriate pages.
 // version 1.1.1: Added support for repsgiven.php
 // version 1.1.0: Added Rep Timeline chart, bug fixes, auto-scale
 // version 1.0.1: Added percentes to legend/tooltips
 // version 1.0.0: Initial Release
 // ------------------------------ Dev Notes -----------------------------
-// TODO: Implement graph with post activity?
-// TODO: Tooltip summaries?
+// TODO: Use algebra to solve for individual rep counts
+//      NOTE: find CDN for algebra.js - using RawGit temporarily
 // ------------------------------ SETTINGS ------------------------------
 // Debug
 var debug = true; // Default: false
@@ -34,6 +35,36 @@ var posRepTotal = parseInt($(".smalltext a:eq(0)").text());
 var neuRepTotal = parseInt($(".smalltext a:eq(1)").text());
 var negRepTotal = parseInt($(".smalltext a:eq(2)").text());
 var totRepTotal = (posRepTotal + neuRepTotal + negRepTotal);
+// Total Reputation (in box)
+var totalRep = parseInt($(".smalltext span").text());
+var totalPosNegCount = posRepTotal + negRepTotal;
+var escape = false;
+var pos1 = 0;
+var pos2 = 0;
+var pos3 = 0;
+var neg1 = 0;
+var neg2 = 0;
+var neg3 = 0;
+
+//var expr1 = new Expression("pos1");
+//expr1 = expr1.multiply(1);
+//var expr2 = new Expression("pos2");
+//expr2 = expr2.multiply(2);
+//var expr3 = new Expression("pos3");
+//expr3 = expr3.multiply(3);
+//var expr4 = new Expression("neg1");
+//expr4 = expr4.multiply(-1);
+//var expr5 = new Expression("neg2");
+//expr5 = expr5.multiply(-2);
+//var expr6 = new Expression("neg3");
+//expr6 = expr6.multiply(-3);
+
+//while (!escape){
+// manipulate numbers until num +'s match and num -'s match
+//if ((totalRep == (((pos1*1)+(pos2*2)+(pos3*3)) + ((neg1*-1)+(neg2*-2)+(neg3*-3)))) && ((pos1+pos2+pos3).count == posRepTotal) && ((neg1+neg2+neg3).count == negRepTotal))
+//escape = true;}
+
+
 // Debug info
 if (debug){
     console.log("Username: "+username);
@@ -51,7 +82,6 @@ $(".trow1 table:eq(0) tbody:eq(0) tr:eq(0) td:eq(0)").after(tableDTotal);
 // Canvas
 var canvasTotal = document.createElement('canvas');
 canvasTotal.id = "repCanvas";
-//$(canvasTotal).css("margin", "auto");
 $(canvaslastRep).css("vertical-align", "middle");
 $("#insertedTableD").append(canvasTotal);
 // Canvas instance
@@ -89,12 +119,33 @@ var repChartTotal = new Chart(repChartTotalCanvas, {
             fullWidth: true,
             position: 'top',
             labels: {
+                fontColor: "white",
                 boxWidth: 20,
                 fontSize: 12,
-            }
+            },
         },
     }
 });
+
+// Click events (Thank you: https://github.com/chartjs/Chart.js/issues/2292 : https://jsfiddle.net/ha19ozqy/)
+document.getElementById("repCanvas").onclick = function(evt){
+    var activePoints = repChartTotal.getElementsAtEvent(evt);
+    var firstPoint = activePoints[0];
+    var label = repChartTotal.data.labels[firstPoint._index];
+    var value = repChartTotal.data.datasets[firstPoint._datasetIndex].data[firstPoint._index];
+    if (firstPoint !== undefined){
+        var labelArray = label.split(" ");
+        //alert(label + ": " + value);
+        switch (labelArray[0]){
+            case "Positives": {location.href = (window.location.href + "&show=positive");}
+                break;
+            case "Neutrals": {location.href = (window.location.href + "&show=neutral");}
+                break;
+            case "Negatives": {location.href = (window.location.href + "&show=negative");}
+                break;
+        }
+    }
+};
 
 // lastRep Pie Chart
 var weekPos = parseInt($(".tborder tbody tr:eq(2) td table tbody tr td:eq(2) table tbody tr:eq(1) td:eq(1) span").text());
@@ -181,33 +232,11 @@ var barOptions_stacked = {
         display:true,
         fullWidth: true,
         labels: {
+            fontColor: "white",
             boxWidth: 20,
             fontSize: 12,
         }
     },
-    // Data labels 
-    //animation: {
-    //onComplete: function () {
-    //var chartInstance = this.chart;
-    //var ctx = chartInstance.ctx;
-    //ctx.font = "9px Open Sans";
-    //ctx.fillStyle = "#fff";
-
-    //Chart.helpers.each(this.data.datasets.forEach(function (dataset, i) {
-    //var meta = chartInstance.controller.getDatasetMeta(i);
-    //Chart.helpers.each(meta.data.forEach(function (bar, index) {
-    //data = dataset.data[index];
-    //if(i===0){
-    //ctx.fillText(data, 70, bar._model.y+4);
-    //} else {
-    //ctx.fillText(data, bar._model.x-10, bar._model.y+4);
-    //}
-    //}),this);
-    //}),this);
-    //}
-    //},
-    //pointLabelFontFamily : "Quadon Extra Bold",
-    //scaleFontFamily : "Quadon Extra Bold",
 };
 var repChartlastRep = new Chart(repChartlastRepCanvas, {
     type: 'horizontalBar',
