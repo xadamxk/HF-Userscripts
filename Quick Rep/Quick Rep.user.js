@@ -55,10 +55,11 @@ $("#posts .tborder").each(function (index, element) {
                 cache: false,
                 success: function(response) {
                     // Check for errors
-                    // Rep Limit
+                    var skipChecks = false;
                     if ($(response).find("blockquote").html() === undefined){
                         console.log("this browser is weird.");
                     }
+                    // Rep Limit
                     else if ($(response).find("blockquote").html().includes("You have already given as many reputation ratings as you are allowed to for today")){
                         errorFound = true;
                         window.alert("You have already given as many reputation ratings as you are allowed to for today.");
@@ -82,7 +83,7 @@ $("#posts .tborder").each(function (index, element) {
                         window.alert("You cannot add a reputation to users of this user group.");
                         return;
                     }
-                    else{
+                    if(!errorFound){
                         // Grab rep index
                         repIndex = $(response).find("#reputation :selected").index();
                         // Magical string of justice: $(response).children(3).children().children().children().children().siblings(6)
