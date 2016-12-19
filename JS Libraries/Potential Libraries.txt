@@ -29,3 +29,6 @@ grade (2 complement colors based on image colors): http://benhowdle.im/grade/
 push (desktop notifications): https://github.com/Nickersoft/push.js
 intense images (full screen pane view for images): https://github.com/tholman/intense-images
 imissyoujs (change icon when in diff tab): https://github.com/Bahlaouane-Hamza/I-Miss-You
+imgareaselect (select portion of image to crop): http://odyniec.net/projects/imgareaselect/
+zoomooz (zoom to area on page based on click events): http://jaukia.github.io/zoomooz/
+imagefill (fills img to container and centers): http://johnpolacek.github.io/imagefill.js/
