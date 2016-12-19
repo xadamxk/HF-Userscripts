@@ -2,7 +2,7 @@
 // @name       Quick Rep
 // @author xadamxk
 // @namespace  https://github.com/xadamxk/HF-Scripts
-// @version    1.0.3
+// @version    1.0.4
 // @description Makes giving reputation on HF easier.
 // @require https://code.jquery.com/jquery-3.1.1.js
 // @match      *://hackforums.net/showthread.php?tid=*
@@ -11,6 +11,7 @@
 // @iconURL https://raw.githubusercontent.com/xadamxk/HF-Userscripts/master/scripticon.jpg
 // ==/UserScript==
 // ------------------------------ Change Log ----------------------------
+// version 1.0.4: Edited 1.0.3 change so canned comment was more neutral
 // version 1.0.3: Added default response if comment was empty - Mr Whiskey
 // version 1.0.2: Bug fix for min rep comment requirements
 // version 1.0.1: Bug fix for certain browsers
@@ -162,7 +163,7 @@ $("#posts .tborder").each(function (index, element) {
                                         "pid": my_pid,
                                         "rid": my_rid,
                                         "reputation": $("#repSelect"+index).val(),
-                                        "comments": "Thanks: https://hackforums.net/"+$(element).find("strong a:eq(0)").attr('href')
+                                        "comments": "Regarding Thread: https://hackforums.net/"+$(element).find("strong a:eq(0)").attr('href')
                                     },
                                            function(data,status){
                                         // Success prompt of some kind
