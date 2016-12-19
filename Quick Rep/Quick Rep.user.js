@@ -2,7 +2,7 @@
 // @name       Quick Rep
 // @author xadamxk
 // @namespace  https://github.com/xadamxk/HF-Scripts
-// @version    1.0.1
+// @version    1.0.2
 // @description Makes giving reputation on HF easier.
 // @require https://code.jquery.com/jquery-3.1.1.js
 // @match      *://hackforums.net/showthread.php?tid=*
@@ -11,6 +11,7 @@
 // @iconURL https://raw.githubusercontent.com/xadamxk/HF-Userscripts/master/scripticon.jpg
 // ==/UserScript==
 // ------------------------------ Change Log ----------------------------
+// version 1.0.2: Bug fix for min rep comment requirements
 // version 1.0.1: Bug fix for certain browsers
 // version 1.0.0: Initial Release
 // ------------------------------ Dev Notes -----------------------------
@@ -150,21 +151,27 @@ $("#posts .tborder").each(function (index, element) {
                         if ($(element).find('[id=repPost'+index+']').length === 0){
                             $(element).find("#repSelect"+index).after($("<button>").text("Rep User").attr("id", "repPost"+index).addClass("button"));
                             $("body").on("click", "#repPost"+index, function() {
-                                $.post("/reputation.php",
-                                       {
-                                    "my_post_key": my_key,
-                                    "action" : "do_add",
-                                    "uid": my_uid,
-                                    "pid": my_pid,
-                                    "rid": my_rid,
-                                    "reputation": $("#repSelect"+index).val(),
-                                    "comments": $("#repComment"+index).val()
-                                },
-                                       function(data,status){
-                                    // Success prompt of some kind
-                                    window.location.href = "https://hackforums.net/"+$(element).find("strong a:eq(0)").attr('href');
-                                    location.reload();
-                                });
+                                // Input over 10 chars
+                                if ($("#repComment"+index).val().length < 11){
+                                    window.alert("Rep comments must be atleast 10 chars.");
+                                }
+                                else{
+                                    $.post("/reputation.php",
+                                           {
+                                        "my_post_key": my_key,
+                                        "action" : "do_add",
+                                        "uid": my_uid,
+                                        "pid": my_pid,
+                                        "rid": my_rid,
+                                        "reputation": $("#repSelect"+index).val(),
+                                        "comments": $("#repComment"+index).val()
+                                    },
+                                           function(data,status){
+                                        // Success prompt of some kind
+                                        window.location.href = "https://hackforums.net/"+$(element).find("strong a:eq(0)").attr('href');
+                                        location.reload();
+                                    });
+                                }
                             });
                         }
                         // Post button already exists
