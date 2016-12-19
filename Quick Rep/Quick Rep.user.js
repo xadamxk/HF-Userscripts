@@ -2,7 +2,7 @@
 // @name       Quick Rep
 // @author xadamxk
 // @namespace  https://github.com/xadamxk/HF-Scripts
-// @version    1.0.4
+// @version    1.0.5
 // @description Makes giving reputation on HF easier.
 // @require https://code.jquery.com/jquery-3.1.1.js
 // @match      *://hackforums.net/showthread.php?tid=*
@@ -11,6 +11,7 @@
 // @iconURL https://raw.githubusercontent.com/xadamxk/HF-Userscripts/master/scripticon.jpg
 // ==/UserScript==
 // ------------------------------ Change Log ----------------------------
+// version 1.0.5: Added support for the classic userbit - Yani
 // version 1.0.4: Edited 1.0.3 change so canned comment was more neutral
 // version 1.0.3: Added default response if comment was empty - Mr Whiskey
 // version 1.0.2: Bug fix for min rep comment requirements
@@ -40,10 +41,11 @@ var ajaxSuccess = false;
 var errorFound = false;
 
 $("#posts .tborder").each(function (index, element) {
-    // UID Array from postbit on /showthread.php
-    uidArray[index] = parseInt($(element).children().children().siblings().children(1).children(1).children(2)
-                               .children(2).children(3).children(7).children(1).children(1).attr('href').slice(53));
-    $(element).find(".author_buttons").append($("<button>").text(repButtonLabel).attr("id", "repButton"+index).addClass("button"));
+    // Grab UID & create button
+    var tsButton = $(element).find(".bitButton[title='Trust Scan']");
+    uidArray[index] = parseInt(tsButton.attr("href").split("uid=")[1]);
+    tsButton.parent().append($("<a>").text(repButtonLabel).attr("id", "repButton"+index).attr("href", "#").addClass("bitButton")); 
+    
     // Standard Quick Rep
     if (basicQuickRep)
         $("body").on("click", "#repButton"+index, function() { 
@@ -51,7 +53,8 @@ $("#posts .tborder").each(function (index, element) {
         });
     // Integrated Quick Rep
     else{
-        $("body").on("click", "#repButton"+index, function() {
+        $("body").on("click", "#repButton"+index, function(e) {
+            e.preventDefault();
             // ajax call on button click
             $.ajax({
                 url: "https://hackforums.net/reputation.php?action=add&uid="+uidArray[index], 
