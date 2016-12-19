@@ -2,7 +2,7 @@
 // @name       Quick Rep
 // @author xadamxk
 // @namespace  https://github.com/xadamxk/HF-Scripts
-// @version    1.0.2
+// @version    1.0.3
 // @description Makes giving reputation on HF easier.
 // @require https://code.jquery.com/jquery-3.1.1.js
 // @match      *://hackforums.net/showthread.php?tid=*
@@ -11,6 +11,7 @@
 // @iconURL https://raw.githubusercontent.com/xadamxk/HF-Userscripts/master/scripticon.jpg
 // ==/UserScript==
 // ------------------------------ Change Log ----------------------------
+// version 1.0.3: Added default response if comment was empty - Mr Whiskey
 // version 1.0.2: Bug fix for min rep comment requirements
 // version 1.0.1: Bug fix for certain browsers
 // version 1.0.0: Initial Release
@@ -152,7 +153,24 @@ $("#posts .tborder").each(function (index, element) {
                             $(element).find("#repSelect"+index).after($("<button>").text("Rep User").attr("id", "repPost"+index).addClass("button"));
                             $("body").on("click", "#repPost"+index, function() {
                                 // Input over 10 chars
-                                if ($("#repComment"+index).val().length < 11){
+                                if ($("#repComment"+index).val().length === 0){
+                                    $.post("/reputation.php",
+                                           {
+                                        "my_post_key": my_key,
+                                        "action" : "do_add",
+                                        "uid": my_uid,
+                                        "pid": my_pid,
+                                        "rid": my_rid,
+                                        "reputation": $("#repSelect"+index).val(),
+                                        "comments": "Thanks: https://hackforums.net/"+$(element).find("strong a:eq(0)").attr('href')
+                                    },
+                                           function(data,status){
+                                        // Success prompt of some kind
+                                        window.location.href = "https://hackforums.net/"+$(element).find("strong a:eq(0)").attr('href');
+                                        location.reload();
+                                    });
+                                }
+                                else if ($("#repComment"+index).val().length < 11){
                                     window.alert("Rep comments must be atleast 10 chars.");
                                 }
                                 else{
