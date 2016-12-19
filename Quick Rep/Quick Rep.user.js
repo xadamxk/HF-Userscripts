@@ -2,7 +2,7 @@
 // @name       Quick Rep
 // @author xadamxk
 // @namespace  https://github.com/xadamxk/HF-Scripts
-// @version    1.0.0
+// @version    1.0.1
 // @description Makes giving reputation on HF easier.
 // @require https://code.jquery.com/jquery-3.1.1.js
 // @match      *://hackforums.net/showthread.php?tid=*
@@ -11,6 +11,7 @@
 // @iconURL https://raw.githubusercontent.com/xadamxk/HF-Userscripts/master/scripticon.jpg
 // ==/UserScript==
 // ------------------------------ Change Log ----------------------------
+// version 1.0.1: Bug fix for certain browsers
 // version 1.0.0: Initial Release
 // ------------------------------ Dev Notes -----------------------------
 // Bugs?
@@ -55,7 +56,10 @@ $("#posts .tborder").each(function (index, element) {
                 success: function(response) {
                     // Check for errors
                     // Rep Limit
-                    if ($(response).find("blockquote").html().includes("You have already given as many reputation ratings as you are allowed to for today")){
+                    if ($(response).find("blockquote").html() === undefined){
+                        console.log("this browser is weird.");
+                    }
+                    else if ($(response).find("blockquote").html().includes("You have already given as many reputation ratings as you are allowed to for today")){
                         errorFound = true;
                         window.alert("You have already given as many reputation ratings as you are allowed to for today.");
                         return;
