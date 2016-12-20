@@ -32,7 +32,7 @@ var repButtonLabel = "Rep"; // Default: "Rep")
 //      basicquickRep = false : Integrates rep menu into post bit
 var basicQuickRep = false; // (Default: false)
 // Rep comment box width
-var repCommentWidth = "75%"; // (Default: "75%")
+var repCommentWidth = "60%"; // (Default: "60%")
 // Notification Dismissal Time
 var notificationTimeout = 15000; // (Default: 15000)
 // Debug: Show console.log statements for debugging purposes
@@ -153,7 +153,7 @@ $(".bitButton[title='Trust Scan']").each(function (index, element) {
                         }
                         // Selectbox doesn't exist
                         if ($(postMessage).find('[id=repSelect'+index+']').length === 0){
-                            $(postMessage).find("#repComment"+index).after($("<select>").attr("id", "repSelect"+index).css("margin-left", "5px").addClass("button"));
+                            $(postMessage).find("#repComment"+index).after($("<select>").attr("id", "repSelect"+index).css("margin-right", "5px").addClass("button"));
                             // Grab rep options from previous page
                             $(my_repOptions).each(function (subindex, subelement) {
                                 $("#repSelect"+index).append( $('<option></option>').val($(subelement).val()).html($(subelement).text()));
@@ -252,7 +252,7 @@ function notififyMe(repComment, repLink){
     }
     else {
         var notification = new Notification('Rep Added Successfully!', { //http://www.simpleimageresizer.com/_uploads/photos/9c5055c8/test_4_75.png
-            icon: 'http://i.imgur.com/SU0cCzg.png',
+            icon: 'https://raw.githubusercontent.com/xadamxk/HF-Userscripts/master/Quick%20Rep/NotificationIcon.png',
             body: repComment,
         });
 
