@@ -2,7 +2,7 @@
 // @name       Quick Rep
 // @author xadamxk
 // @namespace  https://github.com/xadamxk/HF-Scripts
-// @version    1.1.2
+// @version    1.2.0
 // @description Makes giving reputation on HF easier.
 // @require https://code.jquery.com/jquery-3.1.1.js
 // @match      *://hackforums.net/showthread.php?tid=*
@@ -12,6 +12,8 @@
 // @iconURL https://raw.githubusercontent.com/xadamxk/HF-Userscripts/master/scripticon.jpg
 // ==/UserScript==
 // ------------------------------ Change Log ----------------------------
+// version 1.2.0: Added notifications support
+// version 1.1.3: Variable error fix, string changes, and bug fixes
 // version 1.1.2: Changed an error string
 // version 1.1.1: Added support for PM's - Yani
 // version 1.0.5: Added support for the classic userbit - Yani
@@ -29,9 +31,14 @@ var repButtonLabel = "Rep"; // Default: "Rep")
 //      basicquickRep = true : Opens a new window for giving rep
 //      basicquickRep = false : Integrates rep menu into post bit
 var basicQuickRep = false; // (Default: false)
+// Rep comment box width
+var repCommentWidth = "75%"; // (Default: "75%")
+// Notification Dismissal Time
+var notificationTimeout = 15000; // (Default: 15000)
 // Debug: Show console.log statements for debugging purposes
 var debug = false; // (Default: false)
 // ------------------------------ ON PAGE LOAD ------------------------------
+// Global Vars
 var uidArray = [];
 var my_key;
 var my_uid;
@@ -42,31 +49,31 @@ var my_comments;
 var repIndex;
 var ajaxSuccess = false;
 var errorFound = false;
+var repComment;
+var repLink;
 
+// Each post bit on page
 $(".bitButton[title='Trust Scan']").each(function (index, element) {
     var tsButton = $(element);
     var postMessage = tsButton.parents("table.tborder");
-
     // Grab UID & create button
     uidArray[index] = parseInt(tsButton.attr("href").split("uid=")[1]);
-    tsButton.parent().append($("<a>").text(repButtonLabel).attr("id", "repButton"+index).attr("href", "#").addClass("bitButton")); 
-
+    tsButton.parent().append($("<a>").text(repButtonLabel).attr("id", "repButton"+index).attr("href", "#").addClass("bitButton"));
     // Standard Quick Rep
     if (basicQuickRep)
-        $("body").on("click", "#repButton"+index, function() { 
-            MyBB.reputation(uidArray[index]);
-        });
+        $("body").on("click", "#repButton"+index, function() {MyBB.reputation(uidArray[index]);});
     // Integrated Quick Rep
     else{
         $("body").on("click", "#repButton"+index, function(e) {
             e.preventDefault();
             // ajax call on button click
             $.ajax({
-                url: "https://hackforums.net/reputation.php?action=add&uid="+uidArray[index], 
+                url: "https://hackforums.net/reputation.php?action=add&uid="+uidArray[index],
                 cache: false,
                 success: function(response) {
                     // Check for errors
                     var skipChecks = false;
+                    // No errors
                     if ($(response).find("blockquote").html() === undefined){
                         if (debug)
                             console.log("No permission errors!");
@@ -74,25 +81,25 @@ $(".bitButton[title='Trust Scan']").each(function (index, element) {
                     // Rep Limit
                     else if ($(response).find("blockquote").html().includes("You have already given as many reputation ratings as you are allowed to for today")){
                         errorFound = true;
-                        window.alert("You have already given as many reputation ratings as you are allowed to for today.");
+                        window.alert("Permission Error: You have already given as many reputation ratings as you are allowed to for today.");
                         return;
                     }
                     // Need upgrade
                     else if ($(response).find("blockquote").html().includes("You do not have permission to give reputation ratings to users")){
                         errorFound = true;
-                        window.alert("You do not have permission to give reputation ratings to users.");
+                        window.alert("Permission Error: You do not have permission to give reputation ratings to users.");
                         return;
                     }
                     // Self rep
                     else if ($(response).find("blockquote").html().includes("You cannot add to your own reputation")){
                         errorFound = true;
-                        window.alert("You can't rep yourself dumb dumb :P");
+                        window.alert("Permission Error: You can't rep yourself dumb dumb :P");
                         return;
                     }
                     // Rep disabled
                     else if ($(response).find("blockquote").html().includes("You cannot add a reputation to users of this user group")){
                         errorFound = true;
-                        window.alert("You cannot add a reputation to users of this user group.");
+                        window.alert("Permission Error: You cannot add a reputation to users of this user group.");
                         return;
                     }
                     if(!errorFound){
@@ -124,14 +131,14 @@ $(".bitButton[title='Trust Scan']").each(function (index, element) {
                     }
                     // Shouldn't run if error, but just incase...
                     if (!errorFound){
-                        // Textbox doesn't exist yet 
+                        // Textbox doesn't exist yet
                         if ($(postMessage).find('[id=repComment'+index+']').length === 0){
                             $(postMessage).find("#repButton"+index).after($("<input type='text'>").attr("id", "repComment"+index).val(my_comments)
                                                                           .css("padding","3px 6px")
                                                                           .css("text-shadow","1px 1px 0px #000;")
                                                                           .css("background-color","#072948")
                                                                           .css("margin-left", "5px")
-                                                                          .css("width", "75%")
+                                                                          .css("width", repCommentWidth)
                                                                           .css("background", "white")
                                                                           .css("box-shadow", "0 1px 0 0 #0F5799")
                                                                           .css("font-family", "arial")
@@ -163,15 +170,16 @@ $(".bitButton[title='Trust Scan']").each(function (index, element) {
                             $(postMessage).find("#repSelect"+index).after($("<button>").text("Rep User").attr("id", "repPost"+index).addClass("button"));
                             $("body").on("click", "#repPost"+index, function() {
                                 // Check if we are in a PM or a thread
+                                var default_comment; // If rep comment is empty
+                                var next_loc; // Address to load on success
                                 if(window.location.pathname == '/private.php'){
-                                    var next_loc = window.location.href;
-                                    var default_comment = 'This rep is because of your PM';
+                                    next_loc = window.location.href;
+                                    default_comment = 'Regarding your PM.';
                                 } else {
-                                    var next_loc = "https://hackforums.net/"+$(postMessage).find("strong a:eq(1)").attr('href');
-                                    var default_cmment = "Regarding Thread: " + next_loc;
+                                    next_loc = "https://hackforums.net/"+$(postMessage).find("strong a:eq(1)").attr('href');
+                                    default_comment = "Regarding Thread: " + next_loc;
                                 }
-
-                                // Input over 10 chars
+                                // Rep comment is empty - use appropriate default
                                 if ($("#repComment"+index).val().length === 0){
                                     $.post("/reputation.php",
                                            {
@@ -184,14 +192,20 @@ $(".bitButton[title='Trust Scan']").each(function (index, element) {
                                         "comments": default_comment
                                     },
                                            function(data,status){
-                                        // Success prompt of some kind
-                                        window.location = next_loc;
-                                        window.location.reload();
+                                        // Success prompt
+                                        // Notification
+                                        repLink = next_loc;
+                                        repComment = $("#repSelect"+index+" option:selected").text() + "\nRep Reasoning: "+ default_comment;
+                                        notififyMe(repComment, repLink);
+                                        // Remove rep elements
+                                        $("#repButton"+index).trigger("click");
                                     });
                                 }
+                                // Custom comment but too short
                                 else if ($("#repComment"+index).val().length < 11){
                                     window.alert("Rep comments must be atleast 10 chars.");
                                 }
+                                // Input over 10 chars
                                 else{
                                     $.post("/reputation.php",
                                            {
@@ -204,9 +218,13 @@ $(".bitButton[title='Trust Scan']").each(function (index, element) {
                                         "comments": $("#repComment"+index).val()
                                     },
                                            function(data,status){
-                                        // Success prompt of some kind
-                                        window.location = next_loc;
-                                        window.location.reload();
+                                        // Success prompt
+                                        // Notification
+                                        repLink = next_loc;
+                                        repComment = $("#repSelect"+index+" option:selected").text() + "\nRep Reasoning: "+ $("#repComment"+index).val();
+                                        notififyMe(repComment, repLink);
+                                        // Remove rep elements
+                                        $("#repButton"+index).trigger("click");
                                     });
                                 }
                             });
@@ -221,3 +239,27 @@ $(".bitButton[title='Trust Scan']").each(function (index, element) {
         }); // Rep Button onClick
     } // else
 }); // each post
+
+function notififyMe(repComment, repLink){
+    if (Notification.permission !== "granted"){
+        Notification.requestPermission().then(function() {
+            if (Notification.permission !== "granted"){
+                window.alert("Quick Rep Userscript: Please allow desktop notifications!");
+            } else{
+                notififyMe(repComment, repLink);
+            }
+        });
+    }
+    else {
+        var notification = new Notification('Rep Added Successfully!', { //http://www.simpleimageresizer.com/_uploads/photos/9c5055c8/test_4_75.png
+            icon: 'http://i.imgur.com/SU0cCzg.png',
+            body: repComment,
+        });
+
+        notification.onclick = function () {
+            window.location = repLink;
+            window.location.reload();
+        };
+        setTimeout(function() { notification.close(); }, notificationTimeout);
+    }
+}
