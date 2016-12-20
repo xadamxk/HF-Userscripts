@@ -2,7 +2,7 @@
 // @name       Quick Rep
 // @author xadamxk
 // @namespace  https://github.com/xadamxk/HF-Scripts
-// @version    1.0.5
+// @match      *://hackforums.net/private.php?action=read&pmid=*
 // @description Makes giving reputation on HF easier.
 // @require https://code.jquery.com/jquery-3.1.1.js
 // @match      *://hackforums.net/showthread.php?tid=*
@@ -40,9 +40,11 @@ var repIndex;
 var ajaxSuccess = false;
 var errorFound = false;
 
-$("#posts .tborder").each(function (index, element) {
+$(".bitButton[title='Trust Scan']").each(function (index, element) {
+    var tsButton = $(element);
+    var postMessage = tsButton.parents("table.tborder");
+    
     // Grab UID & create button
-    var tsButton = $(element).find(".bitButton[title='Trust Scan']");
     uidArray[index] = parseInt(tsButton.attr("href").split("uid=")[1]);
     tsButton.parent().append($("<a>").text(repButtonLabel).attr("id", "repButton"+index).attr("href", "#").addClass("bitButton")); 
     
@@ -119,8 +121,8 @@ $("#posts .tborder").each(function (index, element) {
                     // Shouldn't run if error, but just incase...
                     if (!errorFound){
                         // Textbox doesn't exist yet 
-                        if ($(element).find('[id=repComment'+index+']').length === 0){
-                            $(element).find("#repButton"+index).after($("<input type='text'>").attr("id", "repComment"+index).val(my_comments)
+                        if ($(postMessage).find('[id=repComment'+index+']').length === 0){
+                            $(postMessage).find("#repButton"+index).after($("<input type='text'>").attr("id", "repComment"+index).val(my_comments)
                                                                       .css("padding","3px 6px")
                                                                       .css("text-shadow","1px 1px 0px #000;")
                                                                       .css("background-color","#072948")
@@ -136,11 +138,11 @@ $("#posts .tborder").each(function (index, element) {
                         }
                         // Textbox already exists
                         else{
-                            $(element).find("#repComment"+index).remove();
+                            $(postMessage).find("#repComment"+index).remove();
                         }
                         // Selectbox doesn't exist
-                        if ($(element).find('[id=repSelect'+index+']').length === 0){
-                            $(element).find("#repComment"+index).after($("<select>").attr("id", "repSelect"+index).css("margin-left", "5px").addClass("button"));
+                        if ($(postMessage).find('[id=repSelect'+index+']').length === 0){
+                            $(postMessage).find("#repComment"+index).after($("<select>").attr("id", "repSelect"+index).css("margin-left", "5px").addClass("button"));
                             // Grab rep options from previous page
                             $(my_repOptions).each(function (subindex, subelement) {
                                 $("#repSelect"+index).append( $('<option></option>').val($(subelement).val()).html($(subelement).text()));
@@ -150,12 +152,21 @@ $("#posts .tborder").each(function (index, element) {
                         }
                         // Selectbox already exists
                         else{
-                            $(element).find("#repSelect"+index).remove();
+                            $(postMessage).find("#repSelect"+index).remove();
                         }
                         // Post button doesn't exist
-                        if ($(element).find('[id=repPost'+index+']').length === 0){
-                            $(element).find("#repSelect"+index).after($("<button>").text("Rep User").attr("id", "repPost"+index).addClass("button"));
+                        if ($(postMessage).find('[id=repPost'+index+']').length === 0){
+                            $(postMessage).find("#repSelect"+index).after($("<button>").text("Rep User").attr("id", "repPost"+index).addClass("button"));
                             $("body").on("click", "#repPost"+index, function() {
+                                // Check if we are in a PM or a thread
+                                    if(window.location.pathname == '/private.php'){
+                                        var next_loc = window.location.href;
+                                        var default_comment = 'This rep is because of your PM';
+                                    } else {
+                                        var next_loc = "https://hackforums.net/"+$(postMessage).find("strong a:eq(1)").attr('href');
+                                        var default_cmment = "Regarding Thread: " + next_loc;
+                                    }
+                                
                                 // Input over 10 chars
                                 if ($("#repComment"+index).val().length === 0){
                                     $.post("/reputation.php",
@@ -166,12 +177,12 @@ $("#posts .tborder").each(function (index, element) {
                                         "pid": my_pid,
                                         "rid": my_rid,
                                         "reputation": $("#repSelect"+index).val(),
-                                        "comments": "Regarding Thread: https://hackforums.net/"+$(element).find("strong a:eq(0)").attr('href')
+                                        "comments": default_comment
                                     },
                                            function(data,status){
                                         // Success prompt of some kind
-                                        window.location.href = "https://hackforums.net/"+$(element).find("strong a:eq(0)").attr('href');
-                                        location.reload();
+                                        window.location = next_loc;
+                                        window.location.reload();
                                     });
                                 }
                                 else if ($("#repComment"+index).val().length < 11){
@@ -190,15 +201,15 @@ $("#posts .tborder").each(function (index, element) {
                                     },
                                            function(data,status){
                                         // Success prompt of some kind
-                                        window.location.href = "https://hackforums.net/"+$(element).find("strong a:eq(0)").attr('href');
-                                        location.reload();
+                                        window.location = next_loc;
+                                        window.location.reload();
                                     });
                                 }
                             });
                         }
                         // Post button already exists
                         else{
-                            $(element).find("#repPost"+index).remove();
+                            $(postMessage).find("#repPost"+index).remove();
                         }
                     } // no errors
                 }// success
