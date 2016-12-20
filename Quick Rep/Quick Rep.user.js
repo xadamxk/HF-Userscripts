@@ -2,15 +2,17 @@
 // @name       Quick Rep
 // @author xadamxk
 // @namespace  https://github.com/xadamxk/HF-Scripts
-// @match      *://hackforums.net/private.php?action=read&pmid=*
+// @version    1.1.1
 // @description Makes giving reputation on HF easier.
 // @require https://code.jquery.com/jquery-3.1.1.js
 // @match      *://hackforums.net/showthread.php?tid=*
+// @match      *://hackforums.net/private.php?action=read&pmid=*
 // @copyright  2016+
 // @updateURL https://github.com/xadamxk/HF-Userscripts/raw/master/Quick%20Rep/Quick%20Rep.user.js
 // @iconURL https://raw.githubusercontent.com/xadamxk/HF-Userscripts/master/scripticon.jpg
 // ==/UserScript==
 // ------------------------------ Change Log ----------------------------
+// version 1.1.1: Added support for PM's - Yani
 // version 1.0.5: Added support for the classic userbit - Yani
 // version 1.0.4: Edited 1.0.3 change so canned comment was more neutral
 // version 1.0.3: Added default response if comment was empty - Mr Whiskey
