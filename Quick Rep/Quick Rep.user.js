@@ -2,7 +2,7 @@
 // @name       Quick Rep
 // @author xadamxk
 // @namespace  https://github.com/xadamxk/HF-Scripts
-// @version    1.1.1
+// @version    1.1.2
 // @description Makes giving reputation on HF easier.
 // @require https://code.jquery.com/jquery-3.1.1.js
 // @match      *://hackforums.net/showthread.php?tid=*
@@ -12,6 +12,7 @@
 // @iconURL https://raw.githubusercontent.com/xadamxk/HF-Userscripts/master/scripticon.jpg
 // ==/UserScript==
 // ------------------------------ Change Log ----------------------------
+// version 1.1.2: Changed an error string
 // version 1.1.1: Added support for PM's - Yani
 // version 1.0.5: Added support for the classic userbit - Yani
 // version 1.0.4: Edited 1.0.3 change so canned comment was more neutral
@@ -45,11 +46,11 @@ var errorFound = false;
 $(".bitButton[title='Trust Scan']").each(function (index, element) {
     var tsButton = $(element);
     var postMessage = tsButton.parents("table.tborder");
-    
+
     // Grab UID & create button
     uidArray[index] = parseInt(tsButton.attr("href").split("uid=")[1]);
     tsButton.parent().append($("<a>").text(repButtonLabel).attr("id", "repButton"+index).attr("href", "#").addClass("bitButton")); 
-    
+
     // Standard Quick Rep
     if (basicQuickRep)
         $("body").on("click", "#repButton"+index, function() { 
@@ -67,7 +68,8 @@ $(".bitButton[title='Trust Scan']").each(function (index, element) {
                     // Check for errors
                     var skipChecks = false;
                     if ($(response).find("blockquote").html() === undefined){
-                        console.log("this browser is weird.");
+                        if (debug)
+                            console.log("No permission errors!");
                     }
                     // Rep Limit
                     else if ($(response).find("blockquote").html().includes("You have already given as many reputation ratings as you are allowed to for today")){
@@ -125,18 +127,18 @@ $(".bitButton[title='Trust Scan']").each(function (index, element) {
                         // Textbox doesn't exist yet 
                         if ($(postMessage).find('[id=repComment'+index+']').length === 0){
                             $(postMessage).find("#repButton"+index).after($("<input type='text'>").attr("id", "repComment"+index).val(my_comments)
-                                                                      .css("padding","3px 6px")
-                                                                      .css("text-shadow","1px 1px 0px #000;")
-                                                                      .css("background-color","#072948")
-                                                                      .css("margin-left", "5px")
-                                                                      .css("width", "75%")
-                                                                      .css("background", "white")
-                                                                      .css("box-shadow", "0 1px 0 0 #0F5799")
-                                                                      .css("font-family", "arial")
-                                                                      .css("font-size", "14px")
-                                                                      .css("border", "1px solid #000")
-                                                                      .css("margin", "5px")
-                                                                      .css("color", "black")); //.css("", "")
+                                                                          .css("padding","3px 6px")
+                                                                          .css("text-shadow","1px 1px 0px #000;")
+                                                                          .css("background-color","#072948")
+                                                                          .css("margin-left", "5px")
+                                                                          .css("width", "75%")
+                                                                          .css("background", "white")
+                                                                          .css("box-shadow", "0 1px 0 0 #0F5799")
+                                                                          .css("font-family", "arial")
+                                                                          .css("font-size", "14px")
+                                                                          .css("border", "1px solid #000")
+                                                                          .css("margin", "5px")
+                                                                          .css("color", "black")); //.css("", "")
                         }
                         // Textbox already exists
                         else{
@@ -161,14 +163,14 @@ $(".bitButton[title='Trust Scan']").each(function (index, element) {
                             $(postMessage).find("#repSelect"+index).after($("<button>").text("Rep User").attr("id", "repPost"+index).addClass("button"));
                             $("body").on("click", "#repPost"+index, function() {
                                 // Check if we are in a PM or a thread
-                                    if(window.location.pathname == '/private.php'){
-                                        var next_loc = window.location.href;
-                                        var default_comment = 'This rep is because of your PM';
-                                    } else {
-                                        var next_loc = "https://hackforums.net/"+$(postMessage).find("strong a:eq(1)").attr('href');
-                                        var default_cmment = "Regarding Thread: " + next_loc;
-                                    }
-                                
+                                if(window.location.pathname == '/private.php'){
+                                    var next_loc = window.location.href;
+                                    var default_comment = 'This rep is because of your PM';
+                                } else {
+                                    var next_loc = "https://hackforums.net/"+$(postMessage).find("strong a:eq(1)").attr('href');
+                                    var default_cmment = "Regarding Thread: " + next_loc;
+                                }
+
                                 // Input over 10 chars
                                 if ($("#repComment"+index).val().length === 0){
                                     $.post("/reputation.php",
