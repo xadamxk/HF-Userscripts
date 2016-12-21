@@ -2,7 +2,7 @@
 // @name       Quick Rep
 // @author xadamxk
 // @namespace  https://github.com/xadamxk/HF-Scripts
-// @version    1.2.1
+// @version    1.2.2
 // @description Makes giving reputation on HF easier.
 // @require https://code.jquery.com/jquery-3.1.1.js
 // @match      *://hackforums.net/showthread.php?tid=*
@@ -12,6 +12,7 @@
 // @iconURL https://raw.githubusercontent.com/xadamxk/HF-Userscripts/master/scripticon.jpg
 // ==/UserScript==
 // ------------------------------ Change Log ----------------------------
+// version 1.2.2: Some very small changes.
 // version 1.2.1: - Added logic for conflicting scripts - relating to default response on posts.
 //                - Cleaned some code up
 // version 1.2.0: Added notifications support
@@ -25,7 +26,7 @@
 // version 1.0.1: Bug fix for certain browsers
 // version 1.0.0: Initial Release
 // ------------------------------ Dev Notes -----------------------------
-// Rep queue compat?
+// Empty rep comment on thread bug :/
 // ------------------------------ SETTINGS ------------------------------
 // Label for button (visible from /showthread.php?)
 var repButtonLabel = "Rep"; // Default: "Rep")
@@ -268,6 +269,7 @@ function notififyMe(repComment, repLink){
         notification.onclick = function () {
             window.location = repLink;
             window.location.reload();
+            notification.close();
         };
         setTimeout(function() { notification.close(); }, notificationTimeout);
     }
