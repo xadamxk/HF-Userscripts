@@ -25,6 +25,7 @@
 // version 1.0.1: Bug fix for certain browsers
 // version 1.0.0: Initial Release
 // ------------------------------ Dev Notes -----------------------------
+// Rep queue compat?
 // ------------------------------ SETTINGS ------------------------------
 // Label for button (visible from /showthread.php?)
 var repButtonLabel = "Rep"; // Default: "Rep")
