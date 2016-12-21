@@ -2,7 +2,7 @@
 // @name       Quick Rep
 // @author xadamxk
 // @namespace  https://github.com/xadamxk/HF-Scripts
-// @version    1.2.0
+// @version    1.2.1
 // @description Makes giving reputation on HF easier.
 // @require https://code.jquery.com/jquery-3.1.1.js
 // @match      *://hackforums.net/showthread.php?tid=*
@@ -12,6 +12,8 @@
 // @iconURL https://raw.githubusercontent.com/xadamxk/HF-Userscripts/master/scripticon.jpg
 // ==/UserScript==
 // ------------------------------ Change Log ----------------------------
+// version 1.2.1: - Added logic for conflicting scripts - relating to default response on posts.
+//                - Cleaned some code up
 // version 1.2.0: Added notifications support
 // version 1.1.3: Variable error fix, string changes, and bug fixes
 // version 1.1.2: Changed an error string
@@ -23,7 +25,6 @@
 // version 1.0.1: Bug fix for certain browsers
 // version 1.0.0: Initial Release
 // ------------------------------ Dev Notes -----------------------------
-// Bugs?
 // ------------------------------ SETTINGS ------------------------------
 // Label for button (visible from /showthread.php?)
 var repButtonLabel = "Rep"; // Default: "Rep")
@@ -72,36 +73,34 @@ $(".bitButton[title='Trust Scan']").each(function (index, element) {
                 cache: false,
                 success: function(response) {
                     // Check for errors
-                    var skipChecks = false;
                     // No errors
-                    if ($(response).find("blockquote").html() === undefined){
+                    var errorBlock = $(response).find("blockquote").html();
+                    var permError = "Permission Error: ";
+                    if (errorBlock === undefined){
                         if (debug)
                             console.log("No permission errors!");
                     }
                     // Rep Limit
-                    else if ($(response).find("blockquote").html().includes("You have already given as many reputation ratings as you are allowed to for today")){
+                    else if (errorBlock.includes("You have already given as many reputation ratings as you are allowed to for today")){
+                        // Rep Queue logic
+                        //      Remove errorFound & return, add new var that lets it run until the $.Post event, then put info in queue.
                         errorFound = true;
-                        window.alert("Permission Error: You have already given as many reputation ratings as you are allowed to for today.");
-                        return;
-                    }
-                    // Need upgrade
-                    else if ($(response).find("blockquote").html().includes("You do not have permission to give reputation ratings to users")){
-                        errorFound = true;
-                        window.alert("Permission Error: You do not have permission to give reputation ratings to users.");
+                        window.alert(permError + errorBlock);
                         return;
                     }
                     // Self rep
-                    else if ($(response).find("blockquote").html().includes("You cannot add to your own reputation")){
+                    else if (errorBlock.includes("You cannot add to your own reputation")){
                         errorFound = true;
-                        window.alert("Permission Error: You can't rep yourself dumb dumb :P");
+                        window.alert(permError + "You can't rep yourself dumb dumb :P");
                         return;
                     }
-                    // Rep disabled
-                    else if ($(response).find("blockquote").html().includes("You cannot add a reputation to users of this user group")){
+                    // Require Upgrade, Rep Disabled, Other?
+                    else {
                         errorFound = true;
-                        window.alert("Permission Error: You cannot add a reputation to users of this user group.");
+                        window.alert(permError + errorBlock);
                         return;
                     }
+                    // No Rep Permission Errors
                     if(!errorFound){
                         // Grab rep index
                         repIndex = $(response).find("#reputation :selected").index();
@@ -115,7 +114,7 @@ $(".bitButton[title='Trust Scan']").each(function (index, element) {
                         // RID
                         my_rid = $(response).find('[name=rid]').val();
                         // Select vals
-                        my_repOptions = $(response).children(3).children().children().children().children().siblings(6).children().siblings(7);
+                        my_repOptions = $(response).find('[name=reputation]').children();
                         // Comments
                         my_comments = $(response).find('[name=comments]').val();
                         if (debug){
@@ -133,6 +132,7 @@ $(".bitButton[title='Trust Scan']").each(function (index, element) {
                     if (!errorFound){
                         // Textbox doesn't exist yet
                         if ($(postMessage).find('[id=repComment'+index+']').length === 0){
+                            // Append rep reasoning textbox
                             $(postMessage).find("#repButton"+index).after($("<input type='text'>").attr("id", "repComment"+index).val(my_comments)
                                                                           .css("padding","3px 6px")
                                                                           .css("text-shadow","1px 1px 0px #000;")
@@ -145,38 +145,46 @@ $(".bitButton[title='Trust Scan']").each(function (index, element) {
                                                                           .css("font-size", "14px")
                                                                           .css("border", "1px solid #000")
                                                                           .css("margin", "5px")
-                                                                          .css("color", "black")); //.css("", "")
+                                                                          .css("color", "black")
+                                                                         ); //.css("", "")
                         }
                         // Textbox already exists
-                        else{
+                        else
                             $(postMessage).find("#repComment"+index).remove();
-                        }
+
                         // Selectbox doesn't exist
                         if ($(postMessage).find('[id=repSelect'+index+']').length === 0){
+                            // Append Rep selection
                             $(postMessage).find("#repComment"+index).after($("<select>").attr("id", "repSelect"+index).css("margin-right", "5px").addClass("button"));
-                            // Grab rep options from previous page
+                            // Append rep options from give rep page
                             $(my_repOptions).each(function (subindex, subelement) {
                                 $("#repSelect"+index).append( $('<option></option>').val($(subelement).val()).html($(subelement).text()));
                             });
-                            // Set index
+                            // Set selected index
                             $("#repSelect"+index)[0].selectedIndex = repIndex;
                         }
                         // Selectbox already exists
-                        else{
+                        else
                             $(postMessage).find("#repSelect"+index).remove();
-                        }
+
                         // Post button doesn't exist
                         if ($(postMessage).find('[id=repPost'+index+']').length === 0){
+                            // Append Rep User button
                             $(postMessage).find("#repSelect"+index).after($("<button>").text("Rep User").attr("id", "repPost"+index).addClass("button"));
+                            // Click event for button
                             $("body").on("click", "#repPost"+index, function() {
-                                // Check if we are in a PM or a thread
+                                // Check if PM or thread
                                 var default_comment; // If rep comment is empty
                                 var next_loc; // Address to load on success
                                 if(window.location.pathname == '/private.php'){
                                     next_loc = window.location.href;
                                     default_comment = 'Regarding your PM.';
                                 } else {
-                                    next_loc = "https://hackforums.net/"+$(postMessage).find("strong a:eq(1)").attr('href');
+                                    // Cycle through attributes, look for '#' in matching html (counters against other scripts)
+                                    for (i = 0; i < $(postMessage).find(".smalltext strong a").length; i++){
+                                        if($(postMessage).find(".smalltext strong a")[i].text.includes("#"))
+                                            next_loc = "https://hackforums.net/"+$(postMessage).find(".smalltext strong a:eq("+i+")").attr('href');
+                                    }
                                     default_comment = "Regarding Thread: " + next_loc;
                                 }
                                 // Rep comment is empty - use appropriate default
@@ -202,9 +210,9 @@ $(".bitButton[title='Trust Scan']").each(function (index, element) {
                                     });
                                 }
                                 // Custom comment but too short
-                                else if ($("#repComment"+index).val().length < 11){
+                                else if ($("#repComment"+index).val().length < 11)
                                     window.alert("Rep comments must be atleast 10 chars.");
-                                }
+
                                 // Input over 10 chars
                                 else{
                                     $.post("/reputation.php",
@@ -230,9 +238,9 @@ $(".bitButton[title='Trust Scan']").each(function (index, element) {
                             });
                         }
                         // Post button already exists
-                        else{
+                        else
                             $(postMessage).find("#repPost"+index).remove();
-                        }
+
                     } // no errors
                 }// success
             }); // ajax
