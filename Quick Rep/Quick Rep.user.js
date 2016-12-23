@@ -2,7 +2,7 @@
 // @name       Quick Rep
 // @author xadamxk
 // @namespace  https://github.com/xadamxk/HF-Scripts
-// @version    2.0.0
+// @version    2.0.1
 // @description Makes giving reputation on HF easier.
 // @require https://code.jquery.com/jquery-3.1.1.js
 // @match      *://hackforums.net/showthread.php?tid=*
@@ -13,6 +13,7 @@
 // @iconURL https://raw.githubusercontent.com/xadamxk/HF-Userscripts/master/scripticon.jpg
 // ==/UserScript==
 // ------------------------------ Change Log ----------------------------
+// version 2.0.1: Bug fix - empty selection when maxed reps for day temp hot fix
 // version 2.0.0: Implemented Rep Queue
 //                - Restructured code
 //                - and more...
@@ -31,6 +32,7 @@
 // version 1.0.0: Initial Release
 // ------------------------------ Dev Notes -----------------------------
 // The bugs are coming!
+// Bug: Empty select issue when out of reps - temp hot fix
 // ------------------------------ SETTINGS ------------------------------
 // Label for button (visible from /showthread.php?)
 var repButtonLabel = "Rep"; // Default: "Rep")
@@ -91,6 +93,17 @@ if (window.location.href.includes("hackforums.net/showthread.php?tid=") ||
                         // Rep Limit
                         else if (errorBlock.includes(repLimit)){
                             // Rep Queue logic
+                            my_key = $(response).find('[name=my_post_key]').val();
+                            // UID
+                            my_uid = $(response).find('[name=uid]').val();
+                            // PID
+                            my_pid = $(response).find('[name=pid]').val();
+                            // RID
+                            my_rid = $(response).find('[name=rid]').val();
+                            // Select vals
+                            my_repOptions = $(response).find('[name=reputation]').children();
+                            // Comments
+                            my_comments = $(response).find('[name=comments]').val();
                             queueRep = true;
                         }
                         // Self rep
@@ -161,12 +174,25 @@ if (window.location.href.includes("hackforums.net/showthread.php?tid=") ||
                             if ($(postMessage).find('[id=repSelect'+index+']').length === 0){
                                 // Append Rep selection
                                 $(postMessage).find("#repComment"+index).after($("<select>").attr("id", "repSelect"+index).css("margin-right", "5px").addClass("button"));
-                                // Append rep options from give rep page
-                                $(my_repOptions).each(function (subindex, subelement) {
-                                    $("#repSelect"+index).append( $('<option></option>').val($(subelement).val()).html($(subelement).text()));
-                                });
-                                // Set selected index
-                                $("#repSelect"+index)[0].selectedIndex = repIndex;
+                                // Out of reps - rep queue
+                                if (queueRep){
+                                    $("#repSelect"+index).append( $('<option></option>').val(3).html("Positive(+3)"));
+                                    $("#repSelect"+index).append( $('<option></option>').val(2).html("Positive(+2)"));
+                                    $("#repSelect"+index).append( $('<option></option>').val(1).html("Positive(+1)"));
+                                    $("#repSelect"+index).append( $('<option></option>').val(0).html("Neutral"));
+                                    $("#repSelect"+index).append( $('<option></option>').val(-1).html("Negative(-1)"));
+                                    $("#repSelect"+index).append( $('<option></option>').val(-2).html("Negative(-2)"));
+                                    $("#repSelect"+index).append( $('<option></option>').val(-3).html("Negative(-3)"));
+                                }
+                                // Have more available reps
+                                else{
+                                    // Append rep options from give rep page
+                                    $(my_repOptions).each(function (subindex, subelement) {
+                                        $("#repSelect"+index).append( $('<option></option>').val($(subelement).val()).html($(subelement).text()));
+                                    });
+                                    // Set selected index
+                                    $("#repSelect"+index)[0].selectedIndex = repIndex;
+                                }
                             }
                             // Selectbox already exists
                             else
@@ -175,7 +201,10 @@ if (window.location.href.includes("hackforums.net/showthread.php?tid=") ||
                             // Post button doesn't exist
                             if ($(postMessage).find('[id=repPost'+index+']').length === 0){
                                 // Append Rep User button
-                                $(postMessage).find("#repSelect"+index).after($("<button>").text("Rep User").attr("id", "repPost"+index).addClass("button"));
+                                var repUserStr = "Rep User";
+                                if (queueRep)
+                                    repUserStr = "Queue Rep";
+                                $(postMessage).find("#repSelect"+index).after($("<button>").text(repUserStr).attr("id", "repPost"+index).addClass("button"));
                                 // Click event for button
                                 $("body").on("click", "#repPost"+index, function() {
                                     // Check if PM or thread
