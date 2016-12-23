@@ -2,7 +2,7 @@
 // @name       Quick Rep
 // @author xadamxk
 // @namespace  https://github.com/xadamxk/HF-Scripts
-// @version    2.0.1
+// @version    2.0.2
 // @description Makes giving reputation on HF easier.
 // @require https://code.jquery.com/jquery-3.1.1.js
 // @match      *://hackforums.net/showthread.php?tid=*
@@ -13,6 +13,7 @@
 // @iconURL https://raw.githubusercontent.com/xadamxk/HF-Userscripts/master/scripticon.jpg
 // ==/UserScript==
 // ------------------------------ Change Log ----------------------------
+// version 2.0.2: Bug fix - adding rep via UserCP even if no reps to give
 // version 2.0.1: Bug fix - empty selection when maxed reps for day temp hot fix
 // version 2.0.0: Implemented Rep Queue
 //                - Restructured code
@@ -33,6 +34,7 @@
 // ------------------------------ Dev Notes -----------------------------
 // The bugs are coming!
 // Bug: Empty select issue when out of reps - temp hot fix
+// Bug: If out of reps and try repping from UserCP
 // ------------------------------ SETTINGS ------------------------------
 // Label for button (visible from /showthread.php?)
 var repButtonLabel = "Rep"; // Default: "Rep")
@@ -455,6 +457,7 @@ function submitRepQuest(index){
             }
             // Rep Limit
             else if (errorBlock.includes(repLimit)){
+                errorFound = true;
                 window.alert(permError+repLimit);
                 return;
             }
