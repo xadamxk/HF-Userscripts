@@ -2,7 +2,7 @@
 // @name       Quick Rep
 // @author xadamxk
 // @namespace  https://github.com/xadamxk/HF-Scripts
-// @version    2.0.2
+// @version    2.0.3
 // @description Makes giving reputation on HF easier.
 // @require https://code.jquery.com/jquery-3.1.1.js
 // @match      *://hackforums.net/showthread.php?tid=*
@@ -13,8 +13,9 @@
 // @iconURL https://raw.githubusercontent.com/xadamxk/HF-Userscripts/master/scripticon.jpg
 // ==/UserScript==
 // ------------------------------ Change Log ----------------------------
+// version 2.0.3: Bug fix - Removing multiple reps from queue didn't work without reloading (hotfix) - ln 333ish
 // version 2.0.2: Bug fix - adding rep via UserCP even if no reps to give
-// version 2.0.1: Bug fix - empty selection when maxed reps for day temp hot fix
+// version 2.0.1: Bug fix - empty selection when maxed reps for day (hot fix) - ln 180ish
 // version 2.0.0: Implemented Rep Queue
 //                - Restructured code
 //                - and more...
@@ -297,6 +298,20 @@ else{
     buildQueueTable();
 }
 
+// Event listener for submit
+$("button.repQueueAdd").click(function(){
+    submitRepQuest($(this).val());
+});
+
+// Event listener for remove
+$("button.repQueueRemove").click(function(){
+    var confirm = window.confirm('Are you sure you want to remove this queued rep?');
+    if (confirm)
+        removeEntry($(this).val());
+});
+
+
+
 // remove entry from cookie
 function removeEntry(queueIndex){
     // Queued array
@@ -315,10 +330,11 @@ function removeEntry(queueIndex){
     }
     // Add queueString back to cookie
     document.cookie = 'RepQueueCookie=' +  newQueueString;
+    location.reload();
     // Remove Entry
-    $("#repQueueTable").remove();
+    //$("#repQueueTable").remove();
     // Rebuild table
-    buildQueueTable();
+    //buildQueueTable();
 }
 
 function buildQueueTable(){
@@ -367,19 +383,6 @@ function buildQueueTable(){
                                   );
     }
 }
-
-// Event listener for submit
-$("button.repQueueAdd").click(function(){
-    submitRepQuest($(this).val());
-});
-
-// Event listener for remove
-$("button.repQueueRemove").click(function(){
-    var confirm = window.confirm('Are you sure you want to remove this queued rep?');
-    if (confirm){
-        removeEntry($(this).val());
-    }
-});
 
 // $.Post Reputation call
 function giveRep(index, loc, selectTxt, selectVal, reason){
