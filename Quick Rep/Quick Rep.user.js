@@ -13,7 +13,7 @@
 // @iconURL https://raw.githubusercontent.com/xadamxk/HF-Userscripts/master/scripticon.jpg
 // ==/UserScript==
 // ------------------------------ Change Log ----------------------------
-// version 2.0.0: Implemented Rep Queue
+// version 2.0.0: Implemented Rep Stack
 //                - Restructured code
 //                - and more...
 // version 1.2.2: Some very small changes.
@@ -42,8 +42,8 @@ var basicQuickRep = false; // (Default: false)
 var repCommentWidth = "60%"; // (Default: "60%")
 // Notification Dismissal Time
 var notificationTimeout = 15000; // (Default: 15000)
-// Auto Trigger Rep Queue - otherwise only triggers when out of reps
-var queueRep = false; // (Default: false)
+// Auto Trigger Rep Stack - otherwise only triggers when out of reps
+var stackRep = false; // (Default: false)
 // Debug: Show console.log statements for debugging purposes
 var debug = false; // (Default: false)
 // ------------------------------ ON PAGE LOAD ------------------------------
@@ -53,7 +53,7 @@ var ajaxSuccess = false;
 var errorFound = false;
 var my_key, my_uid, my_pid, my_rid, my_repOptions, my_comments, repIndex;
 var repComment, repLink, recipientUsername;
-var queuedUID, queuedAmt, queuedReason;
+var stackdUID, stackdAmt, stackdReason;
 
 const repLimit = "You have already given as many reputation ratings as you are allowed to for today";
 const repSelf = "You cannot add to your own reputation";
@@ -90,8 +90,8 @@ if (window.location.href.includes("hackforums.net/showthread.php?tid=") ||
                         }
                         // Rep Limit
                         else if (errorBlock.includes(repLimit)){
-                            // Rep Queue logic
-                            queueRep = true;
+                            // Rep Stack logic
+                            stackRep = true;
                         }
                         // Self rep
                         else if (errorBlock.includes(repSelf)){
@@ -194,21 +194,21 @@ if (window.location.href.includes("hackforums.net/showthread.php?tid=") ||
                                         }
                                         default_comment = "Regarding Thread: " + next_loc;
                                     }
-                                    var queueString;
+                                    var stackString;
                                     // Rep comment is empty - use appropriate default
                                     if ($("#repComment"+index).val().length === 0){
-                                        // Queue Rep - Default
-                                        if (queueRep){
-                                            // Queue string
-                                            queueString = my_uid+"||"+recipientUsername+"||"+$("#repSelect"+index).val()+"||"+default_comment+"|||";
+                                        // Stack Rep - Default
+                                        if (stackRep){
+                                            // Stack string
+                                            stackString = my_uid+"||"+recipientUsername+"||"+$("#repSelect"+index).val()+"||"+default_comment+"|||";
                                             // Make cookie if doesn't already exist
-                                            if (document.cookie.replace(/(?:(?:^|.*;\s*)RepQueueCookie\s*\=\s*([^;]*).*$)|^.*$/, "$1") === undefined)
-                                                document.cookie = 'RepQueueCookie=';
-                                            // Add queueString to cookie
-                                            document.cookie = 'RepQueueCookie=' + document.cookie.replace(/(?:(?:^|.*;\s*)RepQueueCookie\s*\=\s*([^;]*).*$)|^.*$/, "$1") + queueString;
+                                            if (document.cookie.replace(/(?:(?:^|.*;\s*)RepStackCookie\s*\=\s*([^;]*).*$)|^.*$/, "$1") === undefined)
+                                                document.cookie = 'RepStackCookie=';
+                                            // Add stackString to cookie
+                                            document.cookie = 'RepStackCookie=' + document.cookie.replace(/(?:(?:^|.*;\s*)RepStackCookie\s*\=\s*([^;]*).*$)|^.*$/, "$1") + stackString;
                                             // Notification
                                             repComment = $("#repSelect"+index+" option:selected").text() + "\nRep Reasoning: "+ default_comment;
-                                            notififyMe("Rep Queued!",repComment, next_loc);
+                                            notififyMe("Rep Stackd!",repComment, next_loc);
                                         }
                                         else{
                                             // Make $.Post Request
@@ -223,23 +223,23 @@ if (window.location.href.includes("hackforums.net/showthread.php?tid=") ||
 
                                     // Input over 10 chars
                                     else{
-                                        // Queue Rep - Custom
-                                        if (queueRep){
+                                        // Stack Rep - Custom
+                                        if (stackRep){
                                             var newComment = $("#repComment"+index).val();
                                             // If rep reasoning contains '|' seperator, remove all
                                             newComment = $("#repComment"+index).val();
                                             do{newComment = newComment.replace('|','');}
                                             while (newComment.includes('|'));
-                                            // Queue string
-                                            queueString = my_uid+"||"+recipientUsername+"||"+$("#repSelect"+index).val()+"||"+newComment+"|||";
+                                            // Stack string
+                                            stackString = my_uid+"||"+recipientUsername+"||"+$("#repSelect"+index).val()+"||"+newComment+"|||";
                                             // Make cookie if doesn't already exist
-                                            if (document.cookie.replace(/(?:(?:^|.*;\s*)RepQueueCookie\s*\=\s*([^;]*).*$)|^.*$/, "$1") === undefined)
-                                                document.cookie = 'RepQueueCookie=';
-                                            // Add queueString to cookie
-                                            document.cookie = 'RepQueueCookie=' + document.cookie.replace(/(?:(?:^|.*;\s*)RepQueueCookie\s*\=\s*([^;]*).*$)|^.*$/, "$1") + queueString;
+                                            if (document.cookie.replace(/(?:(?:^|.*;\s*)RepStackCookie\s*\=\s*([^;]*).*$)|^.*$/, "$1") === undefined)
+                                                document.cookie = 'RepStackCookie=';
+                                            // Add stackString to cookie
+                                            document.cookie = 'RepStackCookie=' + document.cookie.replace(/(?:(?:^|.*;\s*)RepStackCookie\s*\=\s*([^;]*).*$)|^.*$/, "$1") + stackString;
                                             // Notification
                                             repComment = $("#repSelect"+index+" option:selected").text() + "\nRep Reasoning: "+ $("#repComment"+index).val();
-                                            notififyMe("Rep Queued!",repComment, next_loc);
+                                            notififyMe("Rep Stackd!",repComment, next_loc);
                                         }
                                         else{
                                             // Make $.Post Request
@@ -262,56 +262,56 @@ if (window.location.href.includes("hackforums.net/showthread.php?tid=") ||
 } // url is thread or pm
 // UserCP
 else{
-    // Build rep queue table
-    buildQueueTable();
+    // Build rep stack table
+    buildStackTable();
 }
 
 // remove entry from cookie
-function removeEntry(queueIndex){
-    // Queued array
-    var queuedRep = document.cookie.replace(/(?:(?:^|.*;\s*)RepQueueCookie\s*\=\s*([^;]*).*$)|^.*$/, "$1").split('|||');
+function removeEntry(stackIndex){
+    // Stackd array
+    var stackdRep = document.cookie.replace(/(?:(?:^|.*;\s*)RepStackCookie\s*\=\s*([^;]*).*$)|^.*$/, "$1").split('|||');
     // Precaution incase they delete cookie - should never run
-    if (document.cookie.replace(/(?:(?:^|.*;\s*)RepQueueCookie\s*\=\s*([^;]*).*$)|^.*$/, "$1") === undefined)
-        window.alert("No reps queued.");
+    if (document.cookie.replace(/(?:(?:^|.*;\s*)RepStackCookie\s*\=\s*([^;]*).*$)|^.*$/, "$1") === undefined)
+        window.alert("No reps stackd.");
 
-    var newQueueString = "";
-    // Loop each queued rep from cookie
-    for (i = 0; i < queuedRep.length-1;i++){
+    var newStackString = "";
+    // Loop each stackd rep from cookie
+    for (i = 0; i < stackdRep.length-1;i++){
         // Don't add selected index
-        if(i != queueIndex){
-            newQueueString = newQueueString + queuedRep[i] + "|||";
+        if(i != stackIndex){
+            newStackString = newStackString + stackdRep[i] + "|||";
         }
     }
-    // Add queueString back to cookie
-    document.cookie = 'RepQueueCookie=' +  newQueueString;
+    // Add stackString back to cookie
+    document.cookie = 'RepStackCookie=' +  newStackString;
     // Remove Entry
-    $("#repQueueTable").remove();
+    $("#repStackTable").remove();
     // Rebuild table
-    buildQueueTable();
+    buildStackTable();
 }
 
-function buildQueueTable(){
+function buildStackTable(){
     // IP Table
     var ipTable = $("strong:contains('IP Login History')").parent().parent().parent().parent();
     // Insert table w/tbody before IP Table
-    ipTable.before(($("<table>").attr('id', 'repQueueTable').attr('border', 0).attr('cellspacing', 1)
+    ipTable.before(($("<table>").attr('id', 'repStackTable').attr('border', 0).attr('cellspacing', 1)
                     .attr('cellpadding',4).attr('colspan',6).addClass('tborder')).append('<tbody>').attr('colspan',6));
     // Insert thead (title, thread hyperlink)
-    $('#repQueueTable').append($('<tr>').append($('<td>').addClass('thead').attr('colspan',6).append($('<strong>').text('Rep Queue'))
+    $('#repStackTable').append($('<tr>').append($('<td>').addClass('thead').attr('colspan',6).append($('<strong>').text('Rep Stack'))
                                                 .append($('<a>').attr('href','https://hackforums.net/showthread.php?tid=5498344')
                                                         .append($('<strong>').text('Quick Rep Userscript').addClass('float_right')))));
     // Spacing after table
-    $('#repQueueTable').after($('<br>'));
+    $('#repStackTable').after($('<br>'));
     // Precaution incase they delete cookie
-    if (document.cookie.replace(/(?:(?:^|.*;\s*)RepQueueCookie\s*\=\s*([^;]*).*$)|^.*$/, "$1") === undefined)
-        document.cookie = 'RepQueueCookie=';
-    // Array of queue'd reps
-    var queuedRep = document.cookie.replace(/(?:(?:^|.*;\s*)RepQueueCookie\s*\=\s*([^;]*).*$)|^.*$/, "$1").split('|||');
-    var infoString = queuedRep.length > 1 ? "These are the reps you have queued ("+(queuedRep.length-1)+")." : "No reps queued.";
+    if (document.cookie.replace(/(?:(?:^|.*;\s*)RepStackCookie\s*\=\s*([^;]*).*$)|^.*$/, "$1") === undefined)
+        document.cookie = 'RepStackCookie=';
+    // Array of stack'd reps
+    var stackdRep = document.cookie.replace(/(?:(?:^|.*;\s*)RepStackCookie\s*\=\s*([^;]*).*$)|^.*$/, "$1").split('|||');
+    var infoString = stackdRep.length > 1 ? "These are the reps you have stackd ("+(stackdRep.length-1)+")." : "No reps stackd.";
     // Info row
-    $('#repQueueTable').append($('<tr>').append($('<td>').attr('colspan',6).addClass('tcat smalltext').append(infoString)));
+    $('#repStackTable').append($('<tr>').append($('<td>').attr('colspan',6).addClass('tcat smalltext').append(infoString)));
     // Header row
-    $('#repQueueTable').append($('<tr>')
+    $('#repStackTable').append($('<tr>')
                                .append($('<td>').append($('<strong>').text('User').addClass('smalltext')).addClass('tcat').attr('colspan',1).attr('align','center').attr('width','125'))
                                .append($('<td>').append($('<strong>').text('Amount').addClass('smalltext')).addClass('tcat').attr('colspan',1).attr('align','center').attr('width','75'))
                                .append($('<td>').append($('<strong>').text('Reasoning').addClass('smalltext')).addClass('tcat').attr('colspan',2).attr('align','center'))
@@ -319,32 +319,34 @@ function buildQueueTable(){
                                .append($('<td>').append($('<strong>').text('Remove').addClass('smalltext')).addClass('tcat').attr('colspan',1).attr('align','center').attr('width','100'))
                               );
     // Add cookie values
-    queuedUID = new Array(queuedRep.length);
-    queuedAmt = new Array(queuedRep.length);
-    queuedReason = new Array(queuedRep.length);
-    for (i = 0; i < queuedRep.length-1; i++){
-        queuedUID[i] = queuedRep[i].split('||')[0];
-        queuedAmt[i] = queuedRep[i].split('||')[2];
-        queuedReason[i] = queuedRep[i].split('||')[3];
-        // Each queue'd rep (snippet above basically)
-        $('#repQueueTable').append($('<tr>')
-                                   .append($('<td>').addClass('tcat').attr('colspan',1).attr('align','center').attr('width','125').append($('<a>').text(queuedRep[i].split('||')[1]).attr("href","/member.php?action=profile&uid="+queuedRep[i].split('||')[0])))
-                                   .append($('<td>').append(queuedRep[i].split('||')[2]).addClass('tcat').attr('colspan',1).attr('align','center').attr('width','75'))
-                                   .append($('<td>').append(queuedRep[i].split('||')[3]).addClass('tcat').attr('colspan',2).attr('align','left'))
-                                   .append($('<td>').append($('<button>').addClass('button').val(i).text('Rep').addClass('repQueueAdd')).addClass('tcat').attr('colspan',1).attr('align','center').attr('width','100'))
-                                   .append($('<td>').append($('<button>').addClass('button').val(i).text('Remove').addClass('repQueueRemove')).addClass('tcat').attr('colspan',1).attr('align','center').attr('width','100'))
+    stackdUID = new Array(stackdRep.length);
+    stackdAmt = new Array(stackdRep.length);
+    stackdReason = new Array(stackdRep.length);
+    for (i = stackdRep.length-1; i > -1; i--){ 
+        //replaced stack with stack
+        //todo: 
+        stackdUID[i] = stackdRep[i].split('||')[0];
+        stackdAmt[i] = stackdRep[i].split('||')[2];
+        stackdReason[i] = stackdRep[i].split('||')[3];
+        // Each stack'd rep (snippet above basically)
+        $('#repStackTable').append($('<tr>')
+                                   .append($('<td>').addClass('tcat').attr('colspan',1).attr('align','center').attr('width','125').append($('<a>').text(stackdRep[i].split('||')[1]).attr("href","/member.php?action=profile&uid="+stackdRep[i].split('||')[0])))
+                                   .append($('<td>').append(stackdRep[i].split('||')[2]).addClass('tcat').attr('colspan',1).attr('align','center').attr('width','75'))
+                                   .append($('<td>').append(stackdRep[i].split('||')[3]).addClass('tcat').attr('colspan',2).attr('align','left'))
+                                   .append($('<td>').append($('<button>').addClass('button').val(i).text('Rep').addClass('repStackAdd')).addClass('tcat').attr('colspan',1).attr('align','center').attr('width','100'))
+                                   .append($('<td>').append($('<button>').addClass('button').val(i).text('Remove').addClass('repStackRemove')).addClass('tcat').attr('colspan',1).attr('align','center').attr('width','100'))
                                   );
     }
 }
 
 // Event listener for submit
-$("button.repQueueAdd").click(function(){
+$("button.repStackAdd").click(function(){
     submitRepQuest($(this).val());
 });
 
 // Event listener for remove
-$("button.repQueueRemove").click(function(){
-    var confirm = window.confirm('Are you sure you want to remove this queued rep?');
+$("button.repStackRemove").click(function(){
+    var confirm = window.confirm('Are you sure you want to remove this stackd rep?');
     if (confirm){
         removeEntry($(this).val());
     }
@@ -405,7 +407,7 @@ function notififyMe(repTitle, repComment, repLink){
 // Add button on UserCP
 function submitRepQuest(index){
     $.ajax({
-        url: "https://hackforums.net/reputation.php?action=add&uid="+queuedUID[index],
+        url: "https://hackforums.net/reputation.php?action=add&uid="+stackdUID[index],
         cache: false,
         success: function(response) {
             // Post Key
@@ -443,15 +445,15 @@ function submitRepQuest(index){
             // No errors
             if (!errorFound){
                 // Rep label logic
-                var queuedAmtStr = "";
-                if (queuedAmt[index].includes('-'))
-                    queuedAmtStr = "Negative ("+queuedAmt[index]+")";
-                if (queuedAmt[index] == "0")
-                    queuedAmtStr = "Neutral (0)";
+                var stackdAmtStr = "";
+                if (stackdAmt[index].includes('-'))
+                    stackdAmtStr = "Negative ("+stackdAmt[index]+")";
+                if (stackdAmt[index] == "0")
+                    stackdAmtStr = "Neutral (0)";
                 else
-                    queuedAmtStr = "Positive (+"+queuedAmt[index]+")";
+                    stackdAmtStr = "Positive (+"+stackdAmt[index]+")";
                 // Submit Rep
-                giveRep(index, "https://hackforums.net/usercp.php", queuedAmtStr, queuedAmt[index], queuedReason[index]);
+                giveRep(index, "https://hackforums.net/usercp.php", stackdAmtStr, stackdAmt[index], stackdReason[index]);
                 // Remove element from cookie
                 removeEntry(index);
             }
