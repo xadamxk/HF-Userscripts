@@ -2,7 +2,7 @@
 // @name       Quick Rep
 // @author xadamxk
 // @namespace  https://github.com/xadamxk/HF-Scripts
-// @version    2.0.3
+// @version    2.0.4
 // @description Makes giving reputation on HF easier.
 // @require https://code.jquery.com/jquery-3.1.1.js
 // @match      *://hackforums.net/showthread.php?tid=*
@@ -13,6 +13,7 @@
 // @iconURL https://raw.githubusercontent.com/xadamxk/HF-Userscripts/master/scripticon.jpg
 // ==/UserScript==
 // ------------------------------ Change Log ----------------------------
+// version 2.0.4: Bug fix - Fixed logic behind finding recipient's UID and storing it.
 // version 2.0.3: Bug fix - Removing multiple reps from queue didn't work without reloading (hotfix) - ln 333ish
 // version 2.0.2: Bug fix - adding rep via UserCP even if no reps to give
 // version 2.0.1: Bug fix - empty selection when maxed reps for day (hot fix) - ln 180ish
@@ -57,7 +58,7 @@ var uidArray = [];
 var ajaxSuccess = false;
 var errorFound = false;
 var my_key, my_uid, my_pid, my_rid, my_repOptions, my_comments, repIndex;
-var repComment, repLink, recipientUsername;
+var repComment, repLink, recipientUsername, recipientUID;
 var queuedUID, queuedAmt, queuedReason;
 
 const repLimit = "You have already given as many reputation ratings as you are allowed to for today";
@@ -214,7 +215,10 @@ if (window.location.href.includes("hackforums.net/showthread.php?tid=") ||
                                     var default_comment; // If rep comment is empty
                                     var next_loc; // Address to load on success
                                     recipientUsername = $(postMessage).find('.post_author strong .largetext a span').text();
-
+                                    recipientUID = $(postMessage).find('.post_author strong .largetext a').attr('href');
+                                    // Remove everything but digit
+                                    for (i=0; i < recipientUID.length; i++)
+                                        recipientUID = recipientUID.replace(/\D+/g, '');
                                     if(window.location.pathname == '/private.php'){
                                         next_loc = window.location.href;
                                         default_comment = 'Regarding your PM.';
@@ -232,7 +236,7 @@ if (window.location.href.includes("hackforums.net/showthread.php?tid=") ||
                                         // Queue Rep - Default
                                         if (queueRep){
                                             // Queue string
-                                            queueString = my_uid+"||"+recipientUsername+"||"+$("#repSelect"+index).val()+"||"+default_comment+"|||";
+                                            queueString = recipientUID+"||"+recipientUsername+"||"+$("#repSelect"+index).val()+"||"+default_comment+"|||";
                                             // Make cookie if doesn't already exist
                                             if (document.cookie.replace(/(?:(?:^|.*;\s*)RepQueueCookie\s*\=\s*([^;]*).*$)|^.*$/, "$1") === undefined)
                                                 document.cookie = 'RepQueueCookie=';
@@ -263,7 +267,7 @@ if (window.location.href.includes("hackforums.net/showthread.php?tid=") ||
                                             do{newComment = newComment.replace('|','');}
                                             while (newComment.includes('|'));
                                             // Queue string
-                                            queueString = my_uid+"||"+recipientUsername+"||"+$("#repSelect"+index).val()+"||"+newComment+"|||";
+                                            queueString = recipientUID+"||"+recipientUsername+"||"+$("#repSelect"+index).val()+"||"+newComment+"|||";
                                             // Make cookie if doesn't already exist
                                             if (document.cookie.replace(/(?:(?:^|.*;\s*)RepQueueCookie\s*\=\s*([^;]*).*$)|^.*$/, "$1") === undefined)
                                                 document.cookie = 'RepQueueCookie=';
@@ -297,20 +301,6 @@ else{
     // Build rep queue table
     buildQueueTable();
 }
-
-// Event listener for submit
-$("button.repQueueAdd").click(function(){
-    submitRepQuest($(this).val());
-});
-
-// Event listener for remove
-$("button.repQueueRemove").click(function(){
-    var confirm = window.confirm('Are you sure you want to remove this queued rep?');
-    if (confirm)
-        removeEntry($(this).val());
-});
-
-
 
 // remove entry from cookie
 function removeEntry(queueIndex){
@@ -435,11 +425,23 @@ function notififyMe(repTitle, repComment, repLink){
         setTimeout(function() { notification.close(); }, notificationTimeout);
     }
 }
+// Event listener for submit
+$("button.repQueueAdd").click(function(){
+    submitRepQuest($(this).val());
+});
+
+// Event listener for remove
+$("button.repQueueRemove").click(function(){
+    var confirm = window.confirm('Are you sure you want to remove this queued rep?');
+    if (confirm)
+        removeEntry($(this).val());
+});
 
 // Add button on UserCP
 function submitRepQuest(index){
+    window.alert("test: https://hackforums.net/reputation.php?action=add&uid="+queuedUID[0].toString());
     $.ajax({
-        url: "https://hackforums.net/reputation.php?action=add&uid="+queuedUID[index],
+        url: "https://hackforums.net/reputation.php?action=add&uid="+queuedUID[index].toString(),
         cache: false,
         success: function(response) {
             // Post Key
@@ -462,18 +464,15 @@ function submitRepQuest(index){
             else if (errorBlock.includes(repLimit)){
                 errorFound = true;
                 window.alert(permError+repLimit);
-                return;
             }
             // Self rep
             else if (errorBlock.includes(repSelf)){
                 window.alert(permError + repSelfResp);
-                return;
             }
             // Require Upgrade, Rep Disabled, Other?
             else {
                 errorFound = true;
                 window.alert(permError + errorBlock);
-                return;
             }
             // No errors
             if (!errorFound){
