@@ -2,7 +2,7 @@
 // @name       Rep Charts
 // @author xadamxk
 // @namespace  https://github.com/xadamxk/HF-Scripts
-// @version    1.1.2
+// @version    1.1.3
 // @description  Display graphical information on reputation.php
 // @require https://code.jquery.com/jquery-3.1.1.js
 // @require https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.4.0/Chart.bundle.min.js
@@ -13,14 +13,16 @@
 // @iconURL https://raw.githubusercontent.com/xadamxk/HF-Userscripts/master/scripticon.jpg
 // ==/UserScript==
 // ------------------------------ Change Log ----------------------------
-// version 1.1.2: Added hyperlink support for total rep chart (pos,neut,neg) now take you to the appropriate pages.
+// version 1.1.3: Added rep given/received buttons on rep pages
+// version 1.1.2: Added hyperlink support for total rep chart (pos,neut,neg) now take you to the appropriate pages
 // version 1.1.1: Added support for repsgiven.php
 // version 1.1.0: Added Rep Timeline chart, bug fixes, auto-scale
 // version 1.0.1: Added percentes to legend/tooltips
 // version 1.0.0: Initial Release
 // ------------------------------ Dev Notes -----------------------------
-// TODO: Use algebra to solve for individual rep counts
-//      NOTE: find CDN for algebra.js - using RawGit temporarily
+// Fix weird url scheme after filtering
+// TODO: Use algebra to solve for individual rep counts?
+//      NOTE: find CDN for algebra.js
 // ------------------------------ SETTINGS ------------------------------
 // Debug
 var debug = true; // Default: false
@@ -29,6 +31,22 @@ var posRepColor = "#32CD32"; // Default: ##32CD32
 var neuRepColor = "#666666"; // Default: #666666
 var negRepColor = "#CC3333"; // Default: #CC3333
 // ------------------------------ ON PAGE LOAD ------------------------------
+// Append repOptions butten
+$(".quick_keys div:eq(0) a:eq(0)").before($("<button>").attr("id", "repOptionsButton").addClass("button").css({marginRight : "5px"}));
+// Add given button
+if (window.location.href.includes("hackforums.net/reputation.php?uid=")){
+    $("#repOptionsButton").text("Reps Given");
+    $('#repOptionsButton').click(function(){
+        window.location.href = window.location.href.replace("reputation.php","repsgiven.php");
+    });
+}
+// Add received button
+else if (window.location.href.includes("hackforums.net/repsgiven.php?uid=")){
+    $("#repOptionsButton").text("Reps Received");
+    $('#repOptionsButton').click(function(){
+        window.location.href = window.location.href.replace("repsgiven.php","reputation.php");
+    });
+}
 // Grab rep total values
 var username = $(".largetext strong span").text();
 var posRepTotal = parseInt($(".smalltext a:eq(0)").text());
@@ -38,32 +56,9 @@ var totRepTotal = (posRepTotal + neuRepTotal + negRepTotal);
 // Total Reputation (in box)
 var totalRep = parseInt($(".smalltext span").text());
 var totalPosNegCount = posRepTotal + negRepTotal;
-var escape = false;
-var pos1 = 0;
-var pos2 = 0;
-var pos3 = 0;
-var neg1 = 0;
-var neg2 = 0;
-var neg3 = 0;
 
-//var expr1 = new Expression("pos1");
-//expr1 = expr1.multiply(1);
-//var expr2 = new Expression("pos2");
-//expr2 = expr2.multiply(2);
-//var expr3 = new Expression("pos3");
-//expr3 = expr3.multiply(3);
-//var expr4 = new Expression("neg1");
-//expr4 = expr4.multiply(-1);
-//var expr5 = new Expression("neg2");
-//expr5 = expr5.multiply(-2);
-//var expr6 = new Expression("neg3");
-//expr6 = expr6.multiply(-3);
-
-//while (!escape){
-// manipulate numbers until num +'s match and num -'s match
+// Some math im working with
 //if ((totalRep == (((pos1*1)+(pos2*2)+(pos3*3)) + ((neg1*-1)+(neg2*-2)+(neg3*-3)))) && ((pos1+pos2+pos3).count == posRepTotal) && ((neg1+neg2+neg3).count == negRepTotal))
-//escape = true;}
-
 
 // Debug info
 if (debug){
