@@ -2,7 +2,7 @@
 // @name       Quick Rep
 // @author xadamxk
 // @namespace  https://github.com/xadamxk/HF-Scripts
-// @version    2.0.4
+// @version    2.0.5
 // @description Makes giving reputation on HF easier.
 // @require https://code.jquery.com/jquery-3.1.1.js
 // @match      *://hackforums.net/showthread.php?tid=*
@@ -13,10 +13,12 @@
 // @iconURL https://raw.githubusercontent.com/xadamxk/HF-Userscripts/master/scripticon.jpg
 // ==/UserScript==
 // ------------------------------ Change Log ----------------------------
+// version 2.0.5: Bug fix - fixed 2.0.1 hot fix - added method to get primaryUsergroup
 // version 2.0.4: Bug fix - Fixed logic behind finding recipient's UID and storing it.
-// version 2.0.3: Bug fix - Removing multiple reps from queue didn't work without reloading (hotfix) - ln 333ish
+// version 2.0.3: Bug fix - Removing multiple reps from queue didn't work without reloading (hotfix) - reload page
 // version 2.0.2: Bug fix - adding rep via UserCP even if no reps to give
-// version 2.0.1: Bug fix - empty selection when maxed reps for day (hot fix) - ln 180ish
+// version 2.0.1: Bug fix - empty selection box when maxed reps for day (hot fix) - hardcode
+//                - No default usergroup could be defined without access to give rep page.
 // version 2.0.0: Implemented Rep Queue
 //                - Restructured code
 //                - and more...
@@ -34,15 +36,16 @@
 // version 1.0.1: Bug fix for certain browsers
 // version 1.0.0: Initial Release
 // ------------------------------ Dev Notes -----------------------------
-// The bugs are coming!
-// Bug: Empty select issue when out of reps - temp hot fix
-// Bug: If out of reps and try repping from UserCP
+// The bugs are almost dead
+// Figure out 2.0.3 hot fix - why $ event listener only triggers once?
 // ------------------------------ SETTINGS ------------------------------
 // Label for button (visible from /showthread.php?)
 var repButtonLabel = "Rep"; // Default: "Rep")
 // Enables/Disables basic form of quick rep
 //      basicquickRep = true : Opens a new window for giving rep
+//           Screenshot: https://github.com/xadamxk/HF-Userscripts/blob/master/Quick%20Rep/Capture02.png?raw=true
 //      basicquickRep = false : Integrates rep menu into post bit
+//           Screenshot: https://github.com/xadamxk/HF-Userscripts/blob/master/Quick%20Rep/Capture01.png?raw=true
 var basicQuickRep = false; // (Default: false)
 // Rep comment box width
 var repCommentWidth = "60%"; // (Default: "60%")
@@ -180,13 +183,26 @@ if (window.location.href.includes("hackforums.net/showthread.php?tid=") ||
                                 $(postMessage).find("#repComment"+index).after($("<select>").attr("id", "repSelect"+index).css("margin-right", "5px").addClass("button"));
                                 // Out of reps - rep queue
                                 if (queueRep){
-                                    $("#repSelect"+index).append( $('<option></option>').val(3).html("Positive(+3)"));
-                                    $("#repSelect"+index).append( $('<option></option>').val(2).html("Positive(+2)"));
-                                    $("#repSelect"+index).append( $('<option></option>').val(1).html("Positive(+1)"));
-                                    $("#repSelect"+index).append( $('<option></option>').val(0).html("Neutral"));
-                                    $("#repSelect"+index).append( $('<option></option>').val(-1).html("Negative(-1)"));
-                                    $("#repSelect"+index).append( $('<option></option>').val(-2).html("Negative(-2)"));
-                                    $("#repSelect"+index).append( $('<option></option>').val(-3).html("Negative(-3)"));
+                                    // Append rep options based on primary usergroup
+                                    if (document.cookie.replace(/(?:(?:^|.*;\s*)RepQueueUsergroup\s*\=\s*([^;]*).*$)|^.*$/, "$1") === "")
+                                        getPrimaryUserGroup();
+                                    if (document.cookie.replace(/(?:(?:^|.*;\s*)RepQueueUsergroup\s*\=\s*([^;]*).*$)|^.*$/, "$1") == "Uber"){
+                                        $("#repSelect"+index).append( $('<option></option>').val(3).html("Positive(+3)"));
+                                        $("#repSelect"+index).append( $('<option></option>').val(2).html("Positive(+2)"));
+                                        $("#repSelect"+index).append( $('<option></option>').val(1).html("Positive(+1)"));
+                                        $("#repSelect"+index).append( $('<option></option>').val(0).html("Neutral"));
+                                        $("#repSelect"+index).append( $('<option></option>').val(-1).html("Negative(-1)"));
+                                        $("#repSelect"+index).append( $('<option></option>').val(-2).html("Negative(-2)"));
+                                        $("#repSelect"+index).append( $('<option></option>').val(-3).html("Negative(-3)"));
+                                    }
+                                    else if (document.cookie.replace(/(?:(?:^|.*;\s*)RepQueueUsergroup\s*\=\s*([^;]*).*$)|^.*$/, "$1") == "Leet"){
+                                        $("#repSelect"+index).append( $('<option></option>').val(1).html("Positive(+1)"));
+                                        $("#repSelect"+index).append( $('<option></option>').val(0).html("Neutral"));
+                                    }
+                                    else if (document.cookie.replace(/(?:(?:^|.*;\s*)RepQueueUsergroup\s*\=\s*([^;]*).*$)|^.*$/, "$1") == "Normal"){
+                                        window.alert("Permissions Error! Normal members do not have access to the reputation system!");
+                                        return;
+                                    }
                                 }
                                 // Have more available reps
                                 else{
@@ -300,6 +316,8 @@ if (window.location.href.includes("hackforums.net/showthread.php?tid=") ||
 else{
     // Build rep queue table
     buildQueueTable();
+    // Update primary usergroup
+    getPrimaryUserGroup();
 }
 
 // remove entry from cookie
@@ -413,7 +431,7 @@ function notififyMe(repTitle, repComment, repLink){
         });
     }
     else {
-        var notification = new Notification(repTitle, { //http://www.simpleimageresizer.com/_uploads/photos/9c5055c8/test_4_75.png
+        var notification = new Notification(repTitle, {
             icon: 'https://raw.githubusercontent.com/xadamxk/HF-Userscripts/master/Quick%20Rep/NotificationIcon.png',
             body: repComment,
         });
@@ -439,7 +457,6 @@ $("button.repQueueRemove").click(function(){
 
 // Add button on UserCP
 function submitRepQuest(index){
-    window.alert("test: https://hackforums.net/reputation.php?action=add&uid="+queuedUID[0].toString());
     $.ajax({
         url: "https://hackforums.net/reputation.php?action=add&uid="+queuedUID[index].toString(),
         cache: false,
@@ -480,7 +497,7 @@ function submitRepQuest(index){
                 var queuedAmtStr = "";
                 if (queuedAmt[index].includes('-'))
                     queuedAmtStr = "Negative ("+queuedAmt[index]+")";
-                if (queuedAmt[index] == "0")
+                else if (queuedAmt[index] == "0")
                     queuedAmtStr = "Neutral (0)";
                 else
                     queuedAmtStr = "Positive (+"+queuedAmt[index]+")";
@@ -491,4 +508,39 @@ function submitRepQuest(index){
             }
         }
     });// Ajax
+}
+
+// Update primary usergroup
+function getPrimaryUserGroup(){
+    var primaryUserGroupStr = "Primary User Group:";
+    var primaryUserGroupParent;
+    if (window.location.href.includes("/usercp.php")){
+        primaryUserGroupParent = $("strong:contains('Primary User Group')").parent().text();
+    }
+    else{
+        $.ajax({
+            url: "https://hackforums.net/usercp.php",
+            cache: false,
+            async: false,
+            success: function(response) {
+                primaryUserGroupParent = $(response).find("strong:contains('Primary User Group')").parent().text();
+            }
+        });
+    }
+    // String we want from UserCP
+    var desiredString = primaryUserGroupParent.substr(primaryUserGroupParent.indexOf(primaryUserGroupStr) + primaryUserGroupStr.length);
+    // Create if it doesn't exist
+    if (document.cookie.replace(/(?:(?:^|.*;\s*)RepQueueUsergroup\s*\=\s*([^;]*).*$)|^.*$/, "$1") === undefined)
+        document.cookie = 'RepQueueUsergroup=';
+    // Ub3r
+    if (desiredString.includes("HF Ub3r"))
+        document.cookie = 'RepQueueUsergroup=' + "Uber";
+    // L33t
+    else if (desiredString.includes("HF l33t"))
+        document.cookie = 'RepQueueUsergroup=' + "Leet";
+    // Everything else
+    else
+        document.cookie = 'RepQueueCookie=' + "Normal";
+    // Debug default usergroup
+    if (debug){console.log("Default usergroup: "+document.cookie.replace(/(?:(?:^|.*;\s*)RepQueueUsergroup\s*\=\s*([^;]*).*$)|^.*$/, "$1"));}
 }
