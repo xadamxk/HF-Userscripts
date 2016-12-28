@@ -2,7 +2,7 @@
 // @name       EasyCite
 // @author xadamxk
 // @namespace  https://github.com/xadamxk/HF-Scripts
-// @version    1.0.1
+// @version    1.0.2
 // @description Allows users to cite threads, users, sections, and other pages on HF.
 // @require https://code.jquery.com/jquery-3.1.1.js
 // @match      *://hackforums.net*
@@ -12,7 +12,9 @@
 // @iconURL https://raw.githubusercontent.com/xadamxk/HF-Userscripts/master/scripticon.jpg
 // ==/UserScript==
 // ------------------------------ Change Log ----------------------------
-// version 1.0.0: Initial Release
+// version 1.0.2: Small tweaks and fixes
+// version 1.0.1: Public Release
+// version 1.0.0: Beta Release
 // ------------------------------ Dev Notes -----------------------------
 // Figure out search.php
 // ------------------------------ SETTINGS ------------------------------
@@ -20,8 +22,8 @@
 // ------------------------------ ON PAGE LOAD ------------------------------
 // Default
 var citationLink = location.href;
-var citationDescripion = "";
-var citationText = $(".navigation").find(".active").text();
+var citationDescripion = $(".navigation").find(".active").text();
+var citationText = citationDescripion;
 // Append Cite Button
 $(".navigation").append($("<button>").text("Cite").addClass("button")).attr("id","citeButton"); //.css("background","#333333")
 // Profile Awards
@@ -86,11 +88,6 @@ else if (location.href.includes("/showthread.php?tid=")){
 // Help Docs /myawards.php?awid=
 else if (location.href.includes("/misc.php?action=help")){
     citationDescripion = "Help Documents - "+$(".navigation").find(".active").text();
-    citationText = citationDescripion;
-}
-// Deal Dispute
-else if (location.href.includes("/disputedb.php")){
-    citationDescripion = "Deal Dispute - "+$(".navigation").find(".active").text();
     citationText = citationDescripion;
 }
 // Deal Dispute
