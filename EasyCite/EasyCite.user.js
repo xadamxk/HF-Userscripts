@@ -2,7 +2,7 @@
 // @name       EasyCite
 // @author xadamxk
 // @namespace  https://github.com/xadamxk/HF-Scripts
-// @version    1.0.3
+// @version    1.0.4
 // @description Allows users to cite threads, users, sections, and other pages on HF.
 // @require https://code.jquery.com/jquery-3.1.1.js
 // @match      *://hackforums.net*
@@ -12,14 +12,16 @@
 // @iconURL https://raw.githubusercontent.com/xadamxk/HF-Userscripts/master/scripticon.jpg
 // ==/UserScript==
 // ------------------------------ Change Log ----------------------------
-// version 1.0.3: Added user colors setting for profiles/posts
+// version 1.0.3: Added user colors setting for posts
 // version 1.0.2: Small tweaks and fixes
 // version 1.0.1: Public Release
 // version 1.0.0: Beta Release
 // ------------------------------ Dev Notes -----------------------------
 // Figure out search.php?
 // ------------------------------ SETTINGS ------------------------------
-// Add's color to the username (based on the user's group) when citing a user's profile/post.
+// Add's color to the username (based on the user's group) when citing a user's profile.
+var profileColors = true; // (Default: true)
+// Add's color to the username (based on the user's group) when citing a user's post.
 var usernameColors = false; // (Default: false)
 // Hyperlink's the username when citing a user's post
 var usernameLink = false; // (Default: false)
@@ -43,7 +45,7 @@ else if (location.href.includes("/forumdisplay.php?fid=")){
 // Profiles
 else if (location.href.includes("/member.php?action=profile")){
     citationDescripion = $(".navigation").find(".active").text().replace("Profile of ","");
-    if (usernameColors)
+    if (profileColors)
         citationText = "[color="+rgb2hex($(".quick_keys").find(".largetext strong span").css("color"))+"]"+citationDescripion+"[/color]";
     else
         citationText = +citationDescripion;
