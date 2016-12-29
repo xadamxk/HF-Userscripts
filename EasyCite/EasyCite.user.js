@@ -2,7 +2,7 @@
 // @name       EasyCite
 // @author xadamxk
 // @namespace  https://github.com/xadamxk/HF-Scripts
-// @version    1.0.2
+// @version    1.0.3
 // @description Allows users to cite threads, users, sections, and other pages on HF.
 // @require https://code.jquery.com/jquery-3.1.1.js
 // @match      *://hackforums.net*
@@ -12,20 +12,24 @@
 // @iconURL https://raw.githubusercontent.com/xadamxk/HF-Userscripts/master/scripticon.jpg
 // ==/UserScript==
 // ------------------------------ Change Log ----------------------------
+// version 1.0.3: Added user colors setting for profiles/posts
 // version 1.0.2: Small tweaks and fixes
 // version 1.0.1: Public Release
 // version 1.0.0: Beta Release
 // ------------------------------ Dev Notes -----------------------------
-// Figure out search.php
+// Figure out search.php?
 // ------------------------------ SETTINGS ------------------------------
-//
+// Add's color to the username (based on the user's group) when citing a user's profile/post.
+var usernameColors = false; // (Default: false)
+// Hyperlink's the username when citing a user's post
+var usernameLink = false; // (Default: false)
 // ------------------------------ ON PAGE LOAD ------------------------------
 // Default
 var citationLink = location.href;
 var citationDescripion = $(".navigation").find(".active").text();
 var citationText = citationDescripion;
 // Append Cite Button
-$(".navigation").append($("<button>").text("Cite").addClass("button")).attr("id","citeButton"); //.css("background","#333333")
+$(".navigation").append($("<button>").text("Cite").addClass("bitButton")).attr("id","citeButton"); //.css("background","#333333")
 // Profile Awards
 if (location.href.includes("/myawards.php?uid=")){
     citationDescripion = $(".quick_keys").find("strong:contains('My Awards : ') a").text()+"'s "+$(".navigation").find(".active").text();
@@ -39,7 +43,10 @@ else if (location.href.includes("/forumdisplay.php?fid=")){
 // Profiles
 else if (location.href.includes("/member.php?action=profile")){
     citationDescripion = $(".navigation").find(".active").text().replace("Profile of ","");
-    citationText = citationDescripion;
+    if (usernameColors)
+        citationText = "[color="+rgb2hex($(".quick_keys").find(".largetext strong span").css("color"))+"]"+citationDescripion+"[/color]";
+    else
+        citationText = +citationDescripion;
 }
 // Threads
 else if (location.href.includes("/showthread.php?tid=")){
@@ -78,7 +85,31 @@ else if (location.href.includes("/showthread.php?tid=")){
                 else if($(postMessage).find(".smalltext strong a")[i].text.includes("#")){
                     tempcitationLink = "https://hackforums.net/"+$(postMessage).find(".smalltext strong a:eq("+i+")").attr('href');
                     tempcitationDescripion = $(postMessage).find(".largetext a:eq(0) span").text()+"'s Post";
-                    tempcitationText = tempcitationDescripion;
+                    // User profile link
+                    if (usernameLink)
+                        tempcitationLink = $(postMessage).find(".largetext a:eq(0)").attr('href');
+                    // post Username Info
+                    var postUsername = $(postMessage).find(".largetext a:eq(0) span").text();
+                    var postUsernameLink = "https://hackforums.net/"+$(postMessage).find(".smalltext strong a:eq("+i+")").attr('href');
+                    // User color
+                    if (usernameColors){
+                        var userColor = rgb2hex($(postMessage).find(".largetext a:eq(0) span").css('color'));
+                        // Color + User link
+                        if (usernameLink)
+                            tempcitationText = "[color="+userColor+"]"+postUsername+" [/url][/color][color=white]'s[/color][url="+postUsernameLink+"]"+"[/b][b] Post";
+                        // Color + No Link
+                        else
+                            tempcitationText = "[color="+userColor+"]"+postUsername+"[/color]'s Post";
+                    }
+                    // No color
+                    else{
+                        // No color + User link
+                        if (usernameLink)
+                            tempcitationText = postUsername+"[/url]'s[/b][url="+postUsernameLink+ "][b] Post";
+                        // No color + No link
+                        else
+                            tempcitationText = postUsername+"'s Post";
+                    }
                 }
             }
             prompt("Citation: "+tempcitationDescripion,"[url="+tempcitationLink+"][b]"+tempcitationText+"[/b][/url]");
@@ -111,3 +142,12 @@ $("#citeButton").click(function (event){
         prompt("Citation: "+citationDescripion,"[url="+citationLink+"][b]"+citationText+"[/b][/url]");
     }
 });
+
+// Credit: https://jsfiddle.net/mushigh/myoskaos/
+function rgb2hex(rgb){
+    rgb = rgb.match(/^rgba?[\s+]?\([\s+]?(\d+)[\s+]?,[\s+]?(\d+)[\s+]?,[\s+]?(\d+)[\s+]?/i);
+    return (rgb && rgb.length === 4) ? "#" +
+        ("0" + parseInt(rgb[1],10).toString(16)).slice(-2) +
+        ("0" + parseInt(rgb[2],10).toString(16)).slice(-2) +
+        ("0" + parseInt(rgb[3],10).toString(16)).slice(-2) : '';
+}
