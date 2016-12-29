@@ -12,6 +12,7 @@
 // @iconURL https://raw.githubusercontent.com/xadamxk/HF-Userscripts/master/scripticon.jpg
 // ==/UserScript==
 // ------------------------------ Change Log ----------------------------
+// version 1.0.4: Added user colors setting for profiles
 // version 1.0.3: Added user colors setting for posts
 // version 1.0.2: Small tweaks and fixes
 // version 1.0.1: Public Release
