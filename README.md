@@ -23,6 +23,8 @@ US managers (ex. <a href="https://tampermonkey.net/">TamperMonkey</a>) allow use
 <ul><li><b><a href ="https://github.com/xadamxk/HF-Userscripts/tree/master/HF%20News%20Notifier">HF News Notifier</a>(<a href="https://github.com/xadamxk/HF-Userscripts/raw/master/HF%20News%20Notifier/HF%20News%20Notifier.user.js">Install</a>):</b> Alerts users of new HF News editions (checks on /usercp.php).</li></ul>
 <ul><li><b><a href ="https://github.com/xadamxk/HF-Userscripts/tree/master/Rep%20Charts">Rep Charts</a>(<a href="https://github.com/xadamxk/HF-Userscripts/raw/master/Rep%20Charts/Rep%20Charts.user.js">Install</a>):</b> Display graphical information on member's reputation page.</li></ul>
 <ul><li><b><a href ="https://github.com/xadamxk/HF-Userscripts/tree/master/Quick%20Rep">Quick Rep</a>(<a href="https://github.com/xadamxk/HF-Userscripts/raw/master/Quick%20Rep/Quick%20Rep.user.js">Install</a>):</b> Makes giving reputation on HF easier.</li></ul>
+<ul><li><b><a href ="https://github.com/xadamxk/HF-Userscripts/tree/master/EasyCite">EasyCite</a>(<a href="https://github.com/xadamxk/HF-Userscripts/raw/master/EasyCite/EasyCite.user.js">Install</a>):</b> Allows users to cite threads, users, sections, and other pages on HF.</li></ul>
+<ul><li><b><a href ="https://github.com/xadamxk/HF-Userscripts/tree/master/Header%20Links">Header Links</a>(<a href="https://github.com/xadamxk/HF-Userscripts/raw/master/Header%20Links/Header%20Links.user.js">Install</a>):</b> Adds various links to HF's header (replaces HFES headers).</li></ul>
 <ul><li><b><a href ="https://github.com/xadamxk/HF-Userscripts">Script</a>(<a href="">Install</a>):</b> Description.</li></ul>
 
 </li></ul>
