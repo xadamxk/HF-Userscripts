@@ -25,6 +25,7 @@ US managers (ex. <a href="https://tampermonkey.net/">TamperMonkey</a>) allow use
 <ul><li><b><a href ="https://github.com/xadamxk/HF-Userscripts/tree/master/Quick%20Rep">Quick Rep</a>(<a href="https://github.com/xadamxk/HF-Userscripts/raw/master/Quick%20Rep/Quick%20Rep.user.js">Install</a>):</b> Makes giving reputation on HF easier.</li></ul>
 <ul><li><b><a href ="https://github.com/xadamxk/HF-Userscripts/tree/master/EasyCite">EasyCite</a>(<a href="https://github.com/xadamxk/HF-Userscripts/raw/master/EasyCite/EasyCite.user.js">Install</a>):</b> Allows users to cite threads, users, sections, and other pages on HF.</li></ul>
 <ul><li><b><a href ="https://github.com/xadamxk/HF-Userscripts/tree/master/Header%20Links">Header Links</a>(<a href="https://github.com/xadamxk/HF-Userscripts/raw/master/Header%20Links/Header%20Links.user.js">Install</a>):</b> Adds various links to HF's header (replaces HFES headers).</li></ul>
+<ul><li><b><a href ="https://github.com/xadamxk/HF-Userscripts/tree/master/Smart%20Quotes">Smart Quotes</a>(<a href="https://github.com/xadamxk/HF-Userscripts/raw/master/Smart%20Quotes/Smart%20Quotes.user.js">Install</a>):</b> Enhances quotes by adding style & highlights mentioned quotes</li></ul>
 <ul><li><b><a href ="https://github.com/xadamxk/HF-Userscripts">Script</a>(<a href="">Install</a>):</b> Description.</li></ul>
 
 </li></ul>
