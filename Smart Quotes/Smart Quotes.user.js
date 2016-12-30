@@ -2,7 +2,7 @@
 // @name       Smart Quotes
 // @author xadamxk
 // @namespace  https://github.com/xadamxk/HF-Scripts
-// @version    1.0.1
+// @version    1.0.2
 // @description  Enhances quotes by adding style & highlights mentioned quotes
 // @require https://code.jquery.com/jquery-3.1.1.js
 // @match      *://hackforums.net/showthread.php?tid=*
@@ -12,6 +12,7 @@
 // @iconURL https://raw.githubusercontent.com/xadamxk/HF-Userscripts/master/scripticon.jpg
 // ==/UserScript==
 // ------------------------------ Change Log ----------------------------
+// version 1.0.2: bug fix - fixed notification selector to work on threads without page nav (<10 posts)
 // version 1.0.1: Initial Release
 // version 1.0.0: Beta Release
 // ------------------------------ Dev Notes -----------------------------
@@ -71,7 +72,7 @@ if ($("*").find("blockquote").length > 0){
 }
 if (showsmartQuoteNotification){
     if (usernameCount < 1)
-        $(".pagination").append($("<strong>").text("No Mentions Found").css("color",smartQuoteNotificationColor));
+        $(".quick_keys .float_left:eq(0)").append($("<strong>").text("No Mentions Found").css("color",smartQuoteNotificationColor));
     else
-        $(".pagination").append($("<strong>").text("("+usernameCount+") Mentions").css("color",smartQuoteNotificationColor));
+        $(".quick_keys .float_left:eq(0)").append($("<strong>").text("("+usernameCount+") Mentions").css("color",smartQuoteNotificationColor));
 }
