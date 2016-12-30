@@ -2,13 +2,13 @@
 // @name       Header Links
 // @author xadamxk
 // @namespace  https://github.com/xadamxk/HF-Scripts
-// @version    1.0.0
+// @version    1.0.1
 // @description  Adds various links to HF's header (replaces HFES headers)
 // @require https://code.jquery.com/jquery-3.1.1.js
 // @match      *://hackforums.net*
 // @match      *://hackforums.net/*
 // @copyright  2016+
-// @updateURL 
+// @updateURL https://github.com/xadamxk/HF-Userscripts/raw/master/Header%20Links/Header%20Links.user.js
 // @iconURL https://raw.githubusercontent.com/xadamxk/HF-Userscripts/master/scripticon.jpg
 // ==/UserScript==
 // ------------------------------ Change Log ----------------------------
