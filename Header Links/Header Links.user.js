@@ -67,12 +67,12 @@ links.forEach(function(link) {
     }
 });
 // Add spacers
-appendSpacer();
+appendSpacers();
 
 // Functions
 function appendLink(href,text){
     $(".links a:eq(0)").before($("<a>").attr("href",href).text(text));
 }
-function appendSpacer(){
-    $(".links a").before(" | ");
+function appendSpacers(){
+    $(".links a:not(:last)").after(" | ");
 }
