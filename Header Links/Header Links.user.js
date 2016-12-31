@@ -66,7 +66,6 @@ var links = [
 
 links.forEach(function(link) {
     if (link.enabled === true) {
-        appendLink(link.url, link.name);
         $(".links a:eq(0)").before($("<a>").attr("href", link.url).text(link.name));
     }
 });
