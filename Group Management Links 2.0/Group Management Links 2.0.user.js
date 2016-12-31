@@ -2,12 +2,14 @@
 // @name       Group Management Links 2.0
 // @author xadamxk
 // @namespace  https://github.com/xadamxk/HF-Scripts
-// @version    2.3.2
+// @version    2.3.3
 // @description  Adds group management links to the HF toolbar (automated - scraps group info)
 // @require http://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js
 // @match      *://hackforums.net/*
 // @copyright  2016+
 // @updateURL https://github.com/xadamxk/HF-Userscripts/raw/master/Group%20Management%20Links%202.0/Group%20Management%20Links%202.0.user.js
+// @downloadURL https://github.com/xadamxk/HF-Userscripts/raw/master/Group%20Management%20Links%202.0/Group%20Management%20Links%202.0.user.js
+// @run-at document-start
 // @iconURL https://raw.githubusercontent.com/xadamxk/HF-Userscripts/master/scripticon.jpg
 // @grant       GM_getValue
 // @grant       GM_setValue

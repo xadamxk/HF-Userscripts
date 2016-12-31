@@ -2,16 +2,19 @@
 // @name       Header Links
 // @author xadamxk
 // @namespace  https://github.com/xadamxk/HF-Scripts
-// @version    1.0.1
+// @version    1.0.2
 // @description  Adds various links to HF's header (replaces HFES headers)
 // @require https://code.jquery.com/jquery-3.1.1.js
 // @match      *://hackforums.net*
 // @match      *://hackforums.net/*
 // @copyright  2016+
 // @updateURL https://github.com/xadamxk/HF-Userscripts/raw/master/Header%20Links/Header%20Links.user.js
+// @downloadURL https://github.com/xadamxk/HF-Userscripts/raw/master/Header%20Links/Header%20Links.user.js
+// @run-at document-start
 // @iconURL https://raw.githubusercontent.com/xadamxk/HF-Userscripts/master/scripticon.jpg
 // ==/UserScript==
 // ------------------------------ Change Log ----------------------------
+// version 1.0.2: Fixed auto-update
 // version 1.0.1: Initial Release
 // version 1.0.0: Beta Release
 // ------------------------------ Dev Notes -----------------------------
@@ -60,19 +63,12 @@ var links = [
     }
 ];
 // ------------------------------ ON PAGE LOAD ------------------------------
-// Append Links: if (){appendLink("","");}
+
 links.forEach(function(link) {
     if (link.enabled === true) {
         appendLink(link.url, link.name);
+        $(".links a:eq(0)").before($("<a>").attr("href", link.url).text(link.name));
     }
 });
-// Add spacers
-appendSpacers();
 
-// Functions
-function appendLink(href,text){
-    $(".links a:eq(0)").before($("<a>").attr("href",href).text(text));
-}
-function appendSpacers(){
-    $(".links a:not(:last)").after(" | ");
-}
+$(".links a:not(:last)").after(" | ");

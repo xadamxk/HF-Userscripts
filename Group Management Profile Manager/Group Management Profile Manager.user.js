@@ -2,17 +2,18 @@
 // @name       Group Management Profile Manager
 // @author xadamxk
 // @namespace  https://github.com/xadamxk/HF-Scripts
-// @version    1.0
+// @version    1.0.1
 // @description  Adds group management buttons to profiles (add/remove) for HF leaders
 // @require http://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js
 // @match      *://hackforums.net/member.php?action=profile&uid=*
 // @copyright  2016+
-// @updateURL https://github.com/xadamxk/HF-Userscripts/raw/master/Group%20Management%20Profile%20Manager/Group%20Management%20Profile%20Manager.user.js
 // @iconURL https://raw.githubusercontent.com/xadamxk/HF-Userscripts/master/scripticon.jpg
+// @updateURL https://github.com/xadamxk/HF-Userscripts/raw/master/Group%20Management%20Profile%20Manager/Group%20Management%20Profile%20Manager.user.js
+// @downloadURL https://github.com/xadamxk/HF-Userscripts/raw/master/Group%20Management%20Profile%20Manager/Group%20Management%20Profile%20Manager.user.js
+// @run-at document-start
 // @grant       GM_getValue
 // @grant       GM_setValue
 // ==/UserScript==
-// WIP
 // ------------------------------ ON PAGE LOAD ------------------------------
 var prevInfo;
 const GM_ValAddr = "groupsInfo"; // Can change
@@ -30,11 +31,16 @@ var username = $("span[class*='group']").text();
 
 // ------------------------------ METHODS ------------------------------
 function addUser(gid){
+    var my_key;
+    if(my_post_key === undefined)
+        my_key = unsafeWindow.my_post_key;
+    else
+        my_key = my_post_key;
     // Debug purposes
     //window.alert(my_post_key+","+gid+","+username);
     $.post("/managegroup.php",
     {
-        "my_post_key": my_post_key,
+        "my_post_key": my_key,
         "action": "do_add",
         "gid": gid,
         "username": username
@@ -45,9 +51,14 @@ function addUser(gid){
     });
 }
 function removeUser(gid){
+    var my_key;
+    if(my_post_key === undefined)
+        my_key = unsafeWindow.my_post_key;
+    else
+        my_key = my_post_key;
     $.post("/managegroup.php",
     {
-        "my_post_key": my_post_key,
+        "my_post_key": my_key,
         "action": "do_manageusers",
         "gid": gid,
         "removeuser[0]": uid

@@ -2,7 +2,7 @@
 // @name       Rep Charts
 // @author xadamxk
 // @namespace  https://github.com/xadamxk/HF-Scripts
-// @version    1.1.3
+// @version    1.1.4
 // @description  Display graphical information on reputation.php
 // @require https://code.jquery.com/jquery-3.1.1.js
 // @require https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.4.0/Chart.bundle.min.js
@@ -10,9 +10,12 @@
 // @match      *://hackforums.net/repsgiven.php?uid=*
 // @copyright  2016+
 // @updateURL https://github.com/xadamxk/HF-Userscripts/raw/master/Rep%20Charts/Rep%20Charts.user.js
+// @downloadURL https://github.com/xadamxk/HF-Userscripts/raw/master/Rep%20Charts/Rep%20Charts.user.js
+// @run-at document-start
 // @iconURL https://raw.githubusercontent.com/xadamxk/HF-Userscripts/master/scripticon.jpg
 // ==/UserScript==
 // ------------------------------ Change Log ----------------------------
+// version 1.1.4: Fixed auto-update
 // version 1.1.3: Added rep given/received buttons on rep pages
 // version 1.1.2: Added hyperlink support for total rep chart (pos,neut,neg) now take you to the appropriate pages
 // version 1.1.1: Added support for repsgiven.php
