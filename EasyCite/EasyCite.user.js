@@ -10,7 +10,6 @@
 // @copyright  2016+
 // @updateURL https://github.com/xadamxk/HF-Userscripts/raw/master/EasyCite/EasyCite.user.js
 // @downloadURL https://github.com/xadamxk/HF-Userscripts/raw/master/EasyCite/EasyCite.user.js
-// @run-at document-start
 // @iconURL https://raw.githubusercontent.com/xadamxk/HF-Userscripts/master/scripticon.jpg
 // ==/UserScript==
 // ------------------------------ Change Log ----------------------------
