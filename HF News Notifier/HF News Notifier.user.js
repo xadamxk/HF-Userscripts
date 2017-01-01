@@ -2,7 +2,7 @@
 // @name       HF News Notifier
 // @author xadamxk
 // @namespace  https://github.com/xadamxk/HF-Scripts
-// @version    1.2.2
+// @version    1.2.3
 // @description  Alerts users of new HF News editions (checks on /usercp.php)
 // @require https://code.jquery.com/jquery-3.1.1.js
 // @match      *://hackforums.net/usercp.php
@@ -14,6 +14,7 @@
 // @grant       GM_setValue
 // ==/UserScript==
 // ------------------------------ Change Log ----------------------------
+// version 1.2.3: Bug fix: document-start
 // version 1.2.2: Fixed auto-update
 // version 1.2.1: Bug Fix: thread titles with ("',) no longer break the alert (removes them)
 // version 1.2.0: Implemented dismiss-cookie functionality - Hide alert if previously dismissed, until new thread is found.

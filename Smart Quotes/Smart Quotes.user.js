@@ -2,7 +2,7 @@
 // @name       Smart Quotes
 // @author xadamxk
 // @namespace  https://github.com/xadamxk/HF-Scripts
-// @version    1.0.2
+// @version    1.0.3
 // @description  Enhances quotes by adding style & highlights mentioned quotes
 // @require https://code.jquery.com/jquery-3.1.1.js
 // @match      *://hackforums.net/showthread.php?tid=*
@@ -12,7 +12,8 @@
 // @iconURL https://raw.githubusercontent.com/xadamxk/HF-Userscripts/master/scripticon.jpg
 // ==/UserScript==
 // ------------------------------ Change Log ----------------------------
-// version 1.0.2: bug fix - fixed notification selector to work on threads without page nav (<10 posts)
+// version 1.0.3: Bug fix: document-start
+// version 1.0.2: Bug fix - fixed notification selector to work on threads without page nav (<10 posts)
 // version 1.0.1: Initial Release
 // version 1.0.0: Beta Release
 // ------------------------------ Dev Notes -----------------------------

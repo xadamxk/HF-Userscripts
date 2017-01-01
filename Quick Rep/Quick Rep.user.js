@@ -2,7 +2,7 @@
 // @name       Quick Rep
 // @author xadamxk
 // @namespace  https://github.com/xadamxk/HF-Scripts
-// @version    2.0.6
+// @version    2.0.7
 // @run-at document-start
 // @description Makes giving reputation on HF easier.
 // @require https://code.jquery.com/jquery-3.1.1.js
@@ -15,6 +15,7 @@
 // @iconURL https://raw.githubusercontent.com/xadamxk/HF-Userscripts/master/scripticon.jpg
 // ==/UserScript==
 // ------------------------------ Change Log ----------------------------
+// version 2.0.7: Bug fix: document-start
 // version 2.0.6: Fixed auto-update
 // version 2.0.5: Bug fix - fixed 2.0.1 hot fix - added method to get primaryUsergroup
 // version 2.0.4: Bug fix - Fixed logic behind finding recipient's UID and storing it.
