@@ -251,13 +251,13 @@ GM_configStruct.prototype = {
           // Reset link
           create('a', {
             id: configId + '_resetLink',
-            textContent: 'Reset to defaults',
+            textContent: 'Reset all Settings',
             href: '#',
             title: 'Restore settings to default',
             className: 'reset',
             onclick: function(e) { 
                 e.preventDefault();
-                var confirm = confirm("Are you sure you want to reset these settings?");
+                var confirm = window.confirm("Are you sure you want to reset these settings?");
                 if (confirm){config.reset();}
             }
           })
