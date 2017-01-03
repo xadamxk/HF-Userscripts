@@ -257,8 +257,7 @@ GM_configStruct.prototype = {
             className: 'reset',
             onclick: function(e) { 
                 e.preventDefault();
-                var confirm = window.confirm("Are you sure you want to reset these settings?");
-                if (confirm){config.reset();}
+                config.reset();
             }
           })
       )));
