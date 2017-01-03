@@ -240,7 +240,9 @@ GM_configStruct.prototype = {
           textContent: 'Close',
           title: 'Close window',
           className: 'saveclose_buttons',
-          onclick: function () { config.close() }
+          onclick: function () { 
+              config.close(); 
+              location.reload(); }
         }),
 
         create('div',
@@ -251,9 +253,13 @@ GM_configStruct.prototype = {
             id: configId + '_resetLink',
             textContent: 'Reset to defaults',
             href: '#',
-            title: 'Reset fields to default values',
+            title: 'Restore settings to default',
             className: 'reset',
-            onclick: function(e) { e.preventDefault(); config.reset() }
+            onclick: function(e) { 
+                e.preventDefault();
+                var confirm = confirm("Are you sure you want to reset these settings?");
+                if (confirm){config.reset();}
+            }
           })
       )));
 
