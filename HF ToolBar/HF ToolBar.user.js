@@ -2,7 +2,7 @@
 // @name       HF ToolBar
 // @author xadamxk
 // @namespace  https://github.com/xadamxk/HF-Scripts
-// @version    1.0.1
+// @version    1.0.2
 // @description  Adds a toolbar with various options to the top of HF.
 // @require https://code.jquery.com/jquery-3.1.1.js
 // @require https://cdnjs.cloudflare.com/ajax/libs/jquery.sticky/1.0.3/jquery.sticky.js
@@ -11,25 +11,23 @@
 // @match      *://hackforums.net*
 // @match      *://hackforums.net/*
 // @copyright  2016+
-// @updateURL 
-// @downloadURL 
+// @updateURL https://github.com/xadamxk/HF-Userscripts/raw/master/HF%20ToolBar/HF%20ToolBar.user.js
+// @downloadURL https://github.com/xadamxk/HF-Userscripts/raw/master/HF%20ToolBar/HF%20ToolBar.user.js
 // @grant       GM_getValue
 // @grant       GM_setValue
 // @grant       GM_log
 // @grant       GM_info
 // @iconURL https://raw.githubusercontent.com/xadamxk/HF-Userscripts/master/scripticon.jpg
 // ------------------------------ Change Log ----------------------------
+// version 1.0.2: Code restructure, bug fixes, small changes.
 // version 1.0.1: Implemented Quick Links, Ability to hide shortcuts, and bug fixes.
 // version 1.0.0: Beta Release
 // ==/UserScript==
 // ------------------------------ Dev Notes -----------------------------
-// blueish: #0F5799
-// GM_info : https://tampermonkey.net/documentation.php#GM_info
-// https://github.com/sizzlemctwizzle/GM_config/wiki/Advance-Fields
-// Thank you: http://www.freeformatter.com/javascript-escape.html
-// IH8CSS: http://howtocenterincss.com/
-// Messages: If PM notice exists, change color of PM icon, hide pm notice
-// Clean up: getShortcutEnabledIndex()
+// Note: GM_info : https://tampermonkey.net/documentation.php#GM_info
+// Note: bullet Color: #0F5799
+// TODO: hide pm notice?
+// TODO: Buddy list implementation?
 // ------------------------------ SETTINGS ------------------------------
 // Get Changelog from meta block
 var tempChangeLog = GM_info.scriptMetaStr.split('//');
@@ -81,8 +79,14 @@ var configSettings = {
         },
         'default':'default',
     },
+    'enableActiveIcons':{
+        'label':'Enable Active Icons:',
+        'title':'Icons/Text change colors based on different events.',
+        'type':'checkbox',
+        'default':true,
+    },
     'stickToolbar':{
-        'label':'Make Toolbar "Sticky":',
+        'label':"Enable 'Sticky' Toolbar (experimental):",
         'type':'checkbox',
         'default':true,
     },
@@ -181,29 +185,32 @@ var configSettings = {
     'HFTBversion':{
         'title':'test',
         'section': ["About HFTB",
-                    'Version: '+GM_info.script.version+": "+hftbChangeLog+
-                    "<br>Written By: "+GM_info.script.author+
-                    "<br>Auto-Update: "+GM_info.scriptWillUpdate+
+                    "Written By: "+GM_info.script.author+
+                    "<br>Latest Version: "+!(GM_info.scriptWillUpdate)+
                     "<br>Using Incognito: "+GM_info.isIncognito+
                     "<br>Userscript Manager: "+GM_info.scriptHandler+
+                    '<br>Version: '+GM_info.script.version+": "+hftbChangeLog+
                     "<br>Last Updated: "+Date(GM_info.script.lastUpdated)],
         'value': '0',
         'type': 'hidden'
     }
 };
 // ------------------------------ On Page Load---------------------------
-// Inject font-awesome.css
+// Inject font-awesome.css (Thank you: http://www.freeformatter.com/javascript-escape.html)
 $("head").append ('<link '+ "href='https:\/\/cdnjs.cloudflare.com\/ajax\/libs\/font-awesome\/4.7.0\/css\/font-awesome.css'" + 'rel="stylesheet" type="text/css">');
 // Create toolbar
 createStickyHeader();
 // Stick toolbar
 stickStickyHeader();
-// PM Shortcut event listener
-if(GM_config.get('showShortcut4')){
-    $("#leftSticky a:eq("+getShortcutEnabledIndex("showShortcut4")+")").click(function(){window.alert("it works");});
+// Shortcut event listener example:
+if(GM_config.get('showShortcut2')){
+    $("#leftSticky a:eq("+getShortcutEnabledIndex("showShortcut2")+")").click(function(){
+        createBuddyTable();
+    });
 }
 // Settings event listener
 $("#leftSticky a:eq("+numShortcutsEnabled()+")").click(function(){GM_config.open();});
+// Save button event listener
 // Append quick links to toolbar
 appendQuickLinks();
 // Add spacers to toolbar
@@ -256,7 +263,7 @@ function createStickyHeader(){
     }
     if(GM_config.get('showShortcut2')){
         // Buddies
-        $("#leftSticky").append($("<a>").attr("href","javascript:void(0);").attr("onClick","MyBB.popupWindow('https://hackforums.net/misc.php?action=buddypopup', 'buddyList', 350, 350);")
+        $("#leftSticky").append($("<a>").attr("href","#Buddies").attr("onclick","")
                                 .append($("<i>").attr("id","buddiesLeftSticky").addClass("fa fa-users")));
     }
     if(GM_config.get('showShortcut3')){
@@ -264,10 +271,24 @@ function createStickyHeader(){
         $("#leftSticky").append($("<a>").attr("href","#").attr("onClick","")
                                 .append($("<i>").attr("id","savedLeftSticky").addClass("fa fa-floppy-o fa-lg")));
     }
+    // If PM notice
+    var shortcut4Link = "https://hackforums.net/private.php?action=send";
+    var shortcut4NewPM = false;
+    // New PM
+    if ($("#pm_notice").length > 0){
+        shortcut4Link = $("#pm_notice div:eq(1) a:eq(1)").attr("href");
+        // Active Icons
+        if(GM_config.get('enableActiveIcons')){
+            shortcut4NewPM = true;}
+    }
     if(GM_config.get('showShortcut4')){
         // PMs
-        $("#leftSticky").append($("<a>").attr("href","#MessageSystem").attr("onClick","")
+        $("#leftSticky").append($("<a>").attr("href",shortcut4Link).attr("target","_blank")
                                 .append($("<i>").attr("id","pmLeftSticky").addClass("fa fa-comments fa-lg")));
+        // If new PM & enableActiveIcons
+        if(shortcut4NewPM){
+        $("#pmLeftSticky").css("color","#ff3b30");
+    }
     }
     // Settings (left)
     $("#leftSticky").append($("<a>").attr("href","#Settings").attr("onClick","")
@@ -299,38 +320,27 @@ function createStickyHeader(){
 function getShortcutEnabledIndex(configName){
     var configIndex = 0;
     if(GM_config.get(configName)){
-        var numEnabled = numShortcutsEnabled();
         var numEnabledCount = 0;
-        if(GM_config.get('showShortcut1')){
-            numEnabled--;
-            numEnabledCount++;
-            if (numEnabled == 0){
-                configIndex = numEnabledCount;
+        var configNameTemp = "";
+        for (i=0; i < 5; i++){
+            switch (i){
+                case 0: configNameTemp = "showShortcut1";
+                    break;
+                case 1: configNameTemp = "showShortcut2";
+                    break;
+                case 2: configNameTemp = "showShortcut3";
+                    break;
+                case 3: configNameTemp = "showShortcut4";
+                    break;
             }
-        }
-        if(GM_config.get('showShortcut2')){
-            numEnabled--;
-            numEnabledCount++;
-            if (numEnabled == 0){
-                configIndex = numEnabledCount;
-            }
-        }
-        if(GM_config.get('showShortcut3')){
-            numEnabled--;
-            numEnabledCount++;
-            if (numEnabled == 0){
-                configIndex = numEnabledCount;
-            }
-        }
-        if(GM_config.get('showShortcut4')){
-            numEnabled--;
-            numEnabledCount++;
-            if (numEnabled == 0){
-                configIndex = numEnabledCount;
+            if(GM_config.get(configNameTemp)){
+                if (configName == configNameTemp)
+                    return configIndex;
+                configIndex++;
             }
         }
     }
-    return (configIndex-1);
+    return (configIndex);
 }
 function addSpacersToHeader(){
     var iconLabelSpacer = "-";
@@ -396,4 +406,7 @@ function appendQuickLinks(){
             $("#leftSticky").append($("<a>").attr("href",GM_config.get('quickLinks_5Link')).text(GM_config.get('quickLinks_5Text')));
         }
     }
+}
+function createBuddyTable(){
+    
 }
