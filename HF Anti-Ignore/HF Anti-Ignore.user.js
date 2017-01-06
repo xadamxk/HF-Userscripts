@@ -2,13 +2,13 @@
 // @name       HF Anti-Ignore
 // @author xadamxk
 // @namespace  https://github.com/xadamxk/HF-Scripts
-// @version    1.0.0
+// @version    1.0.1
 // @description Counteracts HF's ignore feature - also works with Global Ignore.
 // @require https://code.jquery.com/jquery-3.1.1.js
 // @match      *://hackforums.net/member.php?action=profile&uid=*
 // @copyright  2016+
-// @updateURL 
-// @downloadURL 
+// @updateURL https://github.com/xadamxk/HF-Userscripts/raw/master/HF%20Anti-Ignore/HF%20Anti-Ignore.user.js
+// @downloadURL https://github.com/xadamxk/HF-Userscripts/raw/master/HF%20Anti-Ignore/HF%20Anti-Ignore.user.js
 // @iconURL https://raw.githubusercontent.com/xadamxk/HF-Userscripts/master/scripticon.jpg
 // ==/UserScript==
 // ------------------------------ Change Log ----------------------------
@@ -29,7 +29,7 @@ $( "table" ).each(function( index ) {
                                                .attr('cellpadding',4).attr('colspan',6).addClass('tborder')).append('<tbody>').attr('colspan',6);
         // Insert thead (title, thread hyperlink)
         $('#antiIgnore').append($('<tr>').append($('<td>').addClass('thead').attr('colspan',2).append($('<strong>').text("Loading "+username+"'s Forum Info ..."))
-                                                 .append($('<a>').attr('href','')
+                                                 .append($('<a>').attr('href','https://hackforums.net/showthread.php?tid=5515646')
                                                          .append($('<strong>').text('Anti-Ignore Userscript').addClass('float_right')))));
         var errorTable = $(this);
         $.ajax({
@@ -183,7 +183,7 @@ $( "table" ).each(function( index ) {
                                              .attr('cellpadding',4).attr('colspan',2).addClass('tborder')).append('<tbody>').attr('colspan',2);
                 // Insert thead (title, thread hyperlink)
                 $('#antiIgnoreContact').append($('<tr>').append($('<td>').addClass('thead').attr('colspan',2).append($('<strong>').text(username+"'s Contact Details"))
-                                                                .append($('<a>').attr('href','')
+                                                                .append($('<a>').attr('href','https://hackforums.net/showthread.php?tid=5515646')
                                                                         .append($('<strong>').text('Anti-Ignore Userscript').addClass('float_right')))));
                 // Description table row
                 //$('#antiIgnoreContact').append($('<tr>').append($('<td>').attr('colspan',2).addClass('tcat smalltext').append("Description")));
