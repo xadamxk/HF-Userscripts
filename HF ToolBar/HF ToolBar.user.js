@@ -2,7 +2,7 @@
 // @name       HF ToolBar
 // @author xadamxk
 // @namespace  https://github.com/xadamxk/HF-Scripts
-// @version    1.0.3
+// @version    1.0.4
 // @description  Adds a toolbar with various options to the top of HF.
 // @require https://code.jquery.com/jquery-3.1.1.js
 // @require https://raw.githubusercontent.com/xadamxk/HF-Userscripts/master/JS%20Libraries/jquery.sticky.js
@@ -20,6 +20,7 @@
 // @grant       GM_info
 // @iconURL https://raw.githubusercontent.com/xadamxk/HF-Userscripts/master/scripticon.jpg
 // ------------------------------ Change Log ----------------------------
+// version 1.0.4: Load HFTB Messages in new tab setting, current page highlight color & settings.
 // version 1.0.3: Home link setting, favicon notifications, and PM updates
 // version 1.0.2: Code restructure, bug fixes, small changes.
 // version 1.0.1: Implemented Quick Links, Ability to hide shortcuts, and bug fixes.
@@ -27,9 +28,12 @@
 // ==/UserScript==
 // ------------------------------ Dev Notes -----------------------------
 // Note: Tiny Box: http://puu.sh/2QUaB.js - https://github.com/nonfiction/nterchange3-extras/tree/master/tinybox2/public_html/javascripts/tinybox2
-// Note: Orange: #ff4500
+// Note: Color compliments: http://www.colorhexa.com/1f8ef1, https://color.adobe.com, http://www.colorschemer.com/online.html
 // Note: bullet Color: #0F5799
+// Note: Good green: #1ff182
+// Note: Good orange: #f4b94f
 // TODO: Buddy list implementation - iFrame?
+// TODO: Saved threads - ?
 // ------------------------------ SETTINGS ------------------------------
 // Get Changelog from meta block
 var tempChangeLog = GM_info.scriptMetaStr.split('//');
@@ -73,7 +77,7 @@ var configSettings = {
         'label':'Show Icon Labels:',
         'section': ['HFTB Utilities',"Customize the appearance of HFTB."],
         'type':'checkbox',
-        'default':true,
+        'default':false,
     },
     'iconLabelSpacer':{
         'label':'Icon Label Spacer:',
@@ -97,6 +101,18 @@ var configSettings = {
         'title':"Makes the toolbar stick to the top of the screen when scrolling.",
         'type':'checkbox',
         'default':true,
+    },
+    'enableCurrentPageColor':{
+        'label':"Enable Current Page Highlight:",
+        'title':"If you are on one of the HFTB links, it will color that icon.",
+        'type':'checkbox',
+        'default':true,
+    },
+    'customCurrentPageColor':{
+        'label':"Color:",
+        'title':"Hex color used for Current Page Highlights.",
+        'type':'text',
+        'default':'#F4B94F',
     },
     'showQL1':{
         'label':'Show Quick Link #1:',
@@ -178,24 +194,24 @@ var configSettings = {
     'showQL5':{
         'label':'Show Quick Link #5:',
         'type':'checkbox',
-        'default':false,
+        'default':true,
     },
     'quickLinks_5Text':{
         'label':'#5 Text:',
         'type':'text',
-        'default':'',
+        'default':'Web Browsers',
     },
     'quickLinks_5Link':{
         'label':'#5 Link:',
         'type':'text',
-        'default':'',
+        'default':'https://hackforums.net/forumdisplay.php?fid=247',
     },
     'hidePMNotification':{
         'label':'Hide PM Notification Alerts:',
         'section': ['PM Tweaks',"An assortment of Private Message modifications."],
         'title':"Hides the alert when you have an unread PM.",
         'type':'checkbox',
-        'default':true,
+        'default':false,
     },
     'enableTinyCon':{
         'label':'Enable favicon badges for PMs:',
@@ -206,6 +222,12 @@ var configSettings = {
     'enablePMCheck':{
         'label':"Enable Background PMs (Experimental - requires 'favicon badges' enabled):",
         'title':"Checks for new PMs after 5 mins.",
+        'type':'checkbox',
+        'default':false,
+    },
+    'openPMNewTab':{
+        'label':"Load messages from HFTB in a new tab:",
+        'title':"Make HFTB Message icon open messages in a new tab",
         'type':'checkbox',
         'default':false,
     },
@@ -232,7 +254,7 @@ stickStickyHeader();
 // Shortcut event listener example:
 if(GM_config.get('showShortcut2')){
     $("#leftSticky a:eq("+getShortcutEnabledIndex("showShortcut2")+")").click(function(){
-        createBuddyTable();
+        // Method
     });
 }
 // Settings event listener
@@ -246,6 +268,8 @@ addSpacersToHeader();
 hidePMNotice();
 // Check for PM Notifications
 checkPMNotifications();
+// Check current page (color if found on toolbar)
+checkforCurrentPage();
 
 // ------------------------------ Functions ---------------------------
 function createStickyHeader(){
@@ -271,7 +295,7 @@ function createStickyHeader(){
         '#HFTB_config input[type="text"] {width:50%;}'+ // '#HFTB_config_spacer1_var,#HFTB_config_spacer2_var,#HFTB_config_spacer3_var,#HFTB_config_spacer4_var {height:10px;}'
         '#HFTB_config_quickLinks_1Text_var,#HFTB_config_quickLinks_2Text_var,#HFTB_config_quickLinks_3Text_var,#HFTB_config_quickLinks_4Text_var,#HFTB_config_quickLinks_5Text_var,'+
         '#HFTB_config_quickLinks_1Link_var,#HFTB_config_quickLinks_2Link_var,#HFTB_config_quickLinks_3Link_var,#HFTB_config_quickLinks_4Link_var,#HFTB_config_quickLinks_5Link_var,'+
-        '#HFTB_config_shortcut1Link_var {padding-left:15px}'
+        '#HFTB_config_shortcut1Link_var, #HFTB_config_customCurrentPageColor_var {padding-left:15px}'
     });
     // Set values based on settings
     // Icon Labels
@@ -317,8 +341,11 @@ function createStickyHeader(){
     }
     if(GM_config.get('showShortcut4')){
         // PMs
-        $("#leftSticky").append($("<a>").attr("href",shortcut4Link).attr("target","_blank").attr("title",shortcut4Text)
+        $("#leftSticky").append($("<a>").attr("href",shortcut4Link).attr("title",shortcut4Text)
                                 .append($("<i>").attr("id","pmLeftSticky").addClass("fa fa-comments fa-lg")));
+        if (GM_config.get('openPMNewTab')){
+            $("#leftSticky a").attr("target","_blank");
+        }
         // If new PM & enableActiveIcons
         if(shortcut4NewPM){
             $("#pmLeftSticky").css("color","#ff3b30");
@@ -425,19 +452,19 @@ function numShortcutsEnabled(){
 function appendQuickLinks(){
     if ($("#Sticky").length > 0){
         if (GM_config.get('showQL1')){
-            $("#leftSticky").append($("<a>").attr("href",GM_config.get('quickLinks_1Link')).text(GM_config.get('quickLinks_1Text')));
+            $("#leftSticky").append($("<a>").attr("href",GM_config.get('quickLinks_1Link')).text(GM_config.get('quickLinks_1Text')).addClass("currentLink"));
         }
         if (GM_config.get('showQL2')){
-            $("#leftSticky").append($("<a>").attr("href",GM_config.get('quickLinks_2Link')).text(GM_config.get('quickLinks_2Text')));
+            $("#leftSticky").append($("<a>").attr("href",GM_config.get('quickLinks_2Link')).text(GM_config.get('quickLinks_2Text')).addClass("currentLink"));
         }
         if (GM_config.get('showQL3')){
-            $("#leftSticky").append($("<a>").attr("href",GM_config.get('quickLinks_3Link')).text(GM_config.get('quickLinks_3Text')));
+            $("#leftSticky").append($("<a>").attr("href",GM_config.get('quickLinks_3Link')).text(GM_config.get('quickLinks_3Text')).addClass("currentLink"));
         }
         if (GM_config.get('showQL4')){
-            $("#leftSticky").append($("<a>").attr("href",GM_config.get('quickLinks_4Link')).text(GM_config.get('quickLinks_4Text')));
+            $("#leftSticky").append($("<a>").attr("href",GM_config.get('quickLinks_4Link')).text(GM_config.get('quickLinks_4Text')).addClass("currentLink"));
         }
         if (GM_config.get('showQL5')){
-            $("#leftSticky").append($("<a>").attr("href",GM_config.get('quickLinks_5Link')).text(GM_config.get('quickLinks_5Text')));
+            $("#leftSticky").append($("<a>").attr("href",GM_config.get('quickLinks_5Link')).text(GM_config.get('quickLinks_5Text')).addClass("currentLink"));
         }
     }
 }
@@ -500,4 +527,16 @@ function updateFavIcon(){
     });
     //console.log("Number of unread PM's: "+numPMs);
     return numPMs;
+}
+function checkforCurrentPage(){
+    if(GM_config.get('enableCurrentPageColor')){
+        $(".currentLink").each(function( index ) {
+            if ($(this).attr("href") === window.location.href){
+                $(this).css("color",GM_config.get('customCurrentPageColor'));
+                return false;
+            }
+        });
+        if (GM_config.get('shortcut1Link') === window.location.href)
+            $("#homeLeftSticky").css("color",GM_config.get('customCurrentPageColor'));
+    }
 }
