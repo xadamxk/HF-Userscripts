@@ -2,14 +2,14 @@
 // @name       HF ToolBar
 // @author xadamxk
 // @namespace  https://github.com/xadamxk/HF-Scripts
-// @version    1.0.5
+// @version    1.1.0
 // @description  Adds a toolbar with various options to the top of HF.
 // @require https://code.jquery.com/jquery-3.1.1.js
 // @require https://raw.githubusercontent.com/xadamxk/HF-Userscripts/master/JS%20Libraries/jquery.sticky.js
 // @require https://raw.githubusercontent.com/xadamxk/HF-Userscripts/master/JS%20Libraries/GM_config.js
 // @require https://raw.githubusercontent.com/xadamxk/HF-Userscripts/master/JS%20Libraries/tinycon.min.js
-// @require https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.js
-// @require http://sandbox.scriptiny.com/tinybox2/tinybox.js
+// @require https://raw.githubusercontent.com/xadamxk/HF-Userscripts/master/JS%20Libraries/jquery-ui.js
+// @require https://raw.githubusercontent.com/xadamxk/HF-Userscripts/master/JS%20Libraries/tinybox.js
 // @run-at document-start
 // @match      *://hackforums.net*
 // @match      *://hackforums.net/*
@@ -22,7 +22,8 @@
 // @grant       GM_info
 // @iconURL https://raw.githubusercontent.com/xadamxk/HF-Userscripts/master/scripticon.jpg
 // ------------------------------ Change Log ----------------------------
-// version 1.0.5: Implemented extractable Buddy List.
+// version 1.1.0: Public Release.
+// version 1.0.5: Implemented extractable Buddy List, Settings active icon color.
 // version 1.0.4: Load HFTB Messages in new tab setting, current page highlight color & settings.
 // version 1.0.3: Home link setting, favicon notifications, and PM updates
 // version 1.0.2: Code restructure, bug fixes, small changes.
@@ -30,14 +31,9 @@
 // version 1.0.0: Beta Release
 // ==/UserScript==
 // ------------------------------ Dev Notes -----------------------------
-// Note: Tiny Box: http://puu.sh/2QUaB.js - https://github.com/nonfiction/nterchange3-extras/tree/master/tinybox2/public_html/javascripts/tinybox2
 // Note: Color compliments: http://www.colorhexa.com/1f8ef1, https://color.adobe.com, http://www.colorschemer.com/online.html
 // Note: bullet Color: #0F5799
-// Note: Good green: #1ff182
-// Note: Good orange: #f4b94f
-// TODO: Buddy list implementation - iFrame?
-// TODO: Saved threads - ?
-// Note: Draggable: https://jqueryui.com/draggable/
+// Note: Saved icon functionality?
 // ------------------------------ SETTINGS ------------------------------
 // Get Changelog from meta block
 var tempChangeLog = GM_info.scriptMetaStr.split('//');
@@ -78,11 +74,11 @@ var configSettings = {
         'label':'Show Saved Shortcut:',
         'title':'This doesnt do anything yet.',
         'type':'checkbox',
-        'default':true,
+        'default':false,
     },
     'showShortcut4':{
         'label':'Show Messages Shortcut:',
-        'title':'Hyperlinks to new PMs/ create new PM.',
+        'title':'Hyperlinks to most recent unread PM/ create new PM.',
         'type':'checkbox',
         'default':true,
     },
@@ -274,7 +270,11 @@ if(GM_config.get('showShortcut2')){
     });
 }
 // Settings event listener
-$("#leftSticky a:eq("+numShortcutsEnabled()+")").click(function(){GM_config.open();});
+$("#leftSticky a:eq("+numShortcutsEnabled()+")").click(function(){
+    if(GM_config.get('enableActiveIcons')){
+        $("#settingsleftSticky").css("color","#1EF1EA");}
+    GM_config.open();
+});
 // Save button event listener
 // Append quick links to toolbar
 appendQuickLinks();
@@ -311,7 +311,7 @@ function createStickyHeader(){
         '#HFTB_config input[type="text"] {width:50%;}'+ // '#HFTB_config_spacer1_var,#HFTB_config_spacer2_var,#HFTB_config_spacer3_var,#HFTB_config_spacer4_var {height:10px;}'
         '#HFTB_config_quickLinks_1Text_var,#HFTB_config_quickLinks_2Text_var,#HFTB_config_quickLinks_3Text_var,#HFTB_config_quickLinks_4Text_var,#HFTB_config_quickLinks_5Text_var,'+
         '#HFTB_config_quickLinks_1Link_var,#HFTB_config_quickLinks_2Link_var,#HFTB_config_quickLinks_3Link_var,#HFTB_config_quickLinks_4Link_var,#HFTB_config_quickLinks_5Link_var,'+
-        '#HFTB_config_shortcut1Link_var, #HFTB_config_customCurrentPageColor_var, #HFTB_config_enableBuddyPopout_var {padding-left:15px}'
+        '#HFTB_config_shortcut1Link_var, #HFTB_config_customCurrentPageColor_var, #HFTB_config_enableBuddyPopout_var, #HFTB_config_enablePMCheck_var {padding-left:15px}'
     });
     // Set values based on settings
     // Icon Labels
