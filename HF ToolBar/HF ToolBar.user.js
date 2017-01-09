@@ -2,12 +2,14 @@
 // @name       HF ToolBar
 // @author xadamxk
 // @namespace  https://github.com/xadamxk/HF-Scripts
-// @version    1.0.4
+// @version    1.0.5
 // @description  Adds a toolbar with various options to the top of HF.
 // @require https://code.jquery.com/jquery-3.1.1.js
 // @require https://raw.githubusercontent.com/xadamxk/HF-Userscripts/master/JS%20Libraries/jquery.sticky.js
 // @require https://raw.githubusercontent.com/xadamxk/HF-Userscripts/master/JS%20Libraries/GM_config.js
 // @require https://raw.githubusercontent.com/xadamxk/HF-Userscripts/master/JS%20Libraries/tinycon.min.js
+// @require https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.js
+// @require http://sandbox.scriptiny.com/tinybox2/tinybox.js
 // @run-at document-start
 // @match      *://hackforums.net*
 // @match      *://hackforums.net/*
@@ -20,6 +22,7 @@
 // @grant       GM_info
 // @iconURL https://raw.githubusercontent.com/xadamxk/HF-Userscripts/master/scripticon.jpg
 // ------------------------------ Change Log ----------------------------
+// version 1.0.5: Implemented extractable Buddy List.
 // version 1.0.4: Load HFTB Messages in new tab setting, current page highlight color & settings.
 // version 1.0.3: Home link setting, favicon notifications, and PM updates
 // version 1.0.2: Code restructure, bug fixes, small changes.
@@ -34,6 +37,7 @@
 // Note: Good orange: #f4b94f
 // TODO: Buddy list implementation - iFrame?
 // TODO: Saved threads - ?
+// Note: Draggable: https://jqueryui.com/draggable/
 // ------------------------------ SETTINGS ------------------------------
 // Get Changelog from meta block
 var tempChangeLog = GM_info.scriptMetaStr.split('//');
@@ -55,6 +59,7 @@ var configSettings = {
     },
     'shortcut1Link':{
         'label':'Home Link:',
+        'title':'Create a home location.',
         'type':'text',
         'default':'https://hackforums.net/usercp.php',
     },
@@ -63,13 +68,21 @@ var configSettings = {
         'type':'checkbox',
         'default':true,
     },
+    'enableBuddyPopout':{
+        'label':'Enable Retractable Buddy List:',
+        'title':'Makes a draggable Buddy List popout.',
+        'type':'checkbox',
+        'default':true,
+    },
     'showShortcut3':{
         'label':'Show Saved Shortcut:',
+        'title':'This doesnt do anything yet.',
         'type':'checkbox',
         'default':true,
     },
     'showShortcut4':{
         'label':'Show Messages Shortcut:',
+        'title':'Hyperlinks to new PMs/ create new PM.',
         'type':'checkbox',
         'default':true,
     },
@@ -81,6 +94,7 @@ var configSettings = {
     },
     'iconLabelSpacer':{
         'label':'Icon Label Spacer:',
+        'title':'Spacer between icons/labels in HFTB.',
         'type':'select',
         'options':{
             'default':'-',
@@ -232,7 +246,7 @@ var configSettings = {
         'default':false,
     },
     'HFTBversion':{
-        'title':'test',
+        'title':'About HFTB',
         'section': ["About HFTB",
                     "Written By: "+GM_info.script.author+
                     "<br>Latest Version: "+!(GM_info.scriptWillUpdate)+
@@ -246,7 +260,8 @@ var configSettings = {
 };
 // ------------------------------ On Page Load---------------------------
 // Inject font-awesome.css (Thank you: http://www.freeformatter.com/javascript-escape.html)
-$("head").append ('<link '+ "href='https:\/\/cdnjs.cloudflare.com\/ajax\/libs\/font-awesome\/4.7.0\/css\/font-awesome.css'" + 'rel="stylesheet" type="text/css">');
+$("head").append('<link '+ "href='https:\/\/cdnjs.cloudflare.com\/ajax\/libs\/font-awesome\/4.7.0\/css\/font-awesome.css'" + 'rel="stylesheet" type="text/css">');
+$("head").append('<link '+ "href='https:\/\/cdn.rawgit.com\/xadamxk\/HF-Userscripts\/9bf86deb\/JS%20Libraries\/tinybox.css'" + 'rel="stylesheet" type="text/css">');
 // Create toolbar
 createStickyHeader();
 // Stick toolbar
@@ -255,6 +270,7 @@ stickStickyHeader();
 if(GM_config.get('showShortcut2')){
     $("#leftSticky a:eq("+getShortcutEnabledIndex("showShortcut2")+")").click(function(){
         // Method
+        showBuddyContainer();
     });
 }
 // Settings event listener
@@ -295,7 +311,7 @@ function createStickyHeader(){
         '#HFTB_config input[type="text"] {width:50%;}'+ // '#HFTB_config_spacer1_var,#HFTB_config_spacer2_var,#HFTB_config_spacer3_var,#HFTB_config_spacer4_var {height:10px;}'
         '#HFTB_config_quickLinks_1Text_var,#HFTB_config_quickLinks_2Text_var,#HFTB_config_quickLinks_3Text_var,#HFTB_config_quickLinks_4Text_var,#HFTB_config_quickLinks_5Text_var,'+
         '#HFTB_config_quickLinks_1Link_var,#HFTB_config_quickLinks_2Link_var,#HFTB_config_quickLinks_3Link_var,#HFTB_config_quickLinks_4Link_var,#HFTB_config_quickLinks_5Link_var,'+
-        '#HFTB_config_shortcut1Link_var, #HFTB_config_customCurrentPageColor_var {padding-left:15px}'
+        '#HFTB_config_shortcut1Link_var, #HFTB_config_customCurrentPageColor_var, #HFTB_config_enableBuddyPopout_var {padding-left:15px}'
     });
     // Set values based on settings
     // Icon Labels
@@ -536,7 +552,23 @@ function checkforCurrentPage(){
                 return false;
             }
         });
-        if (GM_config.get('shortcut1Link') === window.location.href)
+        if (window.location.href.includes(GM_config.get('shortcut1Link')))
             $("#homeLeftSticky").css("color",GM_config.get('customCurrentPageColor'));
     }
+}
+function showBuddyContainer(){
+    if(GM_config.get('enableBuddyPopout')){
+        TINY.box.show({iframe:'https://hackforums.net/misc.php?action=buddypopup',mask:false, boxid:'frameless',width:300,height:350,fixed:true, closejs:function(){$("#buddiesLeftSticky").css("color","white");}});
+        $(".tinner").attr("id","tbWindow").css("background-color","rgba(7,41,72,0.4)"); //.tbox for no frame
+        $( "#tbWindow" ).draggable();
+        // Toggle color of buddy
+        if(GM_config.get('enableActiveIcons')){
+            if($("#tbWindow").length > 0)
+                $("#buddiesLeftSticky").css("color","#1ff182");
+        }
+    }
+    else{
+        window.open('https://hackforums.net/misc.php?action=buddypopup', '_blank');
+    }
+
 }
