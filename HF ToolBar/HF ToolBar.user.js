@@ -2,11 +2,12 @@
 // @name       HF ToolBar
 // @author xadamxk
 // @namespace  https://github.com/xadamxk/HF-Scripts
-// @version    1.0.2
+// @version    1.0.3
 // @description  Adds a toolbar with various options to the top of HF.
 // @require https://code.jquery.com/jquery-3.1.1.js
-// @require https://cdnjs.cloudflare.com/ajax/libs/jquery.sticky/1.0.3/jquery.sticky.js
+// @require https://raw.githubusercontent.com/xadamxk/HF-Userscripts/master/JS%20Libraries/jquery.sticky.js
 // @require https://raw.githubusercontent.com/xadamxk/HF-Userscripts/master/JS%20Libraries/GM_config.js
+// @require https://raw.githubusercontent.com/xadamxk/HF-Userscripts/master/JS%20Libraries/tinycon.min.js
 // @run-at document-start
 // @match      *://hackforums.net*
 // @match      *://hackforums.net/*
@@ -19,15 +20,16 @@
 // @grant       GM_info
 // @iconURL https://raw.githubusercontent.com/xadamxk/HF-Userscripts/master/scripticon.jpg
 // ------------------------------ Change Log ----------------------------
+// version 1.0.3: Home link setting, favicon notifications, and PM updates
 // version 1.0.2: Code restructure, bug fixes, small changes.
 // version 1.0.1: Implemented Quick Links, Ability to hide shortcuts, and bug fixes.
 // version 1.0.0: Beta Release
 // ==/UserScript==
 // ------------------------------ Dev Notes -----------------------------
-// Note: GM_info : https://tampermonkey.net/documentation.php#GM_info
+// Note: Tiny Box: http://puu.sh/2QUaB.js - https://github.com/nonfiction/nterchange3-extras/tree/master/tinybox2/public_html/javascripts/tinybox2
+// Note: Orange: #ff4500
 // Note: bullet Color: #0F5799
-// TODO: hide pm notice?
-// TODO: Buddy list implementation?
+// TODO: Buddy list implementation - iFrame?
 // ------------------------------ SETTINGS ------------------------------
 // Get Changelog from meta block
 var tempChangeLog = GM_info.scriptMetaStr.split('//');
@@ -47,6 +49,11 @@ var configSettings = {
         'type':'checkbox',
         'default':true,
     },
+    'shortcut1Link':{
+        'label':'Home Link:',
+        'type':'text',
+        'default':'https://hackforums.net/usercp.php',
+    },
     'showShortcut2':{
         'label':'Show Buddies Shortcut:',
         'type':'checkbox',
@@ -64,7 +71,7 @@ var configSettings = {
     },
     'showIconLabels':{
         'label':'Show Icon Labels:',
-        'section': ['HFTB Utils',"Customize the appearance of HFTB."],
+        'section': ['HFTB Utilities',"Customize the appearance of HFTB."],
         'type':'checkbox',
         'default':true,
     },
@@ -87,6 +94,7 @@ var configSettings = {
     },
     'stickToolbar':{
         'label':"Enable 'Sticky' Toolbar (experimental):",
+        'title':"Makes the toolbar stick to the top of the screen when scrolling.",
         'type':'checkbox',
         'default':true,
     },
@@ -182,6 +190,25 @@ var configSettings = {
         'type':'text',
         'default':'',
     },
+    'hidePMNotification':{
+        'label':'Hide PM Notification Alerts:',
+        'section': ['PM Tweaks',"An assortment of Private Message modifications."],
+        'title':"Hides the alert when you have an unread PM.",
+        'type':'checkbox',
+        'default':true,
+    },
+    'enableTinyCon':{
+        'label':'Enable favicon badges for PMs:',
+        'title':"Adds notification bubble to favicon with number of unread PMs.",
+        'type':'checkbox',
+        'default':true,
+    },
+    'enablePMCheck':{
+        'label':"Enable Background PMs (Experimental - requires 'favicon badges' enabled):",
+        'title':"Checks for new PMs after 5 mins.",
+        'type':'checkbox',
+        'default':false,
+    },
     'HFTBversion':{
         'title':'test',
         'section': ["About HFTB",
@@ -215,6 +242,10 @@ $("#leftSticky a:eq("+numShortcutsEnabled()+")").click(function(){GM_config.open
 appendQuickLinks();
 // Add spacers to toolbar
 addSpacersToHeader();
+// Hide PM Alert
+hidePMNotice();
+// Check for PM Notifications
+checkPMNotifications();
 
 // ------------------------------ Functions ---------------------------
 function createStickyHeader(){
@@ -239,7 +270,8 @@ function createStickyHeader(){
         '#HFTB_config select {background: #cccccc; border: 1px solid #072948;}'+
         '#HFTB_config input[type="text"] {width:50%;}'+ // '#HFTB_config_spacer1_var,#HFTB_config_spacer2_var,#HFTB_config_spacer3_var,#HFTB_config_spacer4_var {height:10px;}'
         '#HFTB_config_quickLinks_1Text_var,#HFTB_config_quickLinks_2Text_var,#HFTB_config_quickLinks_3Text_var,#HFTB_config_quickLinks_4Text_var,#HFTB_config_quickLinks_5Text_var,'+
-        '#HFTB_config_quickLinks_1Link_var,#HFTB_config_quickLinks_2Link_var,#HFTB_config_quickLinks_3Link_var,#HFTB_config_quickLinks_4Link_var,#HFTB_config_quickLinks_5Link_var{padding-left:15px}'
+        '#HFTB_config_quickLinks_1Link_var,#HFTB_config_quickLinks_2Link_var,#HFTB_config_quickLinks_3Link_var,#HFTB_config_quickLinks_4Link_var,#HFTB_config_quickLinks_5Link_var,'+
+        '#HFTB_config_shortcut1Link_var {padding-left:15px}'
     });
     // Set values based on settings
     // Icon Labels
@@ -252,13 +284,13 @@ function createStickyHeader(){
     $("#panel").append($("<div>").attr("id","Sticky")
                        .css("height","22px").css("background-color","#333333")
                        .css("border-style","solid").css("border-color","white").css("border-width","0px 0px 1px 0px")
-                       .css("display","flex").css("align-items","center"));
+                       .css("display","flex").css("align-items","center").css("z-index","100"));
     // Left
     $("#Sticky").append($("<div>").attr("id","leftSticky").addClass("float_left").text("")
                         .css("padding-left","5px").css("display","block").css("height",headerHeight));
     if(GM_config.get('showShortcut1')){
         // Home
-        $("#leftSticky").append($("<a>").attr("href","https://hackforums.net/usercp.php").attr("onClick","")
+        $("#leftSticky").append($("<a>").attr("href",GM_config.get('shortcut1Link')).attr("onClick","").attr("title","Home")
                                 .append($("<i>").attr("id","homeLeftSticky").addClass("fa fa-home fa-lg")));
     }
     if(GM_config.get('showShortcut2')){
@@ -273,25 +305,27 @@ function createStickyHeader(){
     }
     // If PM notice
     var shortcut4Link = "https://hackforums.net/private.php?action=send";
+    var shortcut4Text = "New Message";
     var shortcut4NewPM = false;
     // New PM
     if ($("#pm_notice").length > 0){
-        shortcut4Link = $("#pm_notice div:eq(1) a:eq(1)").attr("href");
         // Active Icons
         if(GM_config.get('enableActiveIcons')){
-            shortcut4NewPM = true;}
+            shortcut4NewPM = true;
+            shortcut4Text = $("#pm_notice div:eq(1) a:eq(1)").text() + " from "+ $("#pm_notice div:eq(1) a:eq(0)").text();
+            shortcut4Link = $("#pm_notice div:eq(1) a:eq(1)").attr("href");}
     }
     if(GM_config.get('showShortcut4')){
         // PMs
-        $("#leftSticky").append($("<a>").attr("href",shortcut4Link).attr("target","_blank")
+        $("#leftSticky").append($("<a>").attr("href",shortcut4Link).attr("target","_blank").attr("title",shortcut4Text)
                                 .append($("<i>").attr("id","pmLeftSticky").addClass("fa fa-comments fa-lg")));
         // If new PM & enableActiveIcons
         if(shortcut4NewPM){
-        $("#pmLeftSticky").css("color","#ff3b30");
-    }
+            $("#pmLeftSticky").css("color","#ff3b30");
+        }
     }
     // Settings (left)
-    $("#leftSticky").append($("<a>").attr("href","#Settings").attr("onClick","")
+    $("#leftSticky").append($("<a>").attr("href","#Settings").attr("onClick","").attr("title","Settings")
                             .append($("<i>").attr("id","settingsleftSticky").addClass("fa fa-cog fa-lg")));
     // Right
     $("#Sticky").append($("<div>").attr("id","rightSticky").css("float","right").text("")
@@ -407,6 +441,63 @@ function appendQuickLinks(){
         }
     }
 }
-function createBuddyTable(){
-    
+function hidePMNotice(){
+    if(GM_config.get('hidePMNotification')){
+        if ($("#pm_notice").length > 0)
+            $("#pm_notice").hide();
+    }
+}
+function checkPMNotifications(){
+    if(GM_config.get('enableTinyCon') || GM_config.get('enablePMCheck')){
+        Tinycon.setOptions({
+            color: '#000000',
+            background: '#ff3b30',
+            fallback: true
+        });
+        // Set icon if page contains PM
+        if ($("#pm_notice").length > 0){
+            var pmAlert = $("#pm_notice");
+            var hasNumber = /\d/;
+            var numPMs = 0;
+            var numStr = hasNumber.test(pmAlert.find("strong").text());
+            if (numStr)
+                numPMs = parseInt(pmAlert.find("strong").text().replace(/[^0-9\.]/g, ''));
+            else
+                numPMs = 1;
+            Tinycon.setBubble(numPMs);
+        }
+        if (GM_config.get('enablePMCheck')){
+            // Function to check PM's in background
+            var interval = 1000 * 60 * 5; // 1000 milli * 60 secs * x = minutes (No lower than 5 or timeout!)
+            setInterval(function(){
+                var pmCount = updateFavIcon();
+                Tinycon.setBubble(pmCount);
+            }, interval);
+        }
+    }
+}
+function updateFavIcon(){
+    var numPMs = 0;
+    $.ajax({
+        url: "https://hackforums.net/stickies.php",
+        cache: false,
+        async: false,
+        success: function(response) {
+            var pmAlert = $(response).find("#pm_notice");
+            var hasNumber = /\d/;
+            var numStr = hasNumber.test(pmAlert.find("strong").text());
+            if (numStr)
+                numPMs = parseInt(pmAlert.find("strong").text().replace(/[^0-9\.]/g, ''));
+            else if(pmAlert.find("strong").text().includes("one"))
+                numPMs = 1;
+            // If Messages icon is enabled AND Active Icons are on - update link on Toolbar
+            if (GM_config.get('showShortcut4') && GM_config.get('enableActiveIcons')){
+                shortcut4Text = $(pmAlert).find("div:eq(1) a:eq(1)").text() + " from "+ $("#pm_notice div:eq(1) a:eq(0)").text();
+                shortcut4Link = $(pmAlert).find("div:eq(1) a:eq(1)").attr("href");
+                $("#pmLeftSticky").attr("href",shortcut4Link).attr("target","_blank").attr("title",shortcut4Text);
+            }
+        }
+    });
+    //console.log("Number of unread PM's: "+numPMs);
+    return numPMs;
 }
