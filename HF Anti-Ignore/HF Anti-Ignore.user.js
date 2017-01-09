@@ -2,7 +2,7 @@
 // @name       HF Anti-Ignore
 // @author xadamxk
 // @namespace  https://github.com/xadamxk/HF-Scripts
-// @version    1.0.1
+// @version    1.0.2
 // @description Counteracts HF's ignore feature - also works with Global Ignore.
 // @require https://code.jquery.com/jquery-3.1.1.js
 // @match      *://hackforums.net/member.php?action=profile&uid=*
@@ -12,6 +12,7 @@
 // @iconURL https://raw.githubusercontent.com/xadamxk/HF-Userscripts/master/scripticon.jpg
 // ==/UserScript==
 // ------------------------------ Change Log ----------------------------
+// version 1.0.2: Fixed ASCII char bug
 // version 1.0.1: Public Release
 // version 1.0.0: Beta Release
 // ------------------------------ Dev Notes -----------------------------
@@ -117,9 +118,9 @@ $( "table" ).each(function( index ) {
                                             .append($("<span>").css("font-size","12px").attr('colspan',1).attr('align','left').css("width","75%")
                                                     .append("(")
                                                     .append($("<a>").attr("href","https://hackforums.net/search.php?action=finduserthreads&uid="+uid).text("Find All Threads"))
-                                                    .append("—")
+                                                    .append("-")
                                                     .append($("<a>").attr("href","https://hackforums.net/search.php?action=finduser&uid="+uid).text("Find All Posts"))
-                                                    .append("—")
+                                                    .append("-")
                                                     .append($("<a>").attr("href","https://hackforums.net/postactivity.php?uid="+uid).text("Post Activity"))
                                                     .append(")")
                                                    )));
