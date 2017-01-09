@@ -20,39 +20,54 @@
 // ------------------------------ Dev Notes -----------------------------
 //
 // ------------------------------ SETTINGS ------------------------------
-// Bans
-var showBans = true; // (Default: true)
-// Gauth
-var showGauth = true; // (Default: true)
-// Warnings
-var showWarnings = true; // (Default: true)
-// Groups
-var showGroups = true; // (Default: true)
-// Neg Reps
-var showNegreps = true; // (Default: true)
-// Staff
-var showStaff = true; // (Default: true)
-// Mods
-var showMods = true; // (Default: true)
-// PM Tracking
-var showTracking = true; // (Default: true)
+var links = [
+    {
+        "enabled": true,
+        "name": "Neg Reps",
+        "url": "negreplog.php",
+    },
+    {
+        "enabled": true,
+        "name": "Groups",
+        "url": "showgroups.php",
+    },
+    {
+        "enabled": true,
+        "name": "Warnings",
+        "url": "warnlog.php",
+    },
+    {
+        "enabled": true,
+        "name": "Gauth",
+        "url": "gauth.php",
+    },
+    {
+        "enabled": true,
+        "name": "Bans",
+        "url": "bans.php",
+    },
+    {
+        "enabled": true,
+        "name": "Staff",
+        "url": "showstaff.php",
+    },
+    {
+        "enabled": true,
+        "name": "Mods",
+        "url": "showmods.php",
+    },
+    {
+        "enabled": true,
+        "name": "PM Tracking",
+        "url": "private.php?action=tracking",
+    }
+];
 // ------------------------------ ON PAGE LOAD ------------------------------
-// Append Links: if (){appendLink("","");}
-if (showNegreps){appendLink("negreplog.php","Neg Reps");}
-if (showGroups){appendLink("showgroups.php","Groups");}
-if (showWarnings){appendLink("warnlog.php","Warnings");}
-if (showGauth){appendLink("gauth.php","Gauth");}
-if (showBans){ appendLink("bans.php","Bans");}
-if (showStaff){appendLink("showstaff.php","Staff");}
-if (showMods){appendLink("showmods.php","Mods");}
-if (showTracking){appendLink("private.php?action=tracking","PM Tracking");}
-// Add spacer
-appendSpacer();
 
-// Functions
-function appendLink(href,text){
-    $(".links a:eq(0)").before($("<a>").attr("href",href).text(text));
-}
-function appendSpacer(){
-    $(".links a").before(" | ");
-}
+links.forEach(function(link) {
+    if (link.enabled === true) {
+        $(".links a:eq(0)").before($("<a>").attr("href", link.url).text(link.name));
+    }
+});
+
+$(".links a:not(:last)").after(" | ");
