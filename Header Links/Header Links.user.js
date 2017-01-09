@@ -2,7 +2,7 @@
 // @name       Header Links
 // @author xadamxk
 // @namespace  https://github.com/xadamxk/HF-Scripts
-// @version    1.0.3
+// @version    1.0.4
 // @description  Adds various links to HF's header (replaces HFES headers)
 // @require https://code.jquery.com/jquery-3.1.1.js
 // @match      *://hackforums.net*
@@ -13,6 +13,7 @@
 // @iconURL https://raw.githubusercontent.com/xadamxk/HF-Userscripts/master/scripticon.jpg
 // ==/UserScript==
 // ------------------------------ Change Log ----------------------------
+// version 1.0.4: Improved configuration system - thanks RonMelkhior
 // version 1.0.3: Bug fix: document-start
 // version 1.0.2: Fixed auto-update
 // version 1.0.1: Initial Release
