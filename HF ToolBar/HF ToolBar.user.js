@@ -2,7 +2,7 @@
 // @name       HF ToolBar
 // @author xadamxk
 // @namespace  https://github.com/xadamxk/HF-Scripts
-// @version    1.1.0
+// @version    1.1.1
 // @description  Adds a toolbar with various options to the top of HF.
 // @require https://code.jquery.com/jquery-3.1.1.js
 // @require https://raw.githubusercontent.com/xadamxk/HF-Userscripts/master/JS%20Libraries/jquery.sticky.js
