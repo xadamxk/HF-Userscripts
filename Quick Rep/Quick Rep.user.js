@@ -2,7 +2,7 @@
 // @name       Quick Rep
 // @author xadamxk
 // @namespace  https://github.com/xadamxk/HF-Scripts
-// @version    2.0.7.1
+// @version    2.0.8
 // @description Makes giving reputation on HF easier.
 // @require https://code.jquery.com/jquery-3.1.1.js
 // @match      *://hackforums.net/showthread.php?tid=*
@@ -14,6 +14,7 @@
 // @iconURL https://raw.githubusercontent.com/xadamxk/HF-Userscripts/master/scripticon.jpg
 // ==/UserScript==
 // ------------------------------ Change Log ----------------------------
+// version 2.0.8: Staff support, Bug fix: RepQueueCookie is not longer a session cookie.
 // version 2.0.7: Bug fix: document-start
 // version 2.0.6: Fixed auto-update
 // version 2.0.5: Bug fix - fixed 2.0.1 hot fix - added method to get primaryUsergroup
@@ -39,8 +40,7 @@
 // version 1.0.1: Bug fix for certain browsers
 // version 1.0.0: Initial Release
 // ------------------------------ Dev Notes -----------------------------
-// The bugs are almost dead
-// Figure out 2.0.3 hot fix - why $ event listener only triggers once?
+//
 // ------------------------------ SETTINGS ------------------------------
 // Label for button (visible from /showthread.php?)
 var repButtonLabel = "Rep"; // Default: "Rep")
@@ -202,6 +202,19 @@ if (window.location.href.includes("hackforums.net/showthread.php?tid=") ||
                                         $("#repSelect"+index).append( $('<option></option>').val(1).html("Positive(+1)"));
                                         $("#repSelect"+index).append( $('<option></option>').val(0).html("Neutral"));
                                     }
+                                    else if (document.cookie.replace(/(?:(?:^|.*;\s*)RepQueueUsergroup\s*\=\s*([^;]*).*$)|^.*$/, "$1") == "Staff"){
+                                        $("#repSelect"+index).append( $('<option></option>').val(5).html("Positive(+5)"));
+                                        $("#repSelect"+index).append( $('<option></option>').val(4).html("Positive(+4)"));
+                                        $("#repSelect"+index).append( $('<option></option>').val(3).html("Positive(+3)"));
+                                        $("#repSelect"+index).append( $('<option></option>').val(2).html("Positive(+2)"));
+                                        $("#repSelect"+index).append( $('<option></option>').val(1).html("Positive(+1)"));
+                                        $("#repSelect"+index).append( $('<option></option>').val(0).html("Neutral"));
+                                        $("#repSelect"+index).append( $('<option></option>').val(-1).html("Negative(-1)"));
+                                        $("#repSelect"+index).append( $('<option></option>').val(-2).html("Negative(-2)"));
+                                        $("#repSelect"+index).append( $('<option></option>').val(-3).html("Negative(-3)"));
+                                        $("#repSelect"+index).append( $('<option></option>').val(-4).html("Negative(-4)"));
+                                        $("#repSelect"+index).append( $('<option></option>').val(-5).html("Negative(-5)"));
+                                    }
                                     else if (document.cookie.replace(/(?:(?:^|.*;\s*)RepQueueUsergroup\s*\=\s*([^;]*).*$)|^.*$/, "$1") == "Normal"){
                                         window.alert("Permissions Error! Normal members do not have access to the reputation system!");
                                         return;
@@ -258,9 +271,11 @@ if (window.location.href.includes("hackforums.net/showthread.php?tid=") ||
                                             queueString = recipientUID+"||"+recipientUsername+"||"+$("#repSelect"+index).val()+"||"+default_comment+"|||";
                                             // Make cookie if doesn't already exist
                                             if (document.cookie.replace(/(?:(?:^|.*;\s*)RepQueueCookie\s*\=\s*([^;]*).*$)|^.*$/, "$1") === undefined)
-                                                document.cookie = 'RepQueueCookie=';
+                                                createCookie("RepQueueCookie","",10000);
                                             // Add queueString to cookie
-                                            document.cookie = 'RepQueueCookie=' + document.cookie.replace(/(?:(?:^|.*;\s*)RepQueueCookie\s*\=\s*([^;]*).*$)|^.*$/, "$1") + queueString;
+                                            if (readCookie("RepQueueCookie") !== null)
+                                                queueString = readCookie("RepQueueCookie") + queueString;
+                                            createCookie("RepQueueCookie",queueString,10000);
                                             // Notification
                                             repComment = $("#repSelect"+index+" option:selected").text() + "\nRep Reasoning: "+ default_comment;
                                             notififyMe("Rep Queued!",repComment, next_loc);
@@ -289,9 +304,11 @@ if (window.location.href.includes("hackforums.net/showthread.php?tid=") ||
                                             queueString = recipientUID+"||"+recipientUsername+"||"+$("#repSelect"+index).val()+"||"+newComment+"|||";
                                             // Make cookie if doesn't already exist
                                             if (document.cookie.replace(/(?:(?:^|.*;\s*)RepQueueCookie\s*\=\s*([^;]*).*$)|^.*$/, "$1") === undefined)
-                                                document.cookie = 'RepQueueCookie=';
+                                                createCookie("RepQueueCookie","",10000);
                                             // Add queueString to cookie
-                                            document.cookie = 'RepQueueCookie=' + document.cookie.replace(/(?:(?:^|.*;\s*)RepQueueCookie\s*\=\s*([^;]*).*$)|^.*$/, "$1") + queueString;
+                                            if (readCookie("RepQueueCookie") !== null)
+                                                queueString = readCookie("RepQueueCookie") + queueString;
+                                            createCookie("RepQueueCookie",queueString,10000);
                                             // Notification
                                             repComment = $("#repSelect"+index+" option:selected").text() + "\nRep Reasoning: "+ $("#repComment"+index).val();
                                             notififyMe("Rep Queued!",repComment, next_loc);
@@ -340,7 +357,8 @@ function removeEntry(queueIndex){
         }
     }
     // Add queueString back to cookie
-    document.cookie = 'RepQueueCookie=' +  newQueueString;
+    console.log(newQueueString);
+    createCookie("RepQueueCookie",newQueueString,10000);
     location.reload();
     // Remove Entry
     //$("#repQueueTable").remove();
@@ -362,7 +380,7 @@ function buildQueueTable(){
     $('#repQueueTable').after($('<br>'));
     // Precaution incase they delete cookie
     if (document.cookie.replace(/(?:(?:^|.*;\s*)RepQueueCookie\s*\=\s*([^;]*).*$)|^.*$/, "$1") === undefined)
-        document.cookie = 'RepQueueCookie=';
+        createCookie("RepQueueCookie","",10000);
     // Array of queue'd reps
     var queuedRep = document.cookie.replace(/(?:(?:^|.*;\s*)RepQueueCookie\s*\=\s*([^;]*).*$)|^.*$/, "$1").split('|||');
     var infoString = queuedRep.length > 1 ? "These are the reps you have queued ("+(queuedRep.length-1)+")." : "No reps queued.";
@@ -536,14 +554,43 @@ function getPrimaryUserGroup(){
     if (document.cookie.replace(/(?:(?:^|.*;\s*)RepQueueUsergroup\s*\=\s*([^;]*).*$)|^.*$/, "$1") === undefined)
         document.cookie = 'RepQueueUsergroup=';
     // Ub3r
-    if (desiredString.includes("HF Ub3r"))
-        document.cookie = 'RepQueueUsergroup=' + "Uber";
+    if (desiredString.includes("HF Ub3r")){
+        document.cookie = 'RepQueueUsergroup=' + "Uber";}
     // L33t
     else if (desiredString.includes("HF l33t"))
         document.cookie = 'RepQueueUsergroup=' + "Leet";
+    // Staff
+    else if (desiredString.includes("Staff"))
+        document.cookie = 'RepQueueUsergroup=' + "Staff";
     // Everything else
     else
-        document.cookie = 'RepQueueCookie=' + "Normal";
+        document.cookie = 'RepQueueUsergroup=' + "Normal";
     // Debug default usergroup
     if (debug){console.log("Default usergroup: "+document.cookie.replace(/(?:(?:^|.*;\s*)RepQueueUsergroup\s*\=\s*([^;]*).*$)|^.*$/, "$1"));}
+}
+// Cookie functions (http://stackoverflow.com/a/24103596)
+function createCookie(name,value,days) {
+    var expires;
+    if (days) {
+        var date = new Date();
+        date.setTime(date.getTime() + (days*24*60*60*1000));
+        expires = "; expires=" + date.toUTCString();
+    }
+    else expires = "";
+    document.cookie = name + "=" + value + expires + "; path=/";
+}
+
+function readCookie(name) {
+    var nameEQ = name + "=";
+    var ca = document.cookie.split(';');
+    for(var i=0;i < ca.length;i++) {
+        var c = ca[i];
+        while (c.charAt(0)==' ') c = c.substring(1,c.length);
+        if (c.indexOf(nameEQ) === 0) return c.substring(nameEQ.length,c.length);
+    }
+    return null;
+}
+
+function eraseCookie(name) {
+    createCookie(name,"",-1);
 }
