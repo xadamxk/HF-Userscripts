@@ -10,7 +10,6 @@
 // @require https://raw.githubusercontent.com/xadamxk/HF-Userscripts/master/JS%20Libraries/tinycon.min.js
 // @require https://raw.githubusercontent.com/xadamxk/HF-Userscripts/master/JS%20Libraries/jquery-ui.js
 // @require https://raw.githubusercontent.com/xadamxk/HF-Userscripts/master/JS%20Libraries/tinybox.js
-// @run-at document-start
 // @match      *://hackforums.net*
 // @match      *://hackforums.net/*
 // @copyright  2016+
@@ -22,6 +21,7 @@
 // @grant       GM_info
 // @iconURL https://raw.githubusercontent.com/xadamxk/HF-Userscripts/master/scripticon.jpg
 // ------------------------------ Change Log ----------------------------
+// version 1.1.1: Bug Fix: Fixed Buddies/Settings icon not working - caused by other header scripts.
 // version 1.1.0: Public Release.
 // version 1.0.5: Implemented extractable Buddy List, Settings active icon color.
 // version 1.0.4: Load HFTB Messages in new tab setting, current page highlight color & settings.
@@ -33,7 +33,7 @@
 // ------------------------------ Dev Notes -----------------------------
 // Note: Color compliments: http://www.colorhexa.com/1f8ef1, https://color.adobe.com, http://www.colorschemer.com/online.html
 // Note: bullet Color: #0F5799
-// Note: Saved icon functionality?
+// Note: Saved icon -> quick notes
 // ------------------------------ SETTINGS ------------------------------
 // Get Changelog from meta block
 var tempChangeLog = GM_info.scriptMetaStr.split('//');
