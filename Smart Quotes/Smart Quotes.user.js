@@ -2,7 +2,7 @@
 // @name       Smart Quotes
 // @author xadamxk
 // @namespace  https://github.com/xadamxk/HF-Scripts
-// @version    1.0.3
+// @version    1.1.0
 // @description  Enhances quotes by adding style & highlights mentioned quotes
 // @require https://code.jquery.com/jquery-3.1.1.js
 // @match      *://hackforums.net/showthread.php?tid=*
@@ -12,6 +12,7 @@
 // @iconURL https://raw.githubusercontent.com/xadamxk/HF-Userscripts/master/scripticon.jpg
 // ==/UserScript==
 // ------------------------------ Change Log ----------------------------
+// version 1.1.0: Now shows 'smartQuoteNotifications' next to the thread title.
 // version 1.0.3: Bug fix: document-start
 // version 1.0.2: Bug fix - fixed notification selector to work on threads without page nav (<10 posts)
 // version 1.0.1: Initial Release
@@ -72,8 +73,15 @@ if ($("*").find("blockquote").length > 0){
     });
 }
 if (showsmartQuoteNotification){
+    var mentionString = ") Mention";
+    var thead = $("strong:contains(Thread Options)").parent().parent().parent();
+    // Strong that contains thread title
     if (usernameCount < 1)
-        $(".quick_keys .float_left:eq(0)").append($("<strong>").text("No Mentions Found").css("color",smartQuoteNotificationColor));
-    else
-        $(".quick_keys .float_left:eq(0)").append($("<strong>").text("("+usernameCount+") Mentions").css("color",smartQuoteNotificationColor));
+        $(thead.find("strong:contains("+thead.find("div strong").text().replace("Thread Options","")+")")).after($("<a>").text(" No Mentions").attr("id","smartQuoteMentions"));
+    else{
+        if (usernameCount > 1)
+            mentionString+= "s";
+        $(thead.find("strong:contains("+thead.find("div strong").text().replace("Thread Options","")+")")).after($("<a>").text(" ("+usernameCount+mentionString).attr("id","smartQuoteMentions"));
+    }
+    $("#smartQuoteMentions").css("color",smartQuoteNotificationColor);
 }
