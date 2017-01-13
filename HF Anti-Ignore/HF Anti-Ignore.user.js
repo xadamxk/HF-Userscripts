@@ -2,7 +2,7 @@
 // @name       HF Anti-Ignore
 // @author xadamxk
 // @namespace  https://github.com/xadamxk/HF-Scripts
-// @version    1.0.2
+// @version    1.0.3
 // @description Counteracts HF's ignore feature - also works with Global Ignore.
 // @require https://code.jquery.com/jquery-3.1.1.js
 // @match      *://hackforums.net/member.php?action=profile&uid=*
@@ -12,6 +12,7 @@
 // @iconURL https://raw.githubusercontent.com/xadamxk/HF-Userscripts/master/scripticon.jpg
 // ==/UserScript==
 // ------------------------------ Change Log ----------------------------
+// version 1.0.3: Added posts per day and percent of total posts
 // version 1.0.2: Fixed ASCII char bug
 // version 1.0.1: Public Release
 // version 1.0.0: Beta Release
@@ -19,6 +20,7 @@
 // More about 'Global Ignore': https://hackforums.net/showthread.php?tid=5513363
 // ------------------------------ SETTINGS ------------------------------
 var debug = false;
+var totalPosts = 53790000;
 // ------------------------------ Page Load -----------------------------
 $( "table" ).each(function( index ) {
     if ($(this).find(".smalltext strong").text() == "Ignore Error"){
@@ -36,7 +38,7 @@ $( "table" ).each(function( index ) {
         $.ajax({
             method: "POST",
             url: "https://hackforums.net/memberlist.php",
-            data: { 
+            data: {
                 username: username,
                 website: "",
                 sort: "username",
@@ -112,15 +114,68 @@ $( "table" ).each(function( index ) {
                                     .append($('<td>').append($('<strong>').text('Last Visit:')).addClass('tcat').attr('colspan',1).attr('align','left').css("font-size","14px").css("width","25%"))
                                     .append($('<td>').append(userLastVisit).addClass('tcat').attr('colspan',1).attr('align','left').css("font-size","14px").css("width","75%")));
             // Total Post
+            var joinDateShort = userJoinDate.replace(',','').split(/[,]/)[0];
+            // Fix month format
+            var dateArray = joinDateShort.split(' ');
+            switch(dateArray[0]){
+                case 'January': dateArray[0] = "01";
+                    break;
+                case 'February': dateArray[0] = "02";
+                    break;
+                case 'March': dateArray[0] = "03";
+                    break;
+                case 'April': dateArray[0] = "04";
+                    break;
+                case 'May': dateArray[0] = "05";
+                    break;
+                case 'June': dateArray[0] = "06";
+                    break;
+                case 'July': dateArray[0] = "07";
+                    break;
+                case 'August': dateArray[0] = "08";
+                    break;
+                case 'September': dateArray[0] = "09";
+                    break;
+                case 'October': dateArray[0] = "10";
+                    break;
+                case 'November': dateArray[0] = "11";
+                    break;
+                case 'December': dateArray[0] = "12";
+                    break;
+                default: dateArray[0] = "01";
+            }
+            joinDateShort = dateArray[0] + "/" + dateArray[1].replace(/\D/g,'') + "/" + dateArray[2];
+            var today = new Date();
+            var dd = today.getDate();
+            var mm = today.getMonth()+1; //January is 0!
+
+            var yyyy = today.getFullYear();
+            if(dd<10)
+                dd='0'+dd;
+            if(mm<10)
+                mm='0'+mm;
+            today = dd+'/'+mm+'/'+yyyy;
+            // Math for percentages of posts
+            var totPosts = parseInt(userPostCount.replace(',',''));
+            var profileAgeDays = parseInt(new Date(today) - new Date(joinDateShort))/ (1000 * 3600 * 24);
+            var avgPostDay = Math.round((totPosts/profileAgeDays)*100)/100;
+            // Percent of tot posts
+            var percTot = Math.round(((totPosts/totalPosts)*100)*100)/100;
+            if (debug){
+                console.log("Total Posts: "+totPosts);
+                console.log("Profile Age (Days): "+profileAgeDays);
+                console.log("Avg Posts/Day: "+avgPostDay);
+                console.log("Percent of Total Posts: "+percTot/100);
+            }
             $('#antiIgnore').append($('<tr>')
                                     .append($('<td>').append($('<strong>').text('Total Posts:')).addClass('tcat').attr('colspan',1).attr('align','left').css("font-size","14px").css("width","25%"))
-                                    .append($('<td>').append(userPostCount).addClass('tcat').css("font-size","14px").append($("<br>"))
+                                    .append($('<td>').append(userPostCount).addClass('tcat').css("font-size","14px").append(" ("+avgPostDay+" posts per day | "+percTot+" percent of total posts").append($("<br>"))
                                             .append($("<span>").css("font-size","12px").attr('colspan',1).attr('align','left').css("width","75%")
                                                     .append("(")
                                                     .append($("<a>").attr("href","https://hackforums.net/search.php?action=finduserthreads&uid="+uid).text("Find All Threads"))
-                                                    .append("-")
+                                                    .append(" "+String.fromCharCode(8212)+" ")
                                                     .append($("<a>").attr("href","https://hackforums.net/search.php?action=finduser&uid="+uid).text("Find All Posts"))
-                                                    .append("-")
+                                                    .append(" "+String.fromCharCode(8212)+" ")
                                                     .append($("<a>").attr("href","https://hackforums.net/postactivity.php?uid="+uid).text("Post Activity"))
                                                     .append(")")
                                                    )));
@@ -204,7 +259,6 @@ $( "table" ).each(function( index ) {
             var userUserstarNew = "";
             for (i=0;i < userUserstar; i++)
                 userUserstarNew = userUserstarNew + '<img src="'+userUserstarURL+'" border="0" alt="*">';
-            console.log(userUserstarNew);
             // Append user table
             $("#antiIgnore").before($("<table>").css("width","100%").attr('id', 'antiIgnoreUser').attr('border', 0).attr('cellspacing', 0)
                                     .attr('cellpadding',0).append($('<tbody>').append($("<tr>")
