@@ -2,8 +2,8 @@
 // @name       Group Management Profile Manager
 // @author xadamxk
 // @namespace  https://github.com/xadamxk/HF-Scripts
-// @version    1.1.1
-// @description  Adds group management buttons to profiles (add/remove) for HF leaders
+// @version    1.1.2
+// @description  Adds improved group management options for HF leaders
 // @require http://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js
 // @match      *://hackforums.net/*
 // @match      *://hackforums.net*
@@ -14,6 +14,8 @@
 // @grant       GM_getValue
 // @grant       GM_setValue
 // ------------------------------ Change Log ----------------------------
+// version 1.2.0: Implemented 'Deny All Requests' into Group Leader Notices
+// version 1.1.2: Adding setting to hide Group Leader Notices
 // version 1.1.1: Bug fix - Adding/Removing broke in code clean up of v1.1.0
 // version 1.1.0: Implemented Accept/Ignore/Decline all radio buttons on join request menu, cleaned up code
 // version 1.0.1: Public Release
@@ -21,14 +23,20 @@
 // ==/UserScript==
 // ------------------------------ Dev Notes -----------------------------
 // Add quick deny all?
-// Restructure code to support finding userbars better (if image contains string of group name?)
+// Restructure code to support finding userbars better (if image contains string of group name)?
 // ------------------------------ SETTINGS ------------------------------
 // Key used to store group name,gid,etc. (Don't change)
 const GM_ValAddr = "groupsInfo"; // (Default: 'groupsInfo')
+
+// Hide the 'Group Leader Notice' alert
+var hideGroupNotice = false; // (Default: false)
+
 // Which select all radio button to default to Options: 'acceptAllRadio','ignoreAllRadio','declineAllRadio'
 var defaultSelectAll = "ignoreAllRadio"; // (Default: ignoreAllRadio)
+
 // Automatically declines group join requests if any are present
 var declineAllAutomatically = false; // (Default: false)
+
 // Debug Mode - Print certain results to console
 var debug = true; // (Default: false)
 // ------------------------------ ON PAGE LOAD ------------------------------
@@ -216,6 +224,20 @@ function runonEveryHFPage(){
     // Group Notice
     if(groupNoticeDiv !== undefined){
         if(debug){console.log("Group Notice Found!");}
-        
+        if (hideGroupNotice)
+            groupNoticeDiv.hide();
+        else{
+            // Auto decline on page load
+            if(!declineAllAutomatically)
+                declineAllRequests();
+            // Append anchor for 'Deny all Requests'
+            else
+                $(groupNoticeDiv).append("<br>").append($("<a>").text(" (Deny All Requests)"));
+        }
     }
+}
+
+// AJAX to decline all join requests
+function declineAllRequests(){
+    // AJAX goes here
 }
