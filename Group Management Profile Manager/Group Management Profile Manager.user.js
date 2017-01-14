@@ -2,7 +2,7 @@
 // @name       Group Management Profile Manager
 // @author xadamxk
 // @namespace  https://github.com/xadamxk/HF-Scripts
-// @version    1.2.1
+// @version    1.2.2
 // @description  Adds group management buttons to profiles (add/remove) for HF leaders
 // @require http://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js
 // @match      *://hackforums.net/*
@@ -14,6 +14,7 @@
 // @grant       GM_getValue
 // @grant       GM_setValue
 // ------------------------------ Change Log ----------------------------
+// version 1.2.2: Added 'Mark All' under Group Member List
 // version 1.2.1: Added 'Auto Accept' into Group Leader Notices
 // version 1.2.0: Implemented 'Auto Decline' into Group Leader Notices
 // version 1.1.2: Adding setting to hide Group Leader Notices
