@@ -89,7 +89,7 @@ US managers (ex. <a href="https://tampermonkey.net/">TamperMonkey</a>) allow use
 </ul> 
 </ul>
 </li></ul>
-<ul><li><b><a href ="https://hackforums.net/showthread.php?tid=5478207">Group Management Profile Manager</a>(<a href="https://github.com/xadamxk/HF-Userscripts/raw/master/Group%20Management%20Profile%20Manager/Group%20Management%20Profile%20Manager.user.js">Install</a>):</b> Adds group management buttons(add/remove) to profiles for HF leaders.
+<ul><li><b><a href ="https://hackforums.net/showthread.php?tid=5478207">Group Management Profile Manager</a>(<a href="https://github.com/xadamxk/HF-Userscripts/raw/master/Group%20Management%20Profile%20Manager/Group%20Management%20Profile%20Manager.user.js">Install</a>):</b> Adds improved group management options for HF leaders.
 <ul>Release Date: 11/29/2016
 <ul>Screenshots
 <ul>
