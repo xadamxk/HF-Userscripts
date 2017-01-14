@@ -16,16 +16,23 @@ US managers (ex. <a href="https://tampermonkey.net/">TamperMonkey</a>) allow use
 <h3><b><big>Scripts</big></b></h3>
 <ul><li>Below are the scripts listed under this repository along with a short description.
 
-<ul><li><b><a href="https://github.com/xadamxk/HF-Userscripts/tree/master/Custom%20Header">Custom Header</a> (<a href="https://github.com/xadamxk/HF-Userscripts/raw/master/Custom%20Header/Custom%20Header.user.js">Install</a>):</b> Adds various shortcuts to the HF toolbar.</li></ul>
-<ul><li><b><a href="https://github.com/xadamxk/HF-Userscripts/tree/master/Group%20Management%20Links">Group Management Links</a>(<a href="https://github.com/xadamxk/HF-Userscripts/raw/master/Group%20Management%20Links/Group%20Management%20Links.user.js">Install</a>):</b> Adds group management links to the HF toolbar (hardcoded - change GID accordingly).</li></ul>
-<ul><li><b><a href="https://github.com/xadamxk/HF-Userscripts/tree/master/Group%20Management%20Links%202.0">Group Management Links 2.0</a>(<a href="https://github.com/xadamxk/HF-Userscripts/raw/master/Group%20Management%20Links%202.0/Group%20Management%20Links%202.0.user.js">Install</a>):</b> Adds group management links to the HF toolbar (automated - scraps group info) Supports multiple groups!</li></ul>
-<ul><li><b><a href ="https://github.com/xadamxk/HF-Userscripts/tree/master/Group%20Management%20Profile%20Manager">Group Management Profile Manager</a>(<a href="https://github.com/xadamxk/HF-Userscripts/raw/master/Group%20Management%20Profile%20Manager/Group%20Management%20Profile%20Manager.user.js">Install</a>):</b> Adds group management buttons(add/remove) to profiles for HF leaders.</li></ul>
-<ul><li><b><a href ="https://github.com/xadamxk/HF-Userscripts/tree/master/HF%20News%20Notifier">HF News Notifier</a>(<a href="https://github.com/xadamxk/HF-Userscripts/raw/master/HF%20News%20Notifier/HF%20News%20Notifier.user.js">Install</a>):</b> Alerts users of new HF News editions (checks on /usercp.php).</li></ul>
-<ul><li><b><a href ="https://github.com/xadamxk/HF-Userscripts/tree/master/Rep%20Charts">Rep Charts</a>(<a href="https://github.com/xadamxk/HF-Userscripts/raw/master/Rep%20Charts/Rep%20Charts.user.js">Install</a>):</b> Display graphical information on member's reputation page.</li></ul>
-<ul><li><b><a href ="https://github.com/xadamxk/HF-Userscripts/tree/master/Quick%20Rep">Quick Rep</a>(<a href="https://github.com/xadamxk/HF-Userscripts/raw/master/Quick%20Rep/Quick%20Rep.user.js">Install</a>):</b> Makes giving reputation on HF easier.</li></ul>
-<ul><li><b><a href ="https://github.com/xadamxk/HF-Userscripts/tree/master/EasyCite">EasyCite</a>(<a href="https://github.com/xadamxk/HF-Userscripts/raw/master/EasyCite/EasyCite.user.js">Install</a>):</b> Allows users to cite threads, users, sections, and other pages on HF.</li></ul>
-<ul><li><b><a href ="https://github.com/xadamxk/HF-Userscripts/tree/master/Header%20Links">Header Links</a>(<a href="https://github.com/xadamxk/HF-Userscripts/raw/master/Header%20Links/Header%20Links.user.js">Install</a>):</b> Adds various links to HF's header (replaces HFES headers).</li></ul>
-<ul><li><b><a href ="https://github.com/xadamxk/HF-Userscripts/tree/master/Smart%20Quotes">Smart Quotes</a>(<a href="https://github.com/xadamxk/HF-Userscripts/raw/master/Smart%20Quotes/Smart%20Quotes.user.js">Install</a>):</b> Enhances quotes by adding style & highlights mentioned quotes</li></ul>
+<ul><li><b><a href ="https://hackforums.net/showthread.php?tid=5509062">Smart Quotes</a>(<a href="https://github.com/xadamxk/HF-Userscripts/raw/master/Smart%20Quotes/Smart%20Quotes.user.js">Install</a>):</b> Enhances quotes by adding style & highlights mentioned quotes</li></ul>
+<ul><li><b><a href ="https://hackforums.net/showthread.php?tid=5508483">Header Links</a>(<a href="https://github.com/xadamxk/HF-Userscripts/raw/master/Header%20Links/Header%20Links.user.js">Install</a>):</b> Adds various links to HF's header (replaces HFES headers).</li></ul>
+<ul><li><b><a href ="https://hackforums.net/showthread.php?tid=5507074">EasyCite</a>(<a href="https://github.com/xadamxk/HF-Userscripts/raw/master/EasyCite/EasyCite.user.js">Install</a>):</b> Allows users to cite threads, users, sections, and other pages on HF.</li></ul>
+<ul><li><b><a href ="https://hackforums.net/showthread.php?tid=5498344">Quick Rep</a>(<a href="https://github.com/xadamxk/HF-Userscripts/raw/master/Quick%20Rep/Quick%20Rep.user.js">Install</a>):</b> Makes giving reputation on HF easier.</li></ul>
+<ul><li><b><a href ="https://hackforums.net/showthread.php?tid=5495131">Rep Charts</a>(<a href="https://github.com/xadamxk/HF-Userscripts/raw/master/Rep%20Charts/Rep%20Charts.user.js">Install</a>):</b> Display graphical information on member's reputation page.</li></ul>
+<ul><li><b><a href ="https://hackforums.net/showthread.php?tid=5480003">HF News Notifier</a>(<a href="https://github.com/xadamxk/HF-Userscripts/raw/master/HF%20News%20Notifier/HF%20News%20Notifier.user.js">Install</a>):</b> Alerts users of new HF News editions (checks on /usercp.php).</li></ul>
+<ul><li><b><a href ="https://hackforums.net/showthread.php?tid=5478207">Group Management Profile Manager</a>(<a href="https://github.com/xadamxk/HF-Userscripts/raw/master/Group%20Management%20Profile%20Manager/Group%20Management%20Profile%20Manager.user.js">Install</a>):</b> Adds group management buttons(add/remove) to profiles for HF leaders.</li></ul>
+<ul><li><b><a href="https://hackforums.net/showthread.php?tid=5477859">Group Management Links 2.0</a>(<a href="https://github.com/xadamxk/HF-Userscripts/raw/master/Group%20Management%20Links%202.0/Group%20Management%20Links%202.0.user.js">Install</a>):</b> Adds group management links to the HF toolbar (automated - scraps group info) Supports multiple groups!</li></ul>
+<ul><li><b><a href="https://hackforums.net/showthread.php?tid=5495482">Group Management Links</a>(<a href="https://github.com/xadamxk/HF-Userscripts/raw/master/Group%20Management%20Links/Group%20Management%20Links.user.js">Install</a>):</b> Adds group management links to the HF toolbar (hardcoded - change GID accordingly).</li></ul>
+<ul><li><b><a href="https://hackforums.net/showthread.php?tid=5495482">Custom Header</a> (<a href="https://github.com/xadamxk/HF-Userscripts/raw/master/Custom%20Header/Custom%20Header.user.js">Install</a>):</b> Adds various shortcuts to the HF toolbar.</li></ul>
+
+
+
+
+
+
+
 <ul><li><b><a href ="https://github.com/xadamxk/HF-Userscripts">Script</a>(<a href="">Install</a>):</b> Description.</li></ul>
 
 </li></ul>
