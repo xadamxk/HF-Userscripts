@@ -2,8 +2,8 @@
 // @name       Group Management Profile Manager
 // @author xadamxk
 // @namespace  https://github.com/xadamxk/HF-Scripts
-// @version    1.1.2
-// @description  Adds improved group management options for HF leaders
+// @version    1.2.0
+// @description  Adds group management buttons to profiles (add/remove) for HF leaders
 // @require http://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js
 // @match      *://hackforums.net/*
 // @match      *://hackforums.net*
@@ -14,7 +14,7 @@
 // @grant       GM_getValue
 // @grant       GM_setValue
 // ------------------------------ Change Log ----------------------------
-// version 1.2.0: Implemented 'Deny All Requests' into Group Leader Notices
+// version 1.2.0: Implemented 'Auto Decline' into Group Leader Notices
 // version 1.1.2: Adding setting to hide Group Leader Notices
 // version 1.1.1: Bug fix - Adding/Removing broke in code clean up of v1.1.0
 // version 1.1.0: Implemented Accept/Ignore/Decline all radio buttons on join request menu, cleaned up code
@@ -22,27 +22,31 @@
 // version 1.0.0: Beta Release
 // ==/UserScript==
 // ------------------------------ Dev Notes -----------------------------
-// Add quick deny all?
-// Restructure code to support finding userbars better (if image contains string of group name)?
+// Consider restructure code to support finding userbars better (if image contains string of group name) if it becomes an issue in future?.
 // ------------------------------ SETTINGS ------------------------------
 // Key used to store group name,gid,etc. (Don't change)
 const GM_ValAddr = "groupsInfo"; // (Default: 'groupsInfo')
 
-// Hide the 'Group Leader Notice' alert
+// Hide the 'Group Leader Notice' alert (Disables 'Auto-Decline')
 var hideGroupNotice = false; // (Default: false)
 
 // Which select all radio button to default to Options: 'acceptAllRadio','ignoreAllRadio','declineAllRadio'
 var defaultSelectAll = "ignoreAllRadio"; // (Default: ignoreAllRadio)
 
-// Automatically declines group join requests if any are present
+// Auto-Decline: Automatically declines group join requests if any are present
 var declineAllAutomatically = false; // (Default: false)
 
 // Debug Mode - Print certain results to console
-var debug = true; // (Default: false)
+var debug = false; // (Default: false)
 // ------------------------------ ON PAGE LOAD ------------------------------
 // Global variables
 var uid = $(location).attr('href').replace(/[^0-9]/g, '');
 var username = $("span[class*='group']").text();
+var my_key;
+if(my_post_key === undefined)
+    my_key = unsafeWindow.my_post_key;
+else
+    my_key = my_post_key;
 // Profile
 if (window.location.href.includes("hackforums.net/member.php?action=profile&uid="))
     runonProfile();
@@ -53,13 +57,8 @@ else if (window.location.href.includes("hackforums.net/managegroup.php?action=jo
 runonEveryHFPage();
 // ------------------------------ METHODS ------------------------------
 function addUser(gid){
-    var my_key;
-    if(my_post_key === undefined)
-        my_key = unsafeWindow.my_post_key;
-    else
-        my_key = my_post_key;
     // Debug purposes
-    //window.alert(my_post_key+","+gid+","+username);
+    if(debug){console.log(my_post_key+","+gid+","+username);}
     $.post("/managegroup.php",
            {
         "my_post_key": my_key,
@@ -73,11 +72,6 @@ function addUser(gid){
     });
 }
 function removeUser(gid){
-    var my_key;
-    if(my_post_key === undefined)
-        my_key = unsafeWindow.my_post_key;
-    else
-        my_key = my_post_key;
     $.post("/managegroup.php",
            {
         "my_post_key": my_key,
@@ -228,16 +222,74 @@ function runonEveryHFPage(){
             groupNoticeDiv.hide();
         else{
             // Auto decline on page load
-            if(!declineAllAutomatically)
-                declineAllRequests();
+            if(declineAllAutomatically)
+                declineAllRequests(groupNoticeDiv);
             // Append anchor for 'Deny all Requests'
-            else
-                $(groupNoticeDiv).append("<br>").append($("<a>").text(" (Deny All Requests)"));
+            else{
+                $(groupNoticeDiv).append("<br>").append($("<a>").text("(Deny All Requests)").attr("href","#DeclineAllRequests").attr("id","declineAllRequests"));
+                $("#declineAllRequests").click(function() {
+                    var confirmDeny = window.confirm("Are you sure you want to remove all group requests?");
+                    if(confirmDeny){declineAllRequests(groupNoticeDiv);}
+                });
+            }
         }
     }
 }
 
 // AJAX to decline all join requests
-function declineAllRequests(){
-    // AJAX goes here
+function declineAllRequests(groupNoticeDiv){
+    var gid;
+    var numRequests = 0;
+    if(debug){console.log("Decline All Requests Function!");}
+    // AJAX to get GID
+    $.ajax({
+        url: "/usercp.php?action=usergroups",
+        cache: false,
+        async: false,
+        success: function(response) {
+            // Get GID
+            gid = $(response).find("a:contains(Join Requests)").attr("href").replace(/[^0-9]/g, '');
+            if(debug){console.log("Scrapped GID: "+gid);}
+        }
+    });
+    $("#declineAllRequests").text("Removing Requests...");
+    // Wait 1 second, then remove all
+    setTimeout(function () {
+        var denyJSON = {
+            "my_post_key": my_key,
+            "action": "do_joinrequests",
+            "gid": gid
+        };
+        // AJAX to deny all requests
+        $.ajax({
+            url: "/managegroup.php?action=joinrequests&gid="+gid,
+            cache: false,
+            async: false,
+            dataType : "html",
+            success: function(response) {
+                if(debug){console.log("Loaded Requests Page.");}
+                // Deny all
+                var tempStr;
+                var tempJSON;
+                $(response).find("strong:contains(Join Requests for)").parent().parent().parent().find("tr").each(function(rowIndex) {
+                    if ($(this).find("td:eq(0) a:eq(0)").attr("href") === undefined){
+                        // do nothing
+                    }else{
+                        // add UID to json
+                        tempStr = $(this).find("td:eq(0) a:eq(0)").attr("href").replace(/[^0-9]/g, '');
+                        denyJSON[["request["+tempStr+"]"]] = "decline";
+                        if(debug){console.log(denyJSON);}
+                        numRequests = rowIndex -2;
+                    }
+                });
+                if(debug){console.log(denyJSON);}
+                $.post("/managegroup.php",
+                       denyJSON,
+                       function(data,status){
+                });
+            }
+        });
+        groupNoticeDiv.hide();
+    }, 1000);
+    if(debug){console.log(numRequests+ " Requests Declined");}
 }
