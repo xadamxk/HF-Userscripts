@@ -2,8 +2,8 @@
 // @name       HF Anti-Ignore
 // @author xadamxk
 // @namespace  https://github.com/xadamxk/HF-Scripts
-// @version    1.0.4
-// @description Counteracts HF's ignore feature - also works with Global Ignore.
+// @version    1.0.5
+// @description Counteracts HF's ignore feature.
 // @require https://code.jquery.com/jquery-3.1.1.js
 // @match      *://hackforums.net/member.php?action=profile&uid=*
 // @copyright  2016+
@@ -12,13 +12,14 @@
 // @iconURL https://raw.githubusercontent.com/xadamxk/HF-Userscripts/master/scripticon.jpg
 // ==/UserScript==
 // ------------------------------ Change Log ----------------------------
+// version 1.0.5: Removed 'Global Ignore' description
 // version 1.0.4: Added [Rate] to Reputation
 // version 1.0.3: Added posts per day and percent of total posts
 // version 1.0.2: Fixed ASCII char bug
 // version 1.0.1: Public Release
 // version 1.0.0: Beta Release
 // ------------------------------ Dev Notes -----------------------------
-// More about 'Global Ignore': https://hackforums.net/showthread.php?tid=5513363
+// 'Global Ignore' has been removed: https://hackforums.net/showthread.php?tid=5522733&pid=53823545#pid53823545
 // ------------------------------ SETTINGS ------------------------------
 var debug = false;
 var totalPosts = 53790000;
