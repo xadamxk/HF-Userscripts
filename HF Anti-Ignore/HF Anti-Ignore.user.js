@@ -2,7 +2,7 @@
 // @name       HF Anti-Ignore
 // @author xadamxk
 // @namespace  https://github.com/xadamxk/HF-Scripts
-// @version    1.0.3
+// @version    1.0.4
 // @description Counteracts HF's ignore feature - also works with Global Ignore.
 // @require https://code.jquery.com/jquery-3.1.1.js
 // @match      *://hackforums.net/member.php?action=profile&uid=*
@@ -12,6 +12,7 @@
 // @iconURL https://raw.githubusercontent.com/xadamxk/HF-Userscripts/master/scripticon.jpg
 // ==/UserScript==
 // ------------------------------ Change Log ----------------------------
+// version 1.0.4: Added [Rate] to Reputation
 // version 1.0.3: Added posts per day and percent of total posts
 // version 1.0.2: Fixed ASCII char bug
 // version 1.0.1: Public Release
@@ -193,6 +194,8 @@ $( "table" ).each(function( index ) {
                                             .append($("<a>").attr("href","https://hackforums.net/repsgiven.php?uid="+uid).text("Given"))
                                             .append("] [")
                                             .append($("<a>").attr("href","https://hackforums.net/trustscan.php?uid="+uid).text("Trust Scan"))
+                                            .append("] [")
+                                            .append($("<a>").attr("href","https://hackforums.net/reputation.php?action=add&uid="+uid).text("Rate"))
                                             .append("]")
                                            ));
             // Prestige
