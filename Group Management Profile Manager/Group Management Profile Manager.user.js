@@ -2,7 +2,7 @@
 // @name       HF Group Management
 // @author xadamxk
 // @namespace  https://github.com/xadamxk/HF-Scripts
-// @version    2.0.0
+// @version    2.0.1
 // @description  Adds improved group management options for HF leaders.
 // @require http://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js
 // @match      *://hackforums.net/*
@@ -15,7 +15,8 @@
 // @grant       GM_setValue
 // @grant       GM_deleteValue
 // ------------------------------ Change Log ----------------------------
-// version 2.0.0: Implemented 'Group Management Links 2.0' - https://hackforums.net/showthread.php?tid=5477859 
+// version 2.0.1: Bug fix - Centered 'select all' checkbox on member list page
+// version 2.0.0: Implemented 'Group Management Links 2.0' - https://hackforums.net/showthread.php?tid=5477859
 // version 1.2.2: Added 'Mark All' under Group Member List
 // version 1.2.1: Added 'Auto Accept' into Group Leader Notices
 // version 1.2.0: Implemented 'Auto Decline' into Group Leader Notices
@@ -332,6 +333,8 @@ function runonMemberList(){
     var memberListTable = $("strong:contains(Members in)").parent().parent().parent();
     memberListTable.find("tr:eq(1) td:eq(5)")
         .append($("<input>").attr("id","checkBoxAll").attr("type","checkbox").addClass("checkbox").attr("name","allCheckbox"));
+    // Center textbox
+    $("#checkBoxAll").parent().css("text-align","center").css("vertical-align","middle");
     // Check all
     $('input[type=checkbox][name=allCheckbox]').change(function() {
         var checkStatus = $(this).is(':checked');
