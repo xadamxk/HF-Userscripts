@@ -1,9 +1,9 @@
 // ==UserScript==
-// @name       Group Management Profile Manager
+// @name       HF Group Management
 // @author xadamxk
 // @namespace  https://github.com/xadamxk/HF-Scripts
-// @version    1.2.2
-// @description  Adds group management buttons to profiles (add/remove) for HF leaders
+// @version    2.0.0
+// @description  Adds improved group management options for HF leaders.
 // @require http://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js
 // @match      *://hackforums.net/*
 // @match      *://hackforums.net*
@@ -13,7 +13,9 @@
 // @downloadURL https://github.com/xadamxk/HF-Userscripts/raw/master/Group%20Management%20Profile%20Manager/Group%20Management%20Profile%20Manager.user.js
 // @grant       GM_getValue
 // @grant       GM_setValue
+// @grant       GM_deleteValue
 // ------------------------------ Change Log ----------------------------
+// version 2.0.0: Implemented 'Group Management Links 2.0' - https://hackforums.net/showthread.php?tid=5477859 
 // version 1.2.2: Added 'Mark All' under Group Member List
 // version 1.2.1: Added 'Auto Accept' into Group Leader Notices
 // version 1.2.0: Implemented 'Auto Decline' into Group Leader Notices
@@ -24,8 +26,7 @@
 // version 1.0.0: Beta Release
 // ==/UserScript==
 // ------------------------------ Dev Notes -----------------------------
-// Add quick accept all too
-// Restructure code to support finding userbars better (if image contains string of group name)?
+// Restructure code to support finding userbars better (hf news)
 // ------------------------------ SETTINGS ------------------------------
 // Key used to store group name,gid,etc. (Don't change)
 const GM_ValAddr = "groupsInfo"; // (Default: 'groupsInfo')
@@ -46,6 +47,7 @@ var debug = false; // (Default: false)
 var uid = $(location).attr('href').replace(/[^0-9]/g, '');
 var username = $("span[class*='group']").text();
 var my_key;
+var prevInfo;
 if(my_post_key === undefined)
     my_key = unsafeWindow.my_post_key;
 else
@@ -59,6 +61,10 @@ else if (window.location.href.includes("hackforums.net/managegroup.php?action=jo
 // Member List
 else if (window.location.href.includes("hackforums.net/managegroup.php?gid="))
     runonMemberList();
+// Add 'Update Group' button
+else if(window.location.href.includes("https://hackforums.net/usercp.php?action=usergroups") && !(window.location.href.includes("action=joinrequests"))){
+    runonGroupMembership();
+}
 // Decline all
 runonEveryHFPage();
 // ------------------------------ METHODS ------------------------------
@@ -213,6 +219,21 @@ function markAllRadio(colIndex){
 
 function runonEveryHFPage(){
     var groupNoticeDiv;
+    if(debug){
+        //Debug Purposes
+        GM_deleteValue("groupInfo");
+        console.log(GM_getValue("groupInfo", "groupInfo EMPTY"));
+    }
+    else{
+        // Check for previous group info
+        prevInfo = GM_getValue("groupInfo", false);
+        // Grab group info
+        if (!prevInfo)
+            getGroupInfo();
+        // Load previously saved info
+        else
+            setGroupInfo();
+    }
     // Check for pm alert class
     if ($(".pm_alert").length > 0){
         // Check alerts for group notice
@@ -253,60 +274,55 @@ function runonEveryHFPage(){
 function declineAllRequests(groupNoticeDiv, actionStr){
     var gid;
     var numRequests = 0;
-    if(debug){console.log("Decline All Requests Function!");}
-    // AJAX to get GID
-    $.ajax({
-        url: "/usercp.php?action=usergroups",
-        cache: false,
-        async: false,
-        success: function(response) {
-            // Get GID
-            gid = $(response).find("a:contains(Join Requests)").attr("href").replace(/[^0-9]/g, '');
-            if(debug){console.log("Scrapped GID: "+gid);}
-        }
-    });
+    if(debug){console.log("All Requests Function!");}
+    // Check for previous group info
+    prevInfo = GM_getValue("groupInfo", false);
+    // Grab group info
+    if (!prevInfo)
+        getGroupInfo();
+    var infoArray = prevInfo.trim().split(',');
+    gid = infoArray[1];
+    // Update user string
     if (actionStr == "accept")
         $("#acceptAllRequests").text("Accepting Requests...");
     else if(actionStr == "decline")
         $("#declineAllRequests").text("Declining Requests...");
-    // Wait 1 second, then remove all
-    setTimeout(function () {
-        var denyJSON = {
-            "my_post_key": my_key,
-            "action": "do_joinrequests",
-            "gid": gid
-        };
-        // AJAX to deny all requests
-        $.ajax({
-            url: "/managegroup.php?action=joinrequests&gid="+gid,
-            cache: false,
-            async: false,
-            dataType : "html",
-            success: function(response) {
-                if(debug){console.log("Loaded Requests Page.");}
-                // Deny all
-                var tempStr;
-                var tempJSON;
-                $(response).find("strong:contains(Join Requests for)").parent().parent().parent().find("tr").each(function(rowIndex) {
-                    if ($(this).find("td:eq(0) a:eq(0)").attr("href") === undefined){
-                        // do nothing
-                    }else{
-                        // add UID to json
-                        tempStr = $(this).find("td:eq(0) a:eq(0)").attr("href").replace(/[^0-9]/g, '');
-                        denyJSON[["request["+tempStr+"]"]] = actionStr;
-                        if(debug){console.log(denyJSON);}
-                        numRequests = rowIndex -2;
-                    }
-                });
-                if(debug){console.log(denyJSON);}
-                $.post("/managegroup.php",
-                       denyJSON,
-                       function(data,status){
-                });
-            }
-        });
-        groupNoticeDiv.hide();
-    }, 1000);
+    // Run 'all' action
+    var denyJSON = {
+        "my_post_key": my_key,
+        "action": "do_joinrequests",
+        "gid": gid
+    };
+    // AJAX to deny all requests
+    $.ajax({
+        url: "/managegroup.php?action=joinrequests&gid="+gid,
+        cache: false,
+        async: false,
+        dataType : "html",
+        success: function(response) {
+            if(debug){console.log("Loaded Requests Page.");}
+            // Deny all
+            var tempStr;
+            var tempJSON;
+            $(response).find("strong:contains(Join Requests for)").parent().parent().parent().find("tr").each(function(rowIndex) {
+                if ($(this).find("td:eq(0) a:eq(0)").attr("href") === undefined){
+                    // do nothing
+                }else{
+                    // add UID to json
+                    tempStr = $(this).find("td:eq(0) a:eq(0)").attr("href").replace(/[^0-9]/g, '');
+                    denyJSON[["request["+tempStr+"]"]] = actionStr;
+                    if(debug){console.log(denyJSON);}
+                    numRequests = rowIndex -2;
+                }
+            });
+            if(debug){console.log(denyJSON);}
+            $.post("/managegroup.php",
+                   denyJSON,
+                   function(data,status){
+            });
+        }
+    });
+    groupNoticeDiv.hide();
     if(debug){console.log(numRequests+ " Requests Declined");}
 }
 
@@ -323,4 +339,65 @@ function runonMemberList(){
             $(this).prop('checked', checkStatus);
         });
     });
+}
+
+// Add 'Update Group' button
+function runonGroupMembership(){
+    // Insert button
+    $("strong:contains('Groups You Lead')").append($("<button>").text("Update Groups").attr("id", "groupButton").addClass("button").css("margin-left", "20px"));
+    $("body").on("click", "#groupButton", function() { getGroupInfo();});
+}
+
+// Scrap group name, group id, group requests - write to "groupInfo" 'cookie'
+function getGroupInfo(){
+    // Snorlax OP
+    var groupInfoArray = []; // (Name, ID, Requests)
+    // AJAX HERE
+    $.ajax({
+        url: "https://hackforums.net/usercp.php?action=usergroups",
+        cache: false,
+        success: function(response) {
+            if (!$(response).find("Groups You Lead")){
+                window.alert("Group Management Links 2.0 FAILED!\nGroup privledges not found!");
+            }
+            else{
+                $(response).find("a:contains('View Members')").each(function() {
+                    groupInfoArray.push($(this).parent().prev().text()); // Group Name
+                    if(debug){console.log(groupInfoArray[0]);}
+                    groupInfoArray.push($(this).attr("href").substr(20)); // Group ID
+                    if(debug){console.log(groupInfoArray[1]);}
+                    groupInfoArray.push($(this).parent().next().text().replace(/[^0-9]/g, '')); // Pending Requests
+                    if(debug){console.log(groupInfoArray[2]);}
+                });
+                GM_setValue("groupInfo", groupInfoArray.join().toString());
+            }
+            prevInfo = GM_getValue("groupInfo", false);
+            setGroupInfo();
+        }
+    });
+}
+
+// Write "groupInfo" to HTML
+function setGroupInfo(){
+    var infoArray = prevInfo.trim().split(',');
+    // Debug Info
+    if(debug){console.log(infoArray + " | Count:" + infoArray.length);}
+    var regex = "User CP</strong></a>";
+    var revised = "User CP</strong></a>";
+    var nameTemp;
+    var idTemp;
+    for (var i = 0; i < infoArray.length; i++) {
+        // Name
+        if (i%3 === 0)
+            nameTemp = infoArray[i];
+        // ID
+        if(i%3 === 1)
+            idTemp = infoArray[i];
+        // Build String (requestions could also go here)
+        if(i%3 === 2)
+            revised += " &mdash; <a href='http://www.hackforums.net/managegroup.php?gid="+idTemp+"'><strong>"+nameTemp+" Members</strong>"+
+                "</a> &mdash; <a href='http://www.hackforums.net/managegroup.php?action=joinrequests&gid="+idTemp+"'><strong>"+nameTemp+" Requests</strong></a>";
+    }
+    // Set string
+    $("#panel").html($("#panel").html().replace(regex,revised));
 }
