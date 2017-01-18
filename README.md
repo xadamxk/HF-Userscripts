@@ -19,9 +19,55 @@ US managers (ex. <a href="https://tampermonkey.net/">TamperMonkey</a>) allow use
 
 <ul><li><b><a href ="https://hackforums.net/showthread.php?tid=5518790">HF ToolBar</a>(<a href="https://github.com/xadamxk/HF-Userscripts/raw/master/HF%20ToolBar/HF%20ToolBar.user.js">Install</a>):</b> Adds a toolbar with various options to the top of HF.
 <ul>Release Date: 1/09/2017
-<ul>Screenshots
+<ul>Features
 <ul>
-
+<details> 
+  <summary>More Info:</summary>
+  <ul><li><b>Sticky Header: </b>Sticky header sticks the toolbar to the top of the screen, so you'll always have access to your shortcuts.
+  <br>
+  <p align="center">
+  <img src="https://github.com/xadamxk/HF-Userscripts/blob/master/HF%20ToolBar/Capture01.gif?raw=true" width="365" height="188" title="HFTB Screenshot 01"  />
+  </p>
+  </ul></li>
+  <br>
+    <ul><li><b>Retractable Buddy List: </b>The buddy icon has an option to make a retractable window so you can browse while having access to your buddy list.
+  <br>
+  <p align="center">
+  <img src="https://github.com/xadamxk/HF-Userscripts/blob/master/HF%20ToolBar/Capture02.gif?raw=true"  width="552" height="276" title="HFTB Screenshot 02"  />
+  </p>
+  </ul></li>
+  <br>
+  <ul><li><b>FavIcon Badges/ Alerts: </b>Displays the number of unread PM's over the HF favicon.
+  <br>
+  <p align="center">
+  <img src="https://github.com/xadamxk/HF-Userscripts/blob/master/HF%20ToolBar/Capture03.png?raw=true" title="HFTB Screenshot 03"  />
+  </p>
+  </ul></li>
+  <br>
+  <ul><li><b>Background PMs: </b>An experimental feature that will update FavIcon Badges when you are using different tabs (Checks every 5 minutes after a page load).
+  <br>
+  <p align="center">
+  <img src="https://github.com/xadamxk/HF-Userscripts/blob/master/HF%20ToolBar/Capture04.gif?raw=true" title="HFTB Screenshot 04"  />
+  </p>
+  </ul></li>
+  <br>
+  <ul><li><b>Active Icons: </b>Active Icons is a feature that makes the shortcut icons (left of |) interactive. Whether it be a popout buddy window, PM information, open unread PMs, colors, etc.
+  <br>
+  <p align="center">
+  <img src="https://github.com/xadamxk/HF-Userscripts/blob/master/HF%20ToolBar/Capture05.gif?raw=true" title="HFTB Screenshot 05"  />
+  </p>
+  </ul></li>
+  <br>
+  <ul><li><b>Settings Panel: </b>The same easy-to-use settings library HFES used, but with subheaders, tooltips, and an about section.
+  <br>
+  <p align="center">
+  <img src="https://github.com/xadamxk/HF-Userscripts/blob/master/HF%20ToolBar/Capture07.png?raw=true" title="HFTB Screenshot 06"  />
+  <br>
+  <img src="https://github.com/xadamxk/HF-Userscripts/blob/master/HF%20ToolBar/Capture08.png?raw=true" title="HFTB Screenshot 07"  />
+  </p>
+  </ul></li>
+  <br>
+</details>
 </ul><hr>
 </ul> 
 </ul>
