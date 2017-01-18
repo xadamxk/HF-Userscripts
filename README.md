@@ -272,31 +272,16 @@ US managers (ex. <a href="https://tampermonkey.net/">TamperMonkey</a>) allow use
 <blockquote>This script has been retired - please use 'Group Management'.</blockquote>
 <br>
 <ul>Release Date: 11/28/2016
-<ul>Screenshots
-<ul>
-
-</ul><hr>
-</ul> 
 </ul>
 </li></ul>
 <ul><li><b><a href="https://hackforums.net/showthread.php?tid=5495482">Group Management Links</a>(<a href="https://github.com/xadamxk/HF-Userscripts/raw/master/Group%20Management%20Links/Group%20Management%20Links.user.js">Install</a>):</b> Adds group management links to the HF toolbar (hardcoded - change GID accordingly).
-<diff>This script is old - please use 'Group Management'.</diff>
+<blockquote>This script is old - please use 'Group Management'.</blockquote>
 <ul>Release Date: 11/27/2016
-<ul>Screenshots
-<ul>
-
-</ul><hr>
-</ul> 
 </ul>
 </li></ul>
 <ul><li><b><a href="https://hackforums.net/showthread.php?tid=5495482">Custom Header</a> (<a href="https://github.com/xadamxk/HF-Userscripts/raw/master/Custom%20Header/Custom%20Header.user.js">Install</a>):</b> Adds various shortcuts to the HF toolbar.
-<diff>This script is old - please use 'HF ToolBar'.</diff>
+<blockquote>This script is old - please use 'HF ToolBar'.</blockquote>
 <ul>Release Date: 11/27/2016
-<ul>Screenshots
-<ul>
-
-</ul><hr>
-</ul> 
 </ul>
 </li></ul>
 
