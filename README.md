@@ -72,20 +72,27 @@ US managers (ex. <a href="https://tampermonkey.net/">TamperMonkey</a>) allow use
 </li></ul>
 <ul><li><b><a href ="https://hackforums.net/showthread.php?tid=5515646">Anti-Ignore</a>(<a href="https://github.com/xadamxk/HF-Userscripts/raw/master/HF%20Anti-Ignore/HF%20Anti-Ignore.user.js">Install</a>):</b> Counteracts HF's ignore feature - also works with Global Ignore.
 <ul>Release Date: 1/05/2017
-<ul>Screenshots
 <ul>
-
+<details> 
+  <summary>More Info:</summary>
+  <ul><li><b>Load Blocked Content: </b>Bypasses the block feature by grabbing profile information from members that have blocked you.
+  <br>
+  <p align="center">
+  <img src="https://github.com/xadamxk/HF-Userscripts/blob/master/HF%20Anti-Ignore/Capture02.gif?raw=true" width="518" height="325" title="HFTB Screenshot 01"  />
+  </p>
+  </ul></li>
+  <br>
+    <ul><li><b>Bypass Global Ignore: </b>Load content from members using global ignore (feature discontinues as of 1/17/2017).
+  </ul></li>
+</details>
 </ul><hr>
-</ul> 
 </ul> 
 </li></ul>
 <ul><li><b><a href ="https://hackforums.net/showthread.php?tid=5509062">Smart Quotes</a>(<a href="https://github.com/xadamxk/HF-Userscripts/raw/master/Smart%20Quotes/Smart%20Quotes.user.js">Install</a>):</b> Enhances quotes by adding style & highlights mentioned quotes.
 <ul>Release Date: 12/30/2016
-<ul>Screenshots
 <ul>
 
 </ul><hr>
-</ul> 
 </ul> 
 </li></ul>
 <ul><li><b><a href ="https://hackforums.net/showthread.php?tid=5508483">Header Links</a>(<a href="https://github.com/xadamxk/HF-Userscripts/raw/master/Header%20Links/Header%20Links.user.js">Install</a>):</b> Adds various links to HF's header (replaces HFES headers).
