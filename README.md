@@ -91,7 +91,29 @@ US managers (ex. <a href="https://tampermonkey.net/">TamperMonkey</a>) allow use
 <ul><li><b><a href ="https://hackforums.net/showthread.php?tid=5509062">Smart Quotes</a>(<a href="https://github.com/xadamxk/HF-Userscripts/raw/master/Smart%20Quotes/Smart%20Quotes.user.js">Install</a>):</b> Enhances quotes by adding style & highlights mentioned quotes.
 <ul>Release Date: 12/30/2016
 <ul>
-
+<details> 
+  <summary>More Info:</summary>
+  <ul><li><b>Styled Quotes: </b>Styles quotes according to colors found in the script's settings.
+  <br>
+  <p align="center">
+  <img src="https://github.com/xadamxk/HF-Userscripts/blob/master/Smart%20Quotes/Capture04.png?raw=true" width="450" height="59" title="Smart Quote Screenshot 01"  />
+  </p>
+  </ul></li>
+  <br>
+    <ul><li><b>Mentioned Quotes: </b>Changes the quote's color if your username was mentioned.
+    <br>
+    <p align="center">
+  <img src="https://github.com/xadamxk/HF-Userscripts/blob/master/Smart%20Quotes/Capture05.png?raw=true" width="432" height="178" title="Smart Quote Screenshot 02"  />
+  </p>
+  </ul></li>
+  <br>
+  <ul><li><b>Mention Count: </b>Notifies you (next to thread title) if your username was mentioned on that page.
+    <br>
+    <p align="center">
+  <img src="https://github.com/xadamxk/HF-Userscripts/blob/master/Smart%20Quotes/Capture06.png?raw=true" title="Smart Quote Screenshot 03"  />
+  </p>
+  </ul></li>
+</details>
 </ul><hr>
 </ul> 
 </li></ul>
