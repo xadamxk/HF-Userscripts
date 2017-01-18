@@ -207,20 +207,64 @@ US managers (ex. <a href="https://tampermonkey.net/">TamperMonkey</a>) allow use
 </li></ul>
 <ul><li><b><a href ="https://hackforums.net/showthread.php?tid=5480003">HF News Notifier</a>(<a href="https://github.com/xadamxk/HF-Userscripts/raw/master/HF%20News%20Notifier/HF%20News%20Notifier.user.js">Install</a>):</b> Alerts users of new HF News editions (checks on /usercp.php).
 <ul>Release Date: 12/15/2016
-<ul>Screenshots
 <ul>
-
+<details> 
+  <summary>More Info:</summary>
+  <ul><li><b>News Alert: </b>Alerts users when a new News Edition releases in the HF News section.
+  <br>
+  <p align="center">
+  <img src="https://github.com/xadamxk/HF-Userscripts/blob/master/HF%20News%20Notifier/HFNNCapture1.png?raw=true" width="331" height="116" title="News Notifier Screenshot 01"  />
+  </p>
+  </ul></li>
+  <br>
+</details>
 </ul><hr>
-</ul> 
 </ul>
 </li></ul>
-<ul><li><b><a href ="https://hackforums.net/showthread.php?tid=5478207">Group Management Profile Manager</a>(<a href="https://github.com/xadamxk/HF-Userscripts/raw/master/Group%20Management%20Profile%20Manager/Group%20Management%20Profile%20Manager.user.js">Install</a>):</b> Adds improved group management options for HF leaders.
+<ul><li><b><a href ="https://hackforums.net/showthread.php?tid=5478207">Group Management</a>(<a href="https://github.com/xadamxk/HF-Userscripts/raw/master/Group%20Management%20Profile%20Manager/Group%20Management%20Profile%20Manager.user.js">Install</a>):</b> Adds improved group management options for HF leaders.
 <ul>Release Date: 11/29/2016
-<ul>Screenshots
 <ul>
-
+<details> 
+  <summary>More Info:</summary>
+  <ul><li><b>Leader Links: </b>Adds two links to your HF header for viewing your groups member/request lists.
+  <br>
+  <p align="center">
+  <img src="https://github.com/xadamxk/HF-Userscripts/blob/master/Group%20Management%20Links%202.0/Capture.PNG?raw=true" title="Group Manager Screenshot 01"  />
+  </p>
+  </ul></li>
+  <br>
+  <ul><li><b>Profile Manager: </b>Adds (Add/Remove) buttons to user's profiles.
+  <br>
+  <p align="center">
+  <img src="https://raw.githubusercontent.com/xadamxk/HF-Userscripts/master/Group%20Management%20Profile%20Manager/GMPMCapture3.gif" width="314" height="130" title="Group Manager Screenshot 02"  />
+  </p>
+  </ul></li>
+  <br>
+  <ul><li><b>Select All Requests: </b>Allows you to select all in the group requests page.
+  <br>
+  <p align="center">
+  <img src="https://github.com/xadamxk/HF-Userscripts/blob/master/Group%20Management%20Profile%20Manager/Capture04.gif?raw=true" width="173" height="146" title="Group Manager Screenshot 03"  />
+  </p>
+  </ul></li>
+  <br>
+  <ul><li><b>Quick Accept/Deny: </b>Allows you to instantly accept/deny all group requests from the group leader alert.
+  <br>
+  <p align="center">
+  <img src="https://github.com/xadamxk/HF-Userscripts/blob/master/Group%20Management%20Profile%20Manager/Capture07.png?raw=true" width="345" height="44" title="Group Manager Screenshot 04"  />
+  <br>
+  <img src="https://github.com/xadamxk/HF-Userscripts/blob/master/Group%20Management%20Profile%20Manager/Capture06.gif?raw=true" width="494" height="218" title="Group Manager Screenshot 05"  />
+  </p>
+  </ul></li>
+  <br>
+  <ul><li><b>Select All Members: </b>Allows you to select all on the group member list page.
+  <br>
+  <p align="center">
+  <img src="https://github.com/xadamxk/HF-Userscripts/blob/master/Group%20Management%20Profile%20Manager/Capture08.gif?raw=true" width="111" height="219" title="Group Manager Screenshot 06"  />
+  </p>
+  </ul></li>
+  <br>
+</details>
 </ul><hr>
-</ul> 
 </ul>
 </li></ul>
 <ul><li><b><a href="https://hackforums.net/showthread.php?tid=5477859">Group Management Links 2.0</a>(<a href="https://github.com/xadamxk/HF-Userscripts/raw/master/Group%20Management%20Links%202.0/Group%20Management%20Links%202.0.user.js">Install</a>):</b> Adds group management links to the HF toolbar (automated - scraps group info) Supports multiple groups.
