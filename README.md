@@ -19,7 +19,6 @@ US managers (ex. <a href="https://tampermonkey.net/">TamperMonkey</a>) allow use
 
 <ul><li><b><a href ="https://hackforums.net/showthread.php?tid=5518790">HF ToolBar</a>(<a href="https://github.com/xadamxk/HF-Userscripts/raw/master/HF%20ToolBar/HF%20ToolBar.user.js">Install</a>):</b> Adds a toolbar with various options to the top of HF.
 <ul>Release Date: 1/09/2017
-<ul>Features
 <ul>
 <details> 
   <summary>More Info:</summary>
@@ -70,7 +69,6 @@ US managers (ex. <a href="https://tampermonkey.net/">TamperMonkey</a>) allow use
 </details>
 </ul><hr>
 </ul> 
-</ul>
 </li></ul>
 <ul><li><b><a href ="https://hackforums.net/showthread.php?tid=5515646">Anti-Ignore</a>(<a href="https://github.com/xadamxk/HF-Userscripts/raw/master/HF%20Anti-Ignore/HF%20Anti-Ignore.user.js">Install</a>):</b> Counteracts HF's ignore feature - also works with Global Ignore.
 <ul>Release Date: 1/05/2017
