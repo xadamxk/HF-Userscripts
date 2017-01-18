@@ -188,7 +188,7 @@ US managers (ex. <a href="https://tampermonkey.net/">TamperMonkey</a>) allow use
 <ul>
 <details> 
   <summary>More Info:</summary>
-  <ul><li><b>Display Rep Charts: </b>Makes a visual representation of a users reputation summary,
+  <ul><li><b>Display Rep Charts: </b>Makes a visual representation of a users reputation summary.
   <br>
   <p align="center">
   <img src="https://raw.githubusercontent.com/xadamxk/HF-Userscripts/master/Rep%20Charts/RepChartsCapture3.png" width="669" height="168" title="Rep Charts Screenshot 01"  />
