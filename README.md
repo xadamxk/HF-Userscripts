@@ -185,11 +185,24 @@ US managers (ex. <a href="https://tampermonkey.net/">TamperMonkey</a>) allow use
 </li></ul>
 <ul><li><b><a href ="https://hackforums.net/showthread.php?tid=5495131">Rep Charts</a>(<a href="https://github.com/xadamxk/HF-Userscripts/raw/master/Rep%20Charts/Rep%20Charts.user.js">Install</a>):</b> Display graphical information on member's reputation page.
 <ul>Release Date: 12/16/2016
-<ul>Screenshots
 <ul>
-
+<details> 
+  <summary>More Info:</summary>
+  <ul><li><b>Display Rep Charts: </b>Makes a visual representation of a users reputation summary,
+  <br>
+  <p align="center">
+  <img src="https://raw.githubusercontent.com/xadamxk/HF-Userscripts/master/Rep%20Charts/RepChartsCapture3.png" width="669" height="168" title="Rep Charts Screenshot 01"  />
+  </p>
+  </ul></li>
+  <br>
+  <ul><li><b>Reps Given Button: </b>Adds a button to all user's reputation summary page, which links to their given reputation.
+  <br>
+  <p align="center">
+  <img src="https://github.com/xadamxk/HF-Userscripts/blob/master/Rep%20Charts/Capture05.png?raw=true" title="Rep Charts Screenshot 02"  />
+  </p>
+  </ul></li>
+</details>
 </ul><hr>
-</ul> 
 </ul>
 </li></ul>
 <ul><li><b><a href ="https://hackforums.net/showthread.php?tid=5480003">HF News Notifier</a>(<a href="https://github.com/xadamxk/HF-Userscripts/raw/master/HF%20News%20Notifier/HF%20News%20Notifier.user.js">Install</a>):</b> Alerts users of new HF News editions (checks on /usercp.php).
