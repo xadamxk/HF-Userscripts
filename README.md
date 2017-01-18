@@ -119,20 +119,38 @@ US managers (ex. <a href="https://tampermonkey.net/">TamperMonkey</a>) allow use
 </li></ul>
 <ul><li><b><a href ="https://hackforums.net/showthread.php?tid=5508483">Header Links</a>(<a href="https://github.com/xadamxk/HF-Userscripts/raw/master/Header%20Links/Header%20Links.user.js">Install</a>):</b> Adds various links to HF's header (replaces HFES headers).
 <ul>Release Date: 12/29/2016
-<ul>Screenshots
 <ul>
-
+<details> 
+  <summary>More Info:</summary>
+  <ul><li><b>Various Header Links: </b>Add various header links to the HF header.
+  <br>
+  <p align="center">
+  <img src="https://github.com/xadamxk/HF-Userscripts/blob/master/Header%20Links/Capture01.png?raw=true" width="402" height="57" title="Header Links Screenshot 01"  />
+  </p>
+  </ul></li>
+  <br>
+</details>
 </ul><hr>
-</ul> 
 </ul>
 </li></ul>
 <ul><li><b><a href ="https://hackforums.net/showthread.php?tid=5507074">EasyCite</a>(<a href="https://github.com/xadamxk/HF-Userscripts/raw/master/EasyCite/EasyCite.user.js">Install</a>):</b> Allows users to cite threads, users, sections, and other pages on HF.
 <ul>Release Date: 12/28/2016
-<ul>Screenshots
 <ul>
-
+<details> 
+  <summary>More Info:</summary>
+  <ul><li><b>Thread Citing: </b> Cite threads by clicking the 'cite' button next to the navigation bar.</li></ul>
+  <br>
+  <ul><li><b>Thread & Author Citing: </b> Cite threads and include the author by clicking the 'cite' button on the first post.</li></ul>
+  <br>
+  <ul><li><b>Section Citing: </b> Cite sections by clicking the 'cite' button next to the navigation bar.
+  <br>
+  <p align="center">
+  <img src="https://raw.githubusercontent.com/xadamxk/HF-Userscripts/master/EasyCite/Capture01.png" width="377" height="183" title="Easy Cite Screenshot 01"  />
+  </p>
+  </ul></li>
+  <br>
+</details>
 </ul><hr>
-</ul> 
 </ul>
 </li></ul>
 <ul><li><b><a href ="https://hackforums.net/showthread.php?tid=5498344">Quick Rep</a>(<a href="https://github.com/xadamxk/HF-Userscripts/raw/master/Quick%20Rep/Quick%20Rep.user.js">Install</a>):</b> Makes giving reputation on HF easier.
