@@ -177,9 +177,7 @@ US managers (ex. <a href="https://tampermonkey.net/">TamperMonkey</a>) allow use
   <p align="center">
   <img src="https://github.com/xadamxk/HF-Userscripts/blob/master/Quick%20Rep/Capture04.png?raw=true" width="426" height="80" title="Quick Rep Screenshot 03"  />
   </p>
-  </ul></li>
   <br>
-
   </ul></li>
 </details>
 </ul><hr>
