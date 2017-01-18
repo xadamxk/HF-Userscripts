@@ -269,7 +269,8 @@ US managers (ex. <a href="https://tampermonkey.net/">TamperMonkey</a>) allow use
 </li></ul>
 <ul><li><b><a href="https://hackforums.net/showthread.php?tid=5477859">Group Management Links 2.0</a>(<a href="https://github.com/xadamxk/HF-Userscripts/raw/master/Group%20Management%20Links%202.0/Group%20Management%20Links%202.0.user.js">Install</a>):</b> Adds group management links to the HF toolbar (automated - scraps group info) Supports multiple groups. 
 <br>
-<diff>This script has been retired - please use 'Group Management'.</diff>
+<code>This script has been retired - please use 'Group Management'.</code>
+<br>
 <ul>Release Date: 11/28/2016
 <ul>Screenshots
 <ul>
