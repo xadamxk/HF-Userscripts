@@ -153,13 +153,36 @@ US managers (ex. <a href="https://tampermonkey.net/">TamperMonkey</a>) allow use
 </ul><hr>
 </ul>
 </li></ul>
-<ul><li><b><a href ="https://hackforums.net/showthread.php?tid=5498344">Quick Rep</a>(<a href="https://github.com/xadamxk/HF-Userscripts/raw/master/Quick%20Rep/Quick%20Rep.user.js">Install</a>):</b> Makes giving reputation on HF easier.
+<ul><li><b><a href ="https://hackforums.net/showthread.php?tid=5498344">Quick Rep 2.0</a>(<a href="https://github.com/xadamxk/HF-Userscripts/raw/master/Quick%20Rep/Quick%20Rep.user.js">Install</a>):</b> Makes giving reputation on HF easier.
 <ul>Release Date: 12/19/2016
-<ul>Screenshots
 <ul>
+<details> 
+  <summary>More Info:</summary>
+  <ul><li><b>Quick Rep: </b>Allows you to give users reputation from a post or private message.
+  <br>
+  <p align="center">
+  <img src="https://github.com/xadamxk/HF-Userscripts/blob/master/Quick%20Rep/Capture01.png?raw=true" title="Quick Rep Screenshot 01"  />
+  </p>
+  </ul></li>
+  <br>
+  <ul><li><b>Success Alerts: </b>Uses the notification API to display alerts when you rep'd a user.
+  <br>
+  <p align="center">
+  <img src="https://github.com/xadamxk/HF-Userscripts/blob/master/Quick%20Rep/Capture03.png?raw=true" width="236" height="67" title="Quick Rep Screenshot 02"  />
+  </p>
+  </ul></li>
+  <br>
+  <ul><li><b>Rep Queue: </b>Allows users to queue reps once they hit their daily reputation limit.
+  <br>
+  <p align="center">
+  <img src="https://github.com/xadamxk/HF-Userscripts/blob/master/Quick%20Rep/Capture04.png?raw=true" width="426" height="80" title="Quick Rep Screenshot 03"  />
+  </p>
+  </ul></li>
+  <br>
 
+  </ul></li>
+</details>
 </ul><hr>
-</ul> 
 </ul> 
 </li></ul>
 <ul><li><b><a href ="https://hackforums.net/showthread.php?tid=5495131">Rep Charts</a>(<a href="https://github.com/xadamxk/HF-Userscripts/raw/master/Rep%20Charts/Rep%20Charts.user.js">Install</a>):</b> Display graphical information on member's reputation page.
