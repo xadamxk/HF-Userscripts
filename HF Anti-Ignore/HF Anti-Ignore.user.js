@@ -2,7 +2,7 @@
 // @name       HF Anti-Ignore
 // @author xadamxk
 // @namespace  https://github.com/xadamxk/HF-Scripts
-// @version    1.0.5
+// @version    1.0.6
 // @description Counteracts HF's ignore feature.
 // @require https://code.jquery.com/jquery-3.1.1.js
 // @match      *://hackforums.net/member.php?action=profile&uid=*
@@ -12,6 +12,7 @@
 // @iconURL https://raw.githubusercontent.com/xadamxk/HF-Userscripts/master/scripticon.jpg
 // ==/UserScript==
 // ------------------------------ Change Log ----------------------------
+// version 1.0.6: Bug fix - If multiple users had the same containing username, both data sets were returned.
 // version 1.0.5: Removed 'Global Ignore' description
 // version 1.0.4: Added [Rate] to Reputation
 // version 1.0.3: Added posts per day and percent of total posts
@@ -20,6 +21,7 @@
 // version 1.0.0: Beta Release
 // ------------------------------ Dev Notes -----------------------------
 // 'Global Ignore' has been removed: https://hackforums.net/showthread.php?tid=5522733&pid=53823545#pid53823545
+// Add online/offline by taking current time - last online time (if < 5 mins, then online)
 // ------------------------------ SETTINGS ------------------------------
 var debug = false;
 var totalPosts = 53790000;
@@ -68,8 +70,13 @@ $( "table" ).each(function( index ) {
             $(resultTables).each(function(resultIndex) {
                 // We want the 'Member List' table
                 if (($(this).find(".thead div:eq(1) strong").text()) === "Member List"){
+                    var desiredRow;
                     // We want the user that matches the username (username -> a -> column -> row)
-                    var desiredRow = $(resultTables[resultIndex]).find("span:contains("+username+")").parent().parent().parent();
+                    // loop for each containing username
+                    $(resultTables[resultIndex]).find("span:contains("+username+")").each(function(subresultIndex) {
+                        if ($(this).text() === username)
+                            desiredRow = $(resultTables[resultIndex]).find("span:contains("+username+"):eq("+subresultIndex+")").parent().parent().parent();
+                    });
                     userAvatar = $(desiredRow).find("td:eq(0) img").attr("src");
                     userUsergroup = $(desiredRow).find("td:eq(1) a:eq(0) span").attr("class");
                     userUsertitle = $(desiredRow).find("td:eq(1) .smalltext").text();
@@ -79,15 +86,12 @@ $( "table" ).each(function( index ) {
                     userJoinDate = $(desiredRow).find("td:eq(2)").text();
                     userLastVisit = $(desiredRow).find("td:eq(3)").text();
                     userReputation = $(desiredRow).find("td:eq(4)").text();
-                    if (userReputation > 0){
+                    if (userReputation > 0)
                         userRepColor = "reputation_positive";
-                    }
-                    else if (userReputation > 0){
+                    else if (userReputation > 0)
                         userRepColor = "reputation_negative";
-                    }
-                    else {
+                    else 
                         userRepColor = "reputation_neutral";
-                    }
                     userPostCount = $(desiredRow).find("td:eq(5)").text();
                     if (debug){
                         console.log("Avatar: "+userAvatar);
@@ -156,7 +160,7 @@ $( "table" ).each(function( index ) {
                 dd='0'+dd;
             if(mm<10)
                 mm='0'+mm;
-            today = dd+'/'+mm+'/'+yyyy;
+            today = mm+'/'+dd+'/'+yyyy;
             // Math for percentages of posts
             var totPosts = parseInt(userPostCount.replace(',',''));
             var profileAgeDays = parseInt(new Date(today) - new Date(joinDateShort))/ (1000 * 3600 * 24);
