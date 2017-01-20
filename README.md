@@ -145,7 +145,9 @@ US managers (ex. <a href="https://tampermonkey.net/">TamperMonkey</a>) allow use
   <ul><li><b>Section Citing: </b> Cite sections by clicking the 'cite' button next to the navigation bar.
   <br>
   <p align="center">
-  <img src="https://raw.githubusercontent.com/xadamxk/HF-Userscripts/master/EasyCite/Capture01.png" width="377" height="183" title="Easy Cite Screenshot 01"  />
+  <img src="https://github.com/xadamxk/HF-Userscripts/blob/master/EasyCite/Capture02.gif?raw=true" width="429" height="245" title="Cite Screenshot 01" />
+  <br>
+  <img src="https://raw.githubusercontent.com/xadamxk/HF-Userscripts/master/EasyCite/Capture01.png" width="377" height="183" title="Easy Cite Screenshot 02"  />
   </p>
   </ul></li>
   <br>
