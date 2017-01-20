@@ -2,7 +2,7 @@
 // @name       HF Group Management
 // @author xadamxk
 // @namespace  https://github.com/xadamxk/HF-Scripts
-// @version    2.0.1
+// @version    2.0.2
 // @description  Adds improved group management options for HF leaders.
 // @require http://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js
 // @match      *://hackforums.net/*
@@ -15,6 +15,7 @@
 // @grant       GM_setValue
 // @grant       GM_deleteValue
 // ------------------------------ Change Log ----------------------------
+// version 2.0.2: Group Leader Notice now links to your group's requests page
 // version 2.0.1: Bug fix - Centered 'select all' checkbox on member list page
 // version 2.0.0: Implemented 'Group Management Links 2.0' - https://hackforums.net/showthread.php?tid=5477859
 // version 1.2.2: Added 'Mark All' under Group Member List
@@ -41,6 +42,9 @@ var defaultSelectAll = "ignoreAllRadio"; // (Default: ignoreAllRadio)
 // Auto-Decline: Automatically declines group join requests if any are present
 var declineAllAutomatically = false; // (Default: false)
 
+// Links 'Group Leader Notice' to group requests
+var linkGroupLeaderNotice = true; // (Default: true)
+
 // Debug Mode - Print certain results to console
 var debug = false; // (Default: false)
 // ------------------------------ ON PAGE LOAD ------------------------------
@@ -53,20 +57,20 @@ if(my_post_key === undefined)
     my_key = unsafeWindow.my_post_key;
 else
     my_key = my_post_key;
-// Profile
+// Profile (Add/Remove Button)
 if (window.location.href.includes("hackforums.net/member.php?action=profile&uid="))
     runonProfile();
-// Join Requests Menu
+// Join Requests Menu (Select All)
 else if (window.location.href.includes("hackforums.net/managegroup.php?action=joinrequests&gid="))
     runonJoinRequestMenu();
-// Member List
+// Member List (Select All)
 else if (window.location.href.includes("hackforums.net/managegroup.php?gid="))
     runonMemberList();
-// Add 'Update Group' button
+// Add 'Update Group' button (Updates gid for links)
 else if(window.location.href.includes("https://hackforums.net/usercp.php?action=usergroups") && !(window.location.href.includes("action=joinrequests"))){
     runonGroupMembership();
 }
-// Decline all
+// Group Leader Notice (Quick Accept/Deny, Link notice to Requests)
 runonEveryHFPage();
 // ------------------------------ METHODS ------------------------------
 function addUser(gid){
@@ -249,6 +253,19 @@ function runonEveryHFPage(){
         if (hideGroupNotice)
             groupNoticeDiv.hide();
         else{
+            var gid = 0;
+            // Check for previous group info
+            prevInfo = GM_getValue("groupInfo", false);
+            // Grab group info
+            if (!prevInfo)
+                getGroupInfo();
+            var infoArray = prevInfo.trim().split(',');
+            gid = infoArray[1];
+            // Link 'Group Leader Notice' with requests page
+            if (linkGroupLeaderNotice){
+                console.log($(groupNoticeDiv).find("a:eq(0)").attr("href","http://www.hackforums.net/managegroup.php?action=joinrequests&gid="+gid));
+                if(debug){console.log("Link Group Leader Notice: "+linkGroupLeaderNotice+ ","+gid);}
+            }
             // Auto decline on page load
             if(declineAllAutomatically)
                 declineAllRequests(groupNoticeDiv,"decline");
