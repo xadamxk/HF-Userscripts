@@ -266,6 +266,14 @@ US managers (ex. <a href="https://tampermonkey.net/">TamperMonkey</a>) allow use
   <img src="https://github.com/xadamxk/HF-Userscripts/blob/master/Group%20Management%20Profile%20Manager/Capture08.gif?raw=true" width="111" height="219" title="Group Manager Screenshot 06"  />
   </p>
   </ul></li>
+    <br>
+  <ul><li><b>Alternate Row Highlighting: </b>Adds alt row highlighting on member/request lists.
+  <br>
+  <p align="center">
+  <img src="https://github.com/xadamxk/HF-Userscripts/blob/master/Group%20Management%20Profile%20Manager/Capture09.PNG?raw=true" width="520" height="162" title="Group Manager Screenshot 07"  />
+  </p>
+  </ul></li>
+  <br>
   <ul><li><b>Group Leader Notice Link: </b>Changes the 'Group Leader Notice' link to to your group's request page.
   </ul></li>
   <br>
