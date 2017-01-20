@@ -142,6 +142,8 @@ US managers (ex. <a href="https://tampermonkey.net/">TamperMonkey</a>) allow use
   <br>
   <ul><li><b>Thread & Author Citing: </b> Cite threads and include the author by clicking the 'cite' button on the first post.</li></ul>
   <br>
+  <ul><li><b>Post Citing: </b> Cite posts by clicking the 'cite' button on any post.</li></ul>
+  <br>
   <ul><li><b>Section Citing: </b> Cite sections by clicking the 'cite' button next to the navigation bar.
   <br>
   <p align="center">
@@ -263,6 +265,8 @@ US managers (ex. <a href="https://tampermonkey.net/">TamperMonkey</a>) allow use
   <p align="center">
   <img src="https://github.com/xadamxk/HF-Userscripts/blob/master/Group%20Management%20Profile%20Manager/Capture08.gif?raw=true" width="111" height="219" title="Group Manager Screenshot 06"  />
   </p>
+  </ul></li>
+  <ul><li><b>Group Leader Notice Link: </b>Changes the 'Group Leader Notice' link to to your group's request page.
   </ul></li>
   <br>
 </details>
