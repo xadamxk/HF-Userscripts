@@ -2,7 +2,7 @@
 // @name       HF Group Management
 // @author xadamxk
 // @namespace  https://github.com/xadamxk/HF-Scripts
-// @version    2.0.2
+// @version    2.0.3
 // @description  Adds improved group management options for HF leaders.
 // @require http://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js
 // @match      *://hackforums.net/*
@@ -15,6 +15,7 @@
 // @grant       GM_setValue
 // @grant       GM_deleteValue
 // ------------------------------ Change Log ----------------------------
+// version 2.0.3: Added alt row highlighting on member/request lists.
 // version 2.0.2: Group Leader Notice now links to your group's requests page
 // version 2.0.1: Bug fix - Centered 'select all' checkbox on member list page
 // version 2.0.0: Implemented 'Group Management Links 2.0' - https://hackforums.net/showthread.php?tid=5477859
@@ -29,6 +30,7 @@
 // ==/UserScript==
 // ------------------------------ Dev Notes -----------------------------
 // Restructure code to support finding userbars better (hf news)
+// GM_deleteValue("groupInfo");
 // ------------------------------ SETTINGS ------------------------------
 // Key used to store group name,gid,etc. (Don't change)
 const GM_ValAddr = "groupsInfo"; // (Default: 'groupsInfo')
@@ -45,8 +47,11 @@ var declineAllAutomatically = false; // (Default: false)
 // Links 'Group Leader Notice' to group requests
 var linkGroupLeaderNotice = true; // (Default: true)
 
+// Alternate Row Highlighting (member/request list)
+var colorAltRows = true; // (Default: true)
+
 // Debug Mode - Print certain results to console
-var debug = false; // (Default: false)
+var debug = true; // (Default: false)
 // ------------------------------ ON PAGE LOAD ------------------------------
 // Global variables
 var uid = $(location).attr('href').replace(/[^0-9]/g, '');
@@ -207,6 +212,16 @@ function runonJoinRequestMenu(){
             default : console.log("if you're seeing this, my script no longer works.");
         }
     });
+    if (colorAltRows){
+        // Add odd/even rows
+        $("strong:contains(Join Requests for)").parent().parent().parent().parent().attr("id","selectedTable");
+        alternateRows("selectedTable");
+        var altColor = $("#selectedTable tr:eq(1) td:eq(0)").css("background-color");
+        if(debug){console.log("Alternate Color (request list): "+altColor);}
+        // Color odd/even rows
+        $("#selectedTable .odd").children().css("background-color",shadeRGBColor(altColor, 0.01));
+        //$("#selectedTable .even").children().css("background-color",shadeRGBColor(altColor, 0.01));
+    }
 }
 
 // Mark all radio buttons with col index
@@ -224,21 +239,15 @@ function markAllRadio(colIndex){
 
 function runonEveryHFPage(){
     var groupNoticeDiv;
-    if(debug){
-        //Debug Purposes
-        GM_deleteValue("groupInfo");
-        console.log(GM_getValue("groupInfo", "groupInfo EMPTY"));
-    }
-    else{
-        // Check for previous group info
-        prevInfo = GM_getValue("groupInfo", false);
-        // Grab group info
-        if (!prevInfo)
-            getGroupInfo();
-        // Load previously saved info
-        else
-            setGroupInfo();
-    }
+    if(debug){console.log(GM_getValue("groupInfo", "groupInfo EMPTY"));}
+    // Check for previous group info
+    prevInfo = GM_getValue("groupInfo", false);
+    // Grab group info
+    if (!prevInfo)
+        getGroupInfo();
+    // Load previously saved info
+    else
+        setGroupInfo();
     // Check for pm alert class
     if ($(".pm_alert").length > 0){
         // Check alerts for group notice
@@ -346,8 +355,7 @@ function declineAllRequests(groupNoticeDiv, actionStr){
 
 // Mark all checkboxs
 function runonMemberList(){
-    console.log("it works");
-    var memberListTable = $("strong:contains(Members in)").parent().parent().parent();
+    var memberListTable = $("strong:contains(Members in)").parent().parent().parent().attr("id","selectedTable");
     memberListTable.find("tr:eq(1) td:eq(5)")
         .append($("<input>").attr("id","checkBoxAll").attr("type","checkbox").addClass("checkbox").attr("name","allCheckbox"));
     // Center textbox
@@ -359,6 +367,15 @@ function runonMemberList(){
             $(this).prop('checked', checkStatus);
         });
     });
+    if (colorAltRows){
+        // Add odd/even rows
+        alternateRows("selectedTable");
+        var altColor = $("#selectedTable tr:eq(1) td:eq(0)").css("background-color");
+        if(debug){console.log("Alternate Color (member list): "+altColor);}
+        // Color odd/even rows
+        //$("#selectedTable .odd").children().css("background-color","#111111");
+        $("#selectedTable .even").children().css("background-color",shadeRGBColor(altColor, 0.05));
+    }
 }
 
 // Add 'Update Group' button
@@ -420,4 +437,25 @@ function setGroupInfo(){
     }
     // Set string
     $("#panel").html($("#panel").html().replace(regex,revised));
+}
+// Source: http://stackoverflow.com/questions/5560248/programmatically-lighten-or-darken-a-hex-color-or-rgb-and-blend-colors
+function shadeRGBColor(color, percent) {
+    var f=color.split(","),t=percent<0?0:255,p=percent<0?percent*-1:percent,R=parseInt(f[0].slice(4)),G=parseInt(f[1]),B=parseInt(f[2]);
+    return "rgb("+(Math.round((t-R)*p)+R)+","+(Math.round((t-G)*p)+G)+","+(Math.round((t-B)*p)+B)+")";
+}
+// Source: https://www.sitepoint.com/background-colors-javascript/
+function alternateRows(id){
+    if(document.getElementsByTagName){
+        var table = document.getElementById(id);
+        var rows = table.getElementsByTagName("tr");
+        for(i = 0; i < rows.length; i++){
+            //manipulate rows
+            if (i > 1){
+                if(i % 2 === 0)
+                    rows[i].className = "even";
+                else
+                    rows[i].className = "odd";
+            }
+        }
+    }
 }
