@@ -34,7 +34,7 @@ var posRepColor = "#32CD32"; // Default: ##32CD32
 var neuRepColor = "#666666"; // Default: #666666
 var negRepColor = "#CC3333"; // Default: #CC3333
 // ------------------------------ ON PAGE LOAD ------------------------------
-// Append repOptions butten
+// Append repOptions button
 $(".quick_keys div:eq(0) a:eq(0)").before($("<button>").attr("id", "repOptionsButton").addClass("button").css({marginRight : "5px"}));
 // Add given button
 if (window.location.href.includes("hackforums.net/reputation.php?uid=")){
