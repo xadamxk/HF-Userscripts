@@ -2,12 +2,11 @@
 // @name       HF ToolBar
 // @author xadamxk
 // @namespace  https://github.com/xadamxk/HF-Scripts
-// @version    1.2.0
+// @version    1.2.1
 // @description  Adds a toolbar with various options to the top of HF.
 // @require https://code.jquery.com/jquery-3.1.1.js
 // @require https://raw.githubusercontent.com/xadamxk/HF-Userscripts/master/JS%20Libraries/jquery.sticky.js
 // @require https://raw.githubusercontent.com/xadamxk/HF-Userscripts/master/JS%20Libraries/GM_config.js
-// @require https://raw.githubusercontent.com/xadamxk/HF-Userscripts/master/JS%20Libraries/tinycon.min.js
 // @require https://raw.githubusercontent.com/xadamxk/HF-Userscripts/master/JS%20Libraries/jquery-ui.js
 // @require https://raw.githubusercontent.com/xadamxk/HF-Userscripts/master/JS%20Libraries/tinybox.js
 // @require https://raw.githubusercontent.com/xadamxk/HF-Userscripts/master/JS%20Libraries/jquery.textareafullscreen.js
@@ -22,6 +21,7 @@
 // @grant       GM_info
 // @iconURL https://raw.githubusercontent.com/xadamxk/HF-Userscripts/master/scripticon.jpg
 // ------------------------------ Change Log ----------------------------
+// version 1.2.1: Removed PM features -> now in 'PM Enhancer' Userscript
 // version 1.2.0: Added Right Shortcuts, 10 Quick Links, and bug fixes.
 // version 1.1.1: Bug Fix: Fixed Buddies/Settings icon not working - caused by other header scripts.
 // version 1.1.0: Public Release.
@@ -38,6 +38,7 @@
 // TODO: Make sticky width 100%, quick notes, 10 quick links
 // Quick note box: http://creoart.org/jquery.textareafullscreen/
 // Make seperate HTML for textareafullscreen and save button -> append under sticky with movable
+// BUG: Not compatible with leader links :/
 // ------------------------------ SETTINGS ------------------------------
 // Get Changelog from meta block
 var tempChangeLog = GM_info.scriptMetaStr.split('//');
@@ -313,31 +314,6 @@ var configSettings = {
         'type':'text',
         'default':'',
     },
-    'hidePMNotification':{
-        'label':'Hide PM Notification Alerts:',
-        'section': ['PM Tweaks',"An assortment of Private Message modifications."],
-        'title':"Hides the alert when you have an unread PM.",
-        'type':'checkbox',
-        'default':false,
-    },
-    'enableTinyCon':{
-        'label':'Enable favicon badges for PMs:',
-        'title':"Adds notification bubble to favicon with number of unread PMs.",
-        'type':'checkbox',
-        'default':true,
-    },
-    'enablePMCheck':{
-        'label':"Enable Background PMs (Experimental - requires 'favicon badges' enabled):",
-        'title':"Checks for new PMs after 5 mins.",
-        'type':'checkbox',
-        'default':false,
-    },
-    'openPMNewTab':{
-        'label':"Load messages from HFTB in a new tab:",
-        'title':"Make HFTB Message icon open messages in a new tab",
-        'type':'checkbox',
-        'default':false,
-    },
     'HFTBversion':{
         'title':'About HFTB',
         'section': ["About HFTB",
@@ -385,10 +361,6 @@ $("#leftSticky a:eq("+numShortcutsEnabled()+")").click(function(){
 appendQuickLinks();
 // Add spacers to toolbar
 addSpacersToHeader();
-// Hide PM Alert
-hidePMNotice();
-// Check for PM Notifications
-checkPMNotifications();
 // Check current page (color if found on toolbar)
 checkforCurrentPage();
 
@@ -483,8 +455,6 @@ function createStickyHeader(){
         // PMs
         $("#leftSticky").append($("<a>").attr("href",shortcut4Link).attr("title",shortcut4Text)
                                 .append($("<i>").attr("id","pmLeftSticky").addClass("fa fa-comments fa-lg")));
-        if (GM_config.get('openPMNewTab'))
-            $("#leftSticky a").attr("target","_blank");
         // If new PM & enableActiveIcons
         if(shortcut4NewPM)
             $("#pmLeftSticky").css("color","#ff3b30");
@@ -645,45 +615,10 @@ function appendQuickLinks(){
             $("#leftSticky").append($("<a>").attr("href",GM_config.get('quickLinks_10Link')).text(GM_config.get('quickLinks_10Text')).addClass("currentLink"));
     }
 }
-function hidePMNotice(){
-    if(GM_config.get('hidePMNotification')){
-        if ($("#pm_notice").length > 0)
-            $("#pm_notice").hide();
-    }
-}
-function checkPMNotifications(){
-    if(GM_config.get('enableTinyCon') || GM_config.get('enablePMCheck')){
-        Tinycon.setOptions({
-            color: '#000000',
-            background: '#ff3b30',
-            fallback: true
-        });
-        // Set icon if page contains PM
-        if ($("#pm_notice").length > 0){
-            var pmAlert = $("#pm_notice");
-            var hasNumber = /\d/;
-            var numPMs = 0;
-            var numStr = hasNumber.test(pmAlert.find("strong").text());
-            if (numStr)
-                numPMs = parseInt(pmAlert.find("strong").text().replace(/[^0-9\.]/g, ''));
-            else
-                numPMs = 1;
-            Tinycon.setBubble(numPMs);
-        }
-        if (GM_config.get('enablePMCheck')){
-            // Function to check PM's in background
-            var interval = 1000 * 60 * 5; // 1000 milli * 60 secs * x = minutes (No lower than 5 or timeout!)
-            setInterval(function(){
-                var pmCount = updateFavIcon();
-                Tinycon.setBubble(pmCount);
-            }, interval);
-        }
-    }
-}
 function updateFavIcon(){
     var numPMs = 0;
     $.ajax({
-        url: "https://hackforums.net/stickies.php",
+        url: "https://hackforums.net/usercp.php",
         cache: false,
         async: false,
         success: function(response) {
