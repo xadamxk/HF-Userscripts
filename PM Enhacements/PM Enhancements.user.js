@@ -2,10 +2,9 @@
 // @name       PM Enhancements
 // @author xadamxk
 // @namespace  https://github.com/xadamxk/HF-Scripts
-// @version    1.0.1
+// @version    1.0.2
 // @description  Adds various features to the PM system.
 // @require https://code.jquery.com/jquery-3.1.1.js
-// @require https://raw.githubusercontent.com/xadamxk/HF-Userscripts/master/JS%20Libraries/jquery.sticky.js
 // @require https://raw.githubusercontent.com/xadamxk/HF-Userscripts/master/JS%20Libraries/GM_config.js
 // @require https://raw.githubusercontent.com/xadamxk/HF-Userscripts/master/JS%20Libraries/tinycon.min.js
 // @match      *://hackforums.net*
@@ -20,31 +19,54 @@
 // @grant       GM_info
 // @iconURL https://raw.githubusercontent.com/xadamxk/HF-Userscripts/master/scripticon.jpg
 // ------------------------------ Change Log ----------------------------
+// version 1.0.2: Quote Stripping, PM Signature, PM Tracking
 // version 1.0.1: Update/Download URLs
 // version 1.0.0: Beta Release
 // ==/UserScript==
 // ------------------------------ Dev Notes -----------------------------
-//
+// TODO: Easy Deny Responces? (http://userscripts-mirror.org/scripts/review/163767)
 // ------------------------------ SETTINGS ------------------------------
-// Notification Dismissal Time
-var notificationTimeout = 15000; // (Default: 15000)
+// Siiiike, integrated settings panel
 // ------------------------------ On Page ------------------------------
 loadSettings();
 if ( window.location.href == "https://hackforums.net/private.php" || (window.location.href == "https://hackforums.net/private.php#Settings")){
     onPMSystem();
 }
-if (window.location.href.includes("hackforums.net/private.php?action=send&pmid=")){
+else if (window.location.href.includes("hackforums.net/private.php?action=send&pmid=")){
     onPMSend();
+}
+else if(window.location.href == "https://hackforums.net/private.php?action=tracking"){
+    onPMTracking();
+}
+else if(window.location.href == "https://hackforums.net/private.php?action=send"){
+    onPMCompose();
 }
 onAllPages();
 
 // ------------------------------ Functions ------------------------------
+function onPMCompose(){
+    pmSignature();
+}
+function onPMTracking(){
+    if(GM_config.get('enablePMTracking')){
+        // Read tbody
+        var readTable = getTrackingTableBody('Read Messages');
+        trackingTableLinks(readTable);
+        // Unread tbody
+        var unreadTable = getTrackingTableBody('Unread Messages');
+        trackingTableLinks(unreadTable);
+    }
+    // Change label of cancel button so it is more clear
+    //$("input[value='Cancel']").text("TEST");
+
+}
 function onAllPages(){
     checkPMNotifications();
     hidePMNotice();
 }
 function onPMSend(){
     stripQuotes();
+    pmSignature();
 }
 function onPMSystem(){
     // Append link for settings
@@ -56,20 +78,58 @@ function onPMSystem(){
         GM_config.open();
     });
 }
+function pmSignature(){
+    if(GM_config.get('enablePMSignature')){
+        // Format fixer
+        if(GM_config.get('enableQuoteStripping') && window.location.href.includes("&pmid="))
+            $(".tborder tr:last td:last span").append("<br>");
+        // Append option for signature
+        $(".tborder tr:last td:last span")
+            .append($('<input>').attr({ type: 'checkbox', name:'options[sendMessage]',id:'showSignature'}).addClass("checkbox sendMessage").prop('checked', true))
+            .append($("<strong>").text("PM Signature: "))
+            .append($('<label>').text("add predefined text to the end of your PMs."));
+        // Add new line on page load
+        $("#message_new").val($("#message_new").val() + "\n");
+        // Add Signature by default
+        $("#message_new").val($("#message_new").val() + "\n" + GM_config.get('textPMSignature'));
+        // Onclick Event
+        $('.sendMessage').on("click",function(){
+            if($(this).is(':checked')){
+                // get value & add it to message body
+                $("#message_new").val($("#message_new").val() + "\n" + GM_config.get('textPMSignature'));
+            }
+            else{
+                // Remove if it exists
+                var tempSig = $("#message_new").val();
+                if(tempSig.includes(GM_config.get('textPMSignature'))){
+                    $("#message_new").val(tempSig.replace(GM_config.get('textPMSignature'),""));
+                    // All Hail StackOverflow (http://stackoverflow.com/a/5497333)
+                    var pos = $("#message_new").val().lastIndexOf('\n');
+                    $("#message_new").val($("#message_new").val().substring(0,pos) + $("#message_new").val().substring(pos+1));
+                }
+            }
+        });
+    }
+}
 function stripQuotes(){
-    // PM Quote Remover
+    // PM Quote Remover - updated by myself
     // Credit to Snorlax (http://userscripts-mirror.org/scripts/source/185414.user.js)
-    textarea = $("#message_new");
-    GM_setValue("savedMessage", textarea.val());
-    replace = textarea.val().replace(/^(\[quote=(?:(?!\[quote=)[\s\S]*?))\[quote=[\s\S]+\[\/quote\]\s*([\s\S]+?\[\/quote\]\s*)$/g, "$1$2\n\n");
-    textarea.val(replace);
-    $(".tborder tr:last td:last span").append('<label><input type="checkbox" class="checkbox loadMessage" name="options[loadMessage]" value="0" tabindex="8" checked="checked"><strong>Strip quotes?</strong> Strip all quotes but the last.</label>');
-    $('.loadMessage').on("click",function(){
-        if($(this).is(':checked'))
-            textarea.val(replace);
-        else
-            textarea.val(GM_getValue("savedMessage"));
-    });
+    if(GM_config.get('enableQuoteStripping')){
+        textarea = $("#message_new");
+        GM_setValue("savedMessage", textarea.val());
+        replace = textarea.val().replace(/^(\[quote=(?:(?!\[quote=)[\s\S]*?))\[quote=[\s\S]+\[\/quote\]\s*([\s\S]+?\[\/quote\]\s*)$/g, "$1$2\n\n");
+        textarea.val(replace);
+        $(".tborder tr:last td:last span")
+            .append($('<input>').attr({ type: 'checkbox', name:'options[loadMessage]'}).addClass("checkbox loadMessage").prop('checked', true))
+            .append($("<strong>").text("Strip Quotes: "))
+            .append($('<label>').text("remove all quotes but the last."));
+        $('.loadMessage').on("click",function(){
+            if($(this).is(':checked'))
+                textarea.val(replace);
+            else
+                textarea.val(GM_getValue("savedMessage"));
+        });
+    }
 }
 function hidePMNotice(){
     if(GM_config.get('hidePMNotification')){
@@ -193,14 +253,8 @@ function loadSettings(){
             'default':false,
         },
         'enablePMNotifications':{
-            'label':"Enable Desktop PM Notifications:",
+            'label':"Enable Desktop PM Notifications (Experimental - requires 'Background PMs' enabled'):",
             'title':"Uses the notification API to send desktop notifcations.",
-            'type':'checkbox',
-            'default':false,
-        },
-        'openPMNewTab':{
-            'label':"Load messages from HFTB in a new tab:",
-            'title':"Make HFTB Message icon open messages in a new tab",
             'type':'checkbox',
             'default':false,
         },
@@ -209,6 +263,24 @@ function loadSettings(){
             'title':"Credits to Snorlax for PM Quote Remover.",
             'type':'checkbox',
             'default':true,
+        },
+        'enablePMTracking':{
+            'label':"PM Tracking Hyperlinks:",
+            'title':"Hyperlink titles to the appropriate message in Message Tracking.",
+            'type':'checkbox',
+            'default':true,
+        },
+        'enablePMSignature':{
+            'label':"PM Signature:",
+            'title':"Adds predefined string to the end of all PM's.",
+            'type':'checkbox',
+            'default':false,
+        },
+        'textPMSignature':{
+            'label':"Signature:",
+            'title':"PM Signature.",
+            'type':'text',
+            'default':'-PM Enhancer Script',
         },
         'PMENversion':{
             'title':'About PM Enhancer',
@@ -238,7 +310,21 @@ function loadSettings(){
         'box-shadow: 0 1px 0 0 #0F5799 inset !important; padding: 3px 6px; text-decoration: none; font-family: arial;'+
         'text-shadow: 1px 1px 0px #000; font-size: 14px; font-weight: bold; border-radius: 3px;}'+
         '#PMEN_config button:hover {color: #499FED}'+
+        '#PMEN_config input[type="text"] {width:50%;}'+
         '#PMEN_config select {background: #cccccc; border: 1px solid #072948;}'+
-        '{padding-left:15px}'
+        '#PMEN_config_textPMSignature_var, #PMEN_config_enablePMCheck_var, #PMEN_config_enablePMNotifications_var {padding-left:15px}'
     });
+}
+function trackingTableLinks(table){
+    table.find("tr").each(function( index ) {
+        var messageID;
+        if($(this).find(".checkbox").attr("name") !== undefined){
+            $(this).find("td:eq(1)").html('<a href="https://hackforums.net/private.php?action=read&pmid='+
+                                          (parseInt($(this).find(".checkbox").attr("name").replace(/\D/g,''))+1)+'">'+
+                                          $(this).find("td:eq(1)").text()+'</a>');
+        }
+    });
+}
+function getTrackingTableBody(string){
+    return $(".quick_keys").find("strong:contains('"+string+"')").parent().parent().parent();
 }
