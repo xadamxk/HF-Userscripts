@@ -31,6 +31,10 @@
 loadSettings();
 if ( window.location.href == "https://hackforums.net/private.php" || (window.location.href == "https://hackforums.net/private.php#Settings")){
     onPMSystem();
+    if ($("#message_new") > 0){
+        stripQuotes();
+        pmSignature();
+    }
 }
 else if (window.location.href.includes("hackforums.net/private.php?action=send&pmid=")){
     onPMSend();
