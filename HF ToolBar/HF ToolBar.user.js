@@ -2,7 +2,7 @@
 // @name       HF ToolBar
 // @author xadamxk
 // @namespace  https://github.com/xadamxk/HF-Scripts
-// @version    1.2.1
+// @version    1.2.2
 // @description  Adds a toolbar with various options to the top of HF.
 // @require https://code.jquery.com/jquery-3.1.1.js
 // @require https://raw.githubusercontent.com/xadamxk/HF-Userscripts/master/JS%20Libraries/jquery.sticky.js
@@ -13,14 +13,15 @@
 // @match      *://hackforums.net*
 // @match      *://hackforums.net/*
 // @copyright  2016+
-// @updateURL https://github.com/xadamxk/HF-Userscripts/raw/master/HF%20ToolBar/HF%20ToolBar.user.js
-// @downloadURL https://github.com/xadamxk/HF-Userscripts/raw/master/HF%20ToolBar/HF%20ToolBar.user.js
+// @updateURL https://github.com/xadamxk/HF-Userscripts/releases/download/HFTB/HF.ToolBar.user.js
+// @downloadURL https://github.com/xadamxk/HF-Userscripts/releases/download/HFTB/HF.ToolBar.user.js
 // @grant       GM_getValue
 // @grant       GM_setValue
 // @grant       GM_log
 // @grant       GM_info
 // @iconURL https://raw.githubusercontent.com/xadamxk/HF-Userscripts/master/scripticon.jpg
 // ------------------------------ Change Log ----------------------------
+// version 1.2.2: Replaced update/download URLs with release
 // version 1.2.1: Removed PM features -> now in 'PM Enhancer' Userscript
 // version 1.2.0: Added Right Shortcuts, 10 Quick Links, and bug fixes.
 // version 1.1.1: Bug Fix: Fixed Buddies/Settings icon not working - caused by other header scripts.

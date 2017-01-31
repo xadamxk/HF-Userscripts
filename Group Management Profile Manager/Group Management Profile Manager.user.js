@@ -2,19 +2,20 @@
 // @name       HF Group Management
 // @author xadamxk
 // @namespace  https://github.com/xadamxk/HF-Scripts
-// @version    2.0.3
+// @version    2.0.4
 // @description  Adds improved group management options for HF leaders.
 // @require http://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js
 // @match      *://hackforums.net/*
 // @match      *://hackforums.net*
 // @copyright  2016+
 // @iconURL https://raw.githubusercontent.com/xadamxk/HF-Userscripts/master/scripticon.jpg
-// @updateURL https://github.com/xadamxk/HF-Userscripts/raw/master/Group%20Management%20Profile%20Manager/Group%20Management%20Profile%20Manager.user.js
-// @downloadURL https://github.com/xadamxk/HF-Userscripts/raw/master/Group%20Management%20Profile%20Manager/Group%20Management%20Profile%20Manager.user.js
+// @updateURL https://github.com/xadamxk/HF-Userscripts/releases/download/HFGM/Group.Management.Profile.Manager.user.js
+// @downloadURL https://github.com/xadamxk/HF-Userscripts/releases/download/HFGM/Group.Management.Profile.Manager.user.js
 // @grant       GM_getValue
 // @grant       GM_setValue
 // @grant       GM_deleteValue
 // ------------------------------ Change Log ----------------------------
+// version 2.0.4: Replaced update/download URLs with release
 // version 2.0.3: Added alt row highlighting on member/request lists.
 // version 2.0.2: Group Leader Notice now links to your group's requests page
 // version 2.0.1: Bug fix - Centered 'select all' checkbox on member list page

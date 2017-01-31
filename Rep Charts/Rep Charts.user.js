@@ -2,18 +2,19 @@
 // @name       Rep Charts
 // @author xadamxk
 // @namespace  https://github.com/xadamxk/HF-Scripts
-// @version    1.1.5
+// @version    1.1.6
 // @description  Display graphical information on reputation.php
 // @require https://code.jquery.com/jquery-3.1.1.js
 // @require https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.4.0/Chart.bundle.min.js
 // @match      *://hackforums.net/reputation.php?uid=*
 // @match      *://hackforums.net/repsgiven.php?uid=*
 // @copyright  2016+
-// @updateURL https://github.com/xadamxk/HF-Userscripts/raw/master/Rep%20Charts/Rep%20Charts.user.js
-// @downloadURL https://github.com/xadamxk/HF-Userscripts/raw/master/Rep%20Charts/Rep%20Charts.user.js
+// @updateURL https://github.com/xadamxk/HF-Userscripts/releases/download/HFRC/Rep.Charts.user.js
+// @downloadURL https://github.com/xadamxk/HF-Userscripts/releases/download/HFRC/Rep.Charts.user.js
 // @iconURL https://raw.githubusercontent.com/xadamxk/HF-Userscripts/master/scripticon.jpg
 // ==/UserScript==
 // ------------------------------ Change Log ----------------------------
+// version 1.1.6: Replaced update/download URLs with release
 // version 1.1.5: Bug fix: document-start
 // version 1.1.4: Fixed auto-update
 // version 1.1.3: Added rep given/received buttons on rep pages

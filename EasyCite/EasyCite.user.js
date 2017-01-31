@@ -2,17 +2,18 @@
 // @name       EasyCite
 // @author xadamxk
 // @namespace  https://github.com/xadamxk/HF-Scripts
-// @version    1.0.6
+// @version    1.0.7
 // @description Allows users to cite threads, users, sections, and other pages on HF.
 // @require https://code.jquery.com/jquery-3.1.1.js
 // @match      *://hackforums.net*
 // @match      *://hackforums.net/*
 // @copyright  2016+
-// @updateURL https://github.com/xadamxk/HF-Userscripts/raw/master/EasyCite/EasyCite.user.js
-// @downloadURL https://github.com/xadamxk/HF-Userscripts/raw/master/EasyCite/EasyCite.user.js
+// @updateURL https://github.com/xadamxk/HF-Userscripts/releases/download/HFEC/EasyCite.user.js
+// @downloadURL https://github.com/xadamxk/HF-Userscripts/releases/download/HFEC/EasyCite.user.js
 // @iconURL https://raw.githubusercontent.com/xadamxk/HF-Userscripts/master/scripticon.jpg
 // ==/UserScript==
 // ------------------------------ Change Log ----------------------------
+// version 1.0.7: Replaced update/download URLs with release
 // version 1.0.6: Bug fix: document-start
 // version 1.0.5: Fixed auto-update
 // version 1.0.4: Added user colors setting for profiles

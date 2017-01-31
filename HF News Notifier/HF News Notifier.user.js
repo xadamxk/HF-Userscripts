@@ -2,18 +2,19 @@
 // @name       HF News Notifier
 // @author xadamxk
 // @namespace  https://github.com/xadamxk/HF-Scripts
-// @version    1.2.3
+// @version    1.2.4
 // @description  Alerts users of new HF News editions (checks on /usercp.php)
 // @require https://code.jquery.com/jquery-3.1.1.js
 // @match      *://hackforums.net/usercp.php
 // @copyright  2016+
-// @updateURL https://github.com/xadamxk/HF-Userscripts/raw/master/HF%20News%20Notifier/HF%20News%20Notifier.user.js
-// @downloadURL https://github.com/xadamxk/HF-Userscripts/raw/master/HF%20News%20Notifier/HF%20News%20Notifier.user.js
+// @updateURL https://github.com/xadamxk/HF-Userscripts/releases/download/HFNN/HF.News.Notifier.user.js
+// @downloadURL https://github.com/xadamxk/HF-Userscripts/releases/download/HFNN/HF.News.Notifier.user.js
 // @iconURL https://raw.githubusercontent.com/xadamxk/HF-Userscripts/master/scripticon.jpg
 // @grant       GM_getValue
 // @grant       GM_setValue
 // ==/UserScript==
 // ------------------------------ Change Log ----------------------------
+// version 1.2.4: Replaced update/download URLs with release
 // version 1.2.3: Bug fix: document-start
 // version 1.2.2: Fixed auto-update
 // version 1.2.1: Bug Fix: thread titles with ("',) no longer break the alert (removes them)

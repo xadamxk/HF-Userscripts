@@ -2,17 +2,18 @@
 // @name       HF Anti-Ignore
 // @author xadamxk
 // @namespace  https://github.com/xadamxk/HF-Scripts
-// @version    1.1.0
+// @version    1.1.1
 // @description Counteracts HF's ignore feature.
 // @require https://code.jquery.com/jquery-3.1.1.js
 // @match      *://hackforums.net/member.php?action=profile&uid=*
 // @match      *://hackforums.net/showthread.php?tid=*
 // @copyright  2016+
-// @updateURL https://github.com/xadamxk/HF-Userscripts/raw/master/HF%20Anti-Ignore/HF%20Anti-Ignore.user.js
-// @downloadURL https://github.com/xadamxk/HF-Userscripts/raw/master/HF%20Anti-Ignore/HF%20Anti-Ignore.user.js
+// @updateURL https://github.com/xadamxk/HF-Userscripts/releases/download/HFAI/HF.Anti-Ignore.user.js
+// @downloadURL https://github.com/xadamxk/HF-Userscripts/releases/download/HFAI/HF.Anti-Ignore.user.js
 // @iconURL https://raw.githubusercontent.com/xadamxk/HF-Userscripts/master/scripticon.jpg
 // ==/UserScript==
 // ------------------------------ Change Log ----------------------------
+// version 1.1.1: Replaced update/download URLs with release
 // version 1.1.0: Added the option to auto-show blocked user's posts
 // version 1.0.6: Bug fix - If multiple users had the same containing username, both data sets were returned
 // version 1.0.5: Removed 'Global Ignore' description

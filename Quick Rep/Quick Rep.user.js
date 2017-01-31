@@ -2,18 +2,19 @@
 // @name       Quick Rep
 // @author xadamxk
 // @namespace  https://github.com/xadamxk/HF-Scripts
-// @version    2.0.8
+// @version    2.0.9
 // @description Makes giving reputation on HF easier.
 // @require https://code.jquery.com/jquery-3.1.1.js
 // @match      *://hackforums.net/showthread.php?tid=*
 // @match      *://hackforums.net/private.php?action=read&pmid=*
 // @match      *://hackforums.net/usercp.php
 // @copyright  2016+
-// @updateURL https://github.com/xadamxk/HF-Userscripts/raw/master/Quick%20Rep/Quick%20Rep.user.js
-// @downloadURL https://github.com/xadamxk/HF-Userscripts/raw/master/Quick%20Rep/Quick%20Rep.user.js
+// @updateURL https://github.com/xadamxk/HF-Userscripts/releases/download/HFQR/Quick.Rep.user.js
+// @downloadURL https://github.com/xadamxk/HF-Userscripts/releases/download/HFQR/Quick.Rep.user.js
 // @iconURL https://raw.githubusercontent.com/xadamxk/HF-Userscripts/master/scripticon.jpg
 // ==/UserScript==
 // ------------------------------ Change Log ----------------------------
+// version 2.0.9: Replaced update/download URLs with release
 // version 2.0.8: Staff support, Bug fix: RepQueueCookie is not longer a session cookie.
 // version 2.0.7: Bug fix: document-start
 // version 2.0.6: Fixed auto-update

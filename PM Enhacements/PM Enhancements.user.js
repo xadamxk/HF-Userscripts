@@ -2,7 +2,7 @@
 // @name       PM Enhancements
 // @author xadamxk
 // @namespace  https://github.com/xadamxk/HF-Scripts
-// @version    1.0.2
+// @version    1.0.3
 // @description  Adds various features to the PM system.
 // @require https://code.jquery.com/jquery-3.1.1.js
 // @require https://raw.githubusercontent.com/xadamxk/HF-Userscripts/master/JS%20Libraries/GM_config.js
@@ -10,8 +10,8 @@
 // @match      *://hackforums.net*
 // @match      *://hackforums.net/*
 // @copyright  2016+
-// @updateURL https://github.com/xadamxk/HF-Userscripts/raw/master/PM%20Enhacements/PM%20Enhancements.user.js
-// @downloadURL https://github.com/xadamxk/HF-Userscripts/raw/master/PM%20Enhacements/PM%20Enhancements.user.js
+// @updateURL https://github.com/xadamxk/HF-Userscripts/releases/download/HFPE/PM.Enhancements.user.js
+// @downloadURL https://github.com/xadamxk/HF-Userscripts/releases/download/HFPE/PM.Enhancements.user.js
 // @grant       GM_getValue
 // @grant       GM_setValue
 // @grant       GM_deleteValue
@@ -19,6 +19,7 @@
 // @grant       GM_info
 // @iconURL https://raw.githubusercontent.com/xadamxk/HF-Userscripts/master/scripticon.jpg
 // ------------------------------ Change Log ----------------------------
+// version 1.0.3: Replaced update/download URLs with release
 // version 1.0.2: Quote Stripping, PM Signature, PM Tracking
 // version 1.0.1: Update/Download URLs
 // version 1.0.0: Beta Release
