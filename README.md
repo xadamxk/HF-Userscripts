@@ -7,7 +7,7 @@ Userscripts allow users to modify web pages locally using Javascript.
 US managers (ex. <a href="https://tampermonkey.net/">TamperMonkey</a>) allow users to install and manage their userscripts in modern browsers.
 <br />
 
-<a href="http://www.somsubhra.com/github-release-stats/?username=xadamxk&repository=HF-Userscripts"><img src="https://cdn0.iconfinder.com/data/icons/Hand_Drawn_Web_Icon_Set/128/folder_download.png"/></a>
+<a href="http://www.somsubhra.com/github-release-stats/?username=xadamxk&repository=HF-Userscripts"><img src="https://github.com/xadamxk/HF-Userscripts/blob/master/projecticon2.png?raw=true"/></a>
 <br />
 </p>
 
