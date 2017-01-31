@@ -15,7 +15,7 @@ US managers (ex. <a href="https://tampermonkey.net/">TamperMonkey</a>) allow use
 
 <h3><b><big>Scripts</big></b></h3>
 <ul><li>Below are the scripts listed under this repository along with a short description.
-<ul><li><b><a href ="https://hackforums.net/showthread.php?tid=5536003">PM Enhancement</a>(<a href="https://github.com/xadamxk/HF-Userscripts/raw/master/PM%20Enhacements/PM%20Enhancements.user.js">Install</a>):</b> Adds various features to the PM system.
+<ul><li><b><a href ="https://hackforums.net/showthread.php?tid=5536003">PM Enhancement</a>(<a href="https://github.com/xadamxk/HF-Userscripts/releases/download/HFPE/PM.Enhancements.user.js">Install</a>):</b> Adds various features to the PM system.
 <ul>Release Date: 1/28/2017
 <ul>
 <details> 
@@ -68,7 +68,7 @@ US managers (ex. <a href="https://tampermonkey.net/">TamperMonkey</a>) allow use
 </ul><hr>
 </ul> 
 </li></ul>
-<ul><li><b><a href ="https://hackforums.net/showthread.php?tid=5518790">HF ToolBar</a>(<a href="https://github.com/xadamxk/HF-Userscripts/raw/master/HF%20ToolBar/HF%20ToolBar.user.js">Install</a>):</b> Adds a toolbar with various options to the top of HF.
+<ul><li><b><a href ="https://hackforums.net/showthread.php?tid=5518790">HF ToolBar</a>(<a href="https://github.com/xadamxk/HF-Userscripts/releases/download/HFTB/HF.ToolBar.user.js">Install</a>):</b> Adds a toolbar with various options to the top of HF.
 <ul>Release Date: 1/09/2017
 <ul>
 <details> 
@@ -121,7 +121,7 @@ US managers (ex. <a href="https://tampermonkey.net/">TamperMonkey</a>) allow use
 </ul><hr>
 </ul> 
 </li></ul>
-<ul><li><b><a href ="https://hackforums.net/showthread.php?tid=5515646">Anti-Ignore</a>(<a href="https://github.com/xadamxk/HF-Userscripts/raw/master/HF%20Anti-Ignore/HF%20Anti-Ignore.user.js">Install</a>):</b> Counteracts HF's ignore feature - also works with Global Ignore.
+<ul><li><b><a href ="https://hackforums.net/showthread.php?tid=5515646">Anti-Ignore</a>(<a href="https://github.com/xadamxk/HF-Userscripts/releases/download/HFAI/HF.Anti-Ignore.user.js">Install</a>):</b> Counteracts HF's ignore feature - also works with Global Ignore.
 <ul>Release Date: 1/05/2017
 <ul>
 <details> 
@@ -139,7 +139,7 @@ US managers (ex. <a href="https://tampermonkey.net/">TamperMonkey</a>) allow use
 </ul><hr>
 </ul> 
 </li></ul>
-<ul><li><b><a href ="https://hackforums.net/showthread.php?tid=5509062">Smart Quotes</a>(<a href="https://github.com/xadamxk/HF-Userscripts/raw/master/Smart%20Quotes/Smart%20Quotes.user.js">Install</a>):</b> Enhances quotes by adding style & highlights mentioned quotes.
+<ul><li><b><a href ="https://hackforums.net/showthread.php?tid=5509062">Smart Quotes</a>(<a href="https://github.com/xadamxk/HF-Userscripts/releases/download/HFSQ/Smart.Quotes.user.js">Install</a>):</b> Enhances quotes by adding style & highlights mentioned quotes.
 <ul>Release Date: 12/30/2016
 <ul>
 <details> 
@@ -184,7 +184,7 @@ US managers (ex. <a href="https://tampermonkey.net/">TamperMonkey</a>) allow use
 </ul><hr>
 </ul>
 </li></ul>
-<ul><li><b><a href ="https://hackforums.net/showthread.php?tid=5507074">EasyCite</a>(<a href="https://github.com/xadamxk/HF-Userscripts/raw/master/EasyCite/EasyCite.user.js">Install</a>):</b> Allows users to cite threads, users, sections, and other pages on HF.
+<ul><li><b><a href ="https://hackforums.net/showthread.php?tid=5507074">EasyCite</a>(<a href="https://github.com/xadamxk/HF-Userscripts/releases/download/HFEC/EasyCite.user.js">Install</a>):</b> Allows users to cite threads, users, sections, and other pages on HF.
 <ul>Release Date: 12/28/2016
 <ul>
 <details> 
@@ -208,7 +208,7 @@ US managers (ex. <a href="https://tampermonkey.net/">TamperMonkey</a>) allow use
 </ul><hr>
 </ul>
 </li></ul>
-<ul><li><b><a href ="https://hackforums.net/showthread.php?tid=5498344">Quick Rep 2.0</a>(<a href="https://github.com/xadamxk/HF-Userscripts/raw/master/Quick%20Rep/Quick%20Rep.user.js">Install</a>):</b> Makes giving reputation on HF easier.
+<ul><li><b><a href ="https://hackforums.net/showthread.php?tid=5498344">Quick Rep 2.0</a>(<a href="https://github.com/xadamxk/HF-Userscripts/releases/download/HFQR/Quick.Rep.user.js">Install</a>):</b> Makes giving reputation on HF easier.
 <ul>Release Date: 12/19/2016
 <ul>
 <details> 
@@ -238,7 +238,7 @@ US managers (ex. <a href="https://tampermonkey.net/">TamperMonkey</a>) allow use
 </ul><hr>
 </ul> 
 </li></ul>
-<ul><li><b><a href ="https://hackforums.net/showthread.php?tid=5495131">Rep Charts</a>(<a href="https://github.com/xadamxk/HF-Userscripts/raw/master/Rep%20Charts/Rep%20Charts.user.js">Install</a>):</b> Display graphical information on member's reputation page.
+<ul><li><b><a href ="https://hackforums.net/showthread.php?tid=5495131">Rep Charts</a>(<a href="https://github.com/xadamxk/HF-Userscripts/releases/download/HFRC/Rep.Charts.user.js">Install</a>):</b> Display graphical information on member's reputation page.
 <ul>Release Date: 12/16/2016
 <ul>
 <details> 
@@ -260,7 +260,7 @@ US managers (ex. <a href="https://tampermonkey.net/">TamperMonkey</a>) allow use
 </ul><hr>
 </ul>
 </li></ul>
-<ul><li><b><a href ="https://hackforums.net/showthread.php?tid=5480003">HF News Notifier</a>(<a href="https://github.com/xadamxk/HF-Userscripts/raw/master/HF%20News%20Notifier/HF%20News%20Notifier.user.js">Install</a>):</b> Alerts users of new HF News editions (checks on /usercp.php).
+<ul><li><b><a href ="https://hackforums.net/showthread.php?tid=5480003">HF News Notifier</a>(<a href="https://github.com/xadamxk/HF-Userscripts/releases/download/HFNN/HF.News.Notifier.user.js">Install</a>):</b> Alerts users of new HF News editions (checks on /usercp.php).
 <ul>Release Date: 12/15/2016
 <ul>
 <details> 
@@ -276,7 +276,7 @@ US managers (ex. <a href="https://tampermonkey.net/">TamperMonkey</a>) allow use
 </ul><hr>
 </ul>
 </li></ul>
-<ul><li><b><a href ="https://hackforums.net/showthread.php?tid=5478207">Group Management</a>(<a href="https://github.com/xadamxk/HF-Userscripts/raw/master/Group%20Management%20Profile%20Manager/Group%20Management%20Profile%20Manager.user.js">Install</a>):</b> Adds improved group management options for HF leaders.
+<ul><li><b><a href ="https://hackforums.net/showthread.php?tid=5478207">Group Management</a>(<a href="https://github.com/xadamxk/HF-Userscripts/releases/download/HFGM/Group.Management.Profile.Manager.user.js">Install</a>):</b> Adds improved group management options for HF leaders.
 <ul>Release Date: 11/29/2016
 <ul>
 <details> 
