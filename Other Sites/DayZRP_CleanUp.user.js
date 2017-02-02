@@ -2,15 +2,16 @@
 // @name       DayZRP CleanUp
 // @author xadamxk
 // @namespace  https://github.com/xadamxk/HF-Scripts
-// @version    1.0.0
+// @version    1.0.1
 // @description Makes existing posts IPB friendly.
 // @require https://code.jquery.com/jquery-3.1.1.js
 // @match      *://www.dayzrp.com/forums/topic/*
 // @copyright  2016+
-// @updateURL 
-// @downloadURL 
+// @updateURL https://github.com/xadamxk/HF-Userscripts/raw/master/Other%20Sites/DayZRP_CleanUp.user.js
+// @downloadURL https://github.com/xadamxk/HF-Userscripts/raw/master/Other%20Sites/DayZRP_CleanUp.user.js
 // @iconURL https://raw.githubusercontent.com/xadamxk/HF-Userscripts/master/scripticon.jpg
 // ------------------------------ Change Log ----------------------------
+// version 1.0.1: Added Update/Download URL
 // version 1.0.0: Beta Release
 // ==/UserScript==
 // ------------------------------ Dev Notes -----------------------------
