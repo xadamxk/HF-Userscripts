@@ -32,3 +32,5 @@ imissyoujs (change icon when in diff tab): https://github.com/Bahlaouane-Hamza/I
 imgareaselect (select portion of image to crop): http://odyniec.net/projects/imgareaselect/
 zoomooz (zoom to area on page based on click events): http://jaukia.github.io/zoomooz/
 imagefill (fills img to container and centers): http://johnpolacek.github.io/imagefill.js/
+Cheet (easter eggs for site): http://lou.wtf/cheet.js/
+please (make matching colors): https://github.com/Fooidge/PleaseJS
