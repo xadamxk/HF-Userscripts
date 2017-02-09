@@ -269,6 +269,7 @@ US managers (ex. <a href="https://tampermonkey.net/">TamperMonkey</a>) allow use
 <ul>
 <details> 
   <summary>More Info:</summary>
+  <ul><li><b>v1.2.4: </b>62 Downloads.</ul></li><br>
   <ul><li><b>News Alert: </b>Alerts users when a new News Edition releases in the HF News section.
   <br>
   <p align="center">
