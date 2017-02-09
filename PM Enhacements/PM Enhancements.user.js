@@ -2,7 +2,7 @@
 // @name       PM Enhancements
 // @author xadamxk
 // @namespace  https://github.com/xadamxk/HF-Scripts
-// @version    1.0.3
+// @version    1.0.4
 // @description  Adds various features to the PM system.
 // @require https://code.jquery.com/jquery-3.1.1.js
 // @require https://raw.githubusercontent.com/xadamxk/HF-Userscripts/master/JS%20Libraries/GM_config.js
@@ -19,6 +19,7 @@
 // @grant       GM_info
 // @iconURL https://raw.githubusercontent.com/xadamxk/HF-Userscripts/master/scripticon.jpg
 // ------------------------------ Change Log ----------------------------
+// version 1.0.4: Deny PM Receipt feature
 // version 1.0.3: Replaced update/download URLs with release
 // version 1.0.2: Quote Stripping, PM Signature, PM Tracking
 // version 1.0.1: Update/Download URLs
@@ -26,6 +27,7 @@
 // ==/UserScript==
 // ------------------------------ Dev Notes -----------------------------
 // TODO: Easy Deny Responces? (http://userscripts-mirror.org/scripts/review/163767)
+// https://www.dropbox.com/developers/saver
 // ------------------------------ SETTINGS ------------------------------
 // Siiiike, integrated settings panel
 // ------------------------------ On Page ------------------------------
@@ -68,6 +70,7 @@ function onPMTracking(){
 function onAllPages(){
     checkPMNotifications();
     hidePMNotice();
+    denyReadReceipts();
 }
 function onPMSend(){
     stripQuotes();
@@ -287,6 +290,12 @@ function loadSettings(){
             'type':'text',
             'default':'-PM Enhancer Script',
         },
+        'enableDenyReceipts':{
+            'label':"Deny Read Receipts(Ub3r):",
+            'title':"Doesn't send read receipt when opening PM's.",
+            'type':'checkbox',
+            'default':true,
+        },
         'PMENversion':{
             'title':'About PM Enhancer',
             'section': ["About PM Enhancer",
@@ -332,4 +341,12 @@ function trackingTableLinks(table){
 }
 function getTrackingTableBody(string){
     return $(".quick_keys").find("strong:contains('"+string+"')").parent().parent().parent();
+}
+function denyReadReceipts(){
+    if (GM_config.get('enableDenyReceipts')){
+        $("#pm_notice div:eq(1)")
+            .append($("<a>")
+                    .append($("<i>").text(" [deny receipt]").css("font-size","10px"))
+                    .attr("href",$("#pm_notice div:eq(1) a:eq(1)").attr("href")+"&denyreceipt=1"));
+    }
 }
