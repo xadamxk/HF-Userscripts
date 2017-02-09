@@ -21,11 +21,8 @@ US managers (ex. <a href="https://tampermonkey.net/">TamperMonkey</a>) allow use
 <ul>
 <details> 
   <summary>More Info:</summary>
-    <ul><li><b>v1.0.3: </b>150 Downloads.
-    <ul><li><b>v1.0.4: </b>6 Downloads.
-  <br>
-  </ul></li>
-  <br>
+    <ul><li><b>v1.0.3: </b>150 Downloads.</ul></li><br>
+    <ul><li><b>v1.0.4: </b>6 Downloads.</ul></li><br>
   <ul><li><b>FavIcon Badges/ Alerts: </b>Displays the number of unread PM's over the HF favicon.
   <br>
   <p align="center">
