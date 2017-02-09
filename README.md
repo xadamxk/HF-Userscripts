@@ -192,6 +192,8 @@ US managers (ex. <a href="https://tampermonkey.net/">TamperMonkey</a>) allow use
 <ul>
 <details> 
   <summary>More Info:</summary>
+  <ul><li><b>v1.0.7: </b>105 Downloads.
+  <br>
   <ul><li><b>Thread Citing: </b> Cite threads by clicking the 'cite' button next to the navigation bar.</li></ul>
   <br>
   <ul><li><b>Thread & Author Citing: </b> Cite threads and include the author by clicking the 'cite' button on the first post.</li></ul>
