@@ -2,7 +2,7 @@
 // @name       EasyCite
 // @author xadamxk
 // @namespace  https://github.com/xadamxk/HF-Scripts
-// @version    1.0.7
+// @version    1.0.8
 // @description Allows users to cite threads, users, sections, and other pages on HF.
 // @require https://code.jquery.com/jquery-3.1.1.js
 // @match      *://hackforums.net*
@@ -13,6 +13,7 @@
 // @iconURL https://raw.githubusercontent.com/xadamxk/HF-Userscripts/master/scripticon.jpg
 // ==/UserScript==
 // ------------------------------ Change Log ----------------------------
+// version 1.0.8: Added 'cite all sections' on search page
 // version 1.0.7: Replaced update/download URLs with release
 // version 1.0.6: Bug fix: document-start
 // version 1.0.5: Fixed auto-update
@@ -138,10 +139,22 @@ else if (location.href.includes("/reputation.php?uid=") || location.href.include
     citationDescripion = $(".quick_keys").find("strong:contains('Reputation Report for')").text().replace("Reputation Report for ","")+" 's "+$(".navigation").find(".active").text();
     citationText = citationDescripion;
 }
-// Search Page?
+// Search Page Results
 else if (location.href.includes("/search.php?action=results")){
     citationDescripion = ""+$(".navigation").find(".active").text();
     citationText = citationDescripion;
+}
+// Search Page
+else if (location.href.includes("/search.php") && !location.href.includes("?action=results")){
+    // Append button
+    $(".quick_keys").find("strong:contains(Search in Forum)").append(" ").append($("<a>").text("Cite").addClass("bitButton").attr("id","citeAllSections"));
+    $( "#citeAllSections" ).click(function() {
+        // Output
+        var selectTable = $(".quick_keys").find("strong:contains(Hack Forums - Search)").parent().parent().parent().parent();
+        selectTable.after($("<textarea>").val(citeAllSections()).css("width",selectTable.css("width")).attr("id","citeAllSectionsOutput")).after("<br>");
+        $("#citeAllSectionsOutput").select();
+        //prompt("All Sections:",citeAllSections());
+    });
 }
 $("#citeButton").click(function (event){
     var target = $(event.target);
@@ -149,7 +162,16 @@ $("#citeButton").click(function (event){
         prompt("Citation: "+citationDescripion,"[url="+citationLink+"][b]"+citationText+"[/b][/url]");
     }
 });
-
+// Grab all section values function
+function citeAllSections(){
+    var baseStr = "";
+    // Grab values
+    $("select[name='forums[]'] option").each(function( index ) {
+        if($(this).attr("value") !== "all")
+            baseStr = baseStr + "[url=https://hackforums.net/forumdisplay.php?fid="+$(this).attr("value")+"]"+$(this).text()+"[/url]\n";
+    });
+    return baseStr;
+}
 // Credit: https://jsfiddle.net/mushigh/myoskaos/
 function rgb2hex(rgb){
     rgb = rgb.match(/^rgba?[\s+]?\([\s+]?(\d+)[\s+]?,[\s+]?(\d+)[\s+]?,[\s+]?(\d+)[\s+]?/i);
