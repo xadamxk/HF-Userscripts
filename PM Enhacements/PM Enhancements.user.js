@@ -2,7 +2,7 @@
 // @name       PM Enhancements
 // @author xadamxk
 // @namespace  https://github.com/xadamxk/HF-Scripts
-// @version    1.0.4
+// @version    1.0.5
 // @description  Adds various features to the PM system.
 // @require https://code.jquery.com/jquery-3.1.1.js
 // @require https://raw.githubusercontent.com/xadamxk/HF-Userscripts/master/JS%20Libraries/GM_config.js
@@ -19,6 +19,7 @@
 // @grant       GM_info
 // @iconURL https://raw.githubusercontent.com/xadamxk/HF-Userscripts/master/scripticon.jpg
 // ------------------------------ Change Log ----------------------------
+// version 1.0.5: Fixed PM notification alert
 // version 1.0.4: Deny PM Receipt feature
 // version 1.0.3: Replaced update/download URLs with release
 // version 1.0.2: Quote Stripping, PM Signature, PM Tracking
@@ -191,7 +192,7 @@ function updateFavIcon(){
                 numPMs = parseInt(pmAlert.find("strong").text().replace(/[^0-9\.]/g, ''));
             else if(pmAlert.find("strong").text().includes("one"))
                 numPMs = 1;
-            notificationBodyText = $(pmAlert).find("div:eq(1) a:eq(1)").text() + " from "+ $("#pm_notice div:eq(1) a:eq(0)").text();
+            notificationBodyText = $(pmAlert).find("div:eq(1) a:eq(1)").text() + " from "+ $(pmAlert).find("div:eq(1) a:eq(0)").text();
             notificationBodyLink = $(pmAlert).find("div:eq(1) a:eq(1)").attr("href");
             titleString = numPMs+" Unread Message";
             if (numPMs > 1){titleString = titleString+"s";}
