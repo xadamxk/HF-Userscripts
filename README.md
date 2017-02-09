@@ -21,7 +21,9 @@ US managers (ex. <a href="https://tampermonkey.net/">TamperMonkey</a>) allow use
 <ul>
 <details> 
   <summary>More Info:</summary>
-  <ul><li><b>Sticky Header: </b>Sticky header sticks the toolbar to the top of the screen, so you'll always have access to your shortcuts.
+    <ul><li><b>v1.0.3: </b>150 Downloads.
+  <br>
+  </ul></li>
   <br>
   <ul><li><b>FavIcon Badges/ Alerts: </b>Displays the number of unread PM's over the HF favicon.
   <br>
@@ -190,6 +192,9 @@ US managers (ex. <a href="https://tampermonkey.net/">TamperMonkey</a>) allow use
 <ul>
 <details> 
   <summary>More Info:</summary>
+  <ul><li><b>v1.0.7: </b>105 Downloads.
+  </ul></li>
+  <br>
   <ul><li><b>Thread Citing: </b> Cite threads by clicking the 'cite' button next to the navigation bar.</li></ul>
   <br>
   <ul><li><b>Thread & Author Citing: </b> Cite threads and include the author by clicking the 'cite' button on the first post.</li></ul>
