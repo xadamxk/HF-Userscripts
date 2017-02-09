@@ -1,0 +1,2 @@
+https://hackforums.net/xmlhttp.php?action=get_users&query=test
+https://hackforums.net/xmlhttp.php?action=get_buddyselect
