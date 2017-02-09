@@ -193,6 +193,7 @@ US managers (ex. <a href="https://tampermonkey.net/">TamperMonkey</a>) allow use
 <details> 
   <summary>More Info:</summary>
   <ul><li><b>v1.0.7: </b>105 Downloads.
+  </ul></li>
   <br>
   <ul><li><b>Thread Citing: </b> Cite threads by clicking the 'cite' button next to the navigation bar.</li></ul>
   <br>
