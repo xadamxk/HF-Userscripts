@@ -145,6 +145,7 @@ US managers (ex. <a href="https://tampermonkey.net/">TamperMonkey</a>) allow use
 <ul>
 <details> 
   <summary>More Info:</summary>
+  <ul><li><b>v1.1.1: </b>128 Downloads.</ul></li><br>
   <ul><li><b>Styled Quotes: </b>Styles quotes according to colors found in the script's settings.
   <br>
   <p align="center">
@@ -164,6 +165,9 @@ US managers (ex. <a href="https://tampermonkey.net/">TamperMonkey</a>) allow use
     <p align="center">
   <img src="https://github.com/xadamxk/HF-Userscripts/blob/master/Smart%20Quotes/Capture06.png?raw=true" title="Smart Quote Screenshot 03"  />
   </p>
+  <br>
+  <ul><li><b>Always Quote: </b>Allows you to quote the text on closed threads.
+  <br>
   </ul></li>
 </details>
 </ul><hr>
