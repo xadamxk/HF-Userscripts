@@ -2,7 +2,7 @@
 // @name       Smart Quotes
 // @author xadamxk
 // @namespace  https://github.com/xadamxk/HF-Scripts
-// @version    1.1.2
+// @version    1.1.3
 // @description  Enhances quotes by adding style & highlights mentioned quotes
 // @require https://code.jquery.com/jquery-3.1.1.js
 // @match      *://hackforums.net/showthread.php?tid=*
@@ -12,6 +12,7 @@
 // @iconURL https://raw.githubusercontent.com/xadamxk/HF-Userscripts/master/scripticon.jpg
 // ==/UserScript==
 // ------------------------------ Change Log ----------------------------
+// version 1.1.3: Removed console.log statements
 // version 1.1.2: Added 'Always Quote' to quote on closed threads
 // version 1.1.1: Replaced update/download URLs with release
 // version 1.1.0: Now shows 'smartQuoteNotifications' next to the thread title
@@ -102,12 +103,12 @@ if($(".quick_keys").find($("a[title='Thread Closed']")).length > 0){
         console.log("Post ID: "+postLink[1]);
         // Username
         var postUsername = postBlock.children().next().children().eq(0).find(".post_author").find("strong span a span").text();
-        console.log("Username: "+postUsername);
+        //console.log("Username: "+postUsername);
         // Post Content
         var postContent = $("#pid_"+postLink[1]).text();
         var postContentHTML = $("#pid_"+postLink[1]).html();
         var parsedPostHTML = $('<div/>').append(postContentHTML);
-        console.log(parsedPostHTML);
+        //console.log(parsedPostHTML);
         // Spoilers
         if(parsedPostHTML.find(".spoiler_header").length > 0){
             $(parsedPostHTML).find(".spoiler_header").each(function( index ) {
@@ -127,7 +128,7 @@ if($(".quick_keys").find($("a[title='Thread Closed']")).length > 0){
             });
         }
         postContent = "[quote='"+postUsername+"' pid='"+postLink[1]+"']"+postContent+"[/quote]";
-        console.log("new content: "+postContent);
+        //console.log("new content: "+postContent);
         prompt(postUsername+"'s Quote: ",postContent);
     });
 }

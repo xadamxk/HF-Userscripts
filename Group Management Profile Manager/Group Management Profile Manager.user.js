@@ -2,7 +2,7 @@
 // @name       HF Group Management
 // @author xadamxk
 // @namespace  https://github.com/xadamxk/HF-Scripts
-// @version    2.0.4
+// @version    2.0.5
 // @description  Adds improved group management options for HF leaders.
 // @require http://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js
 // @match      *://hackforums.net/*
@@ -15,6 +15,7 @@
 // @grant       GM_setValue
 // @grant       GM_deleteValue
 // ------------------------------ Change Log ----------------------------
+// version 2.0.5: Removed console.log statements
 // version 2.0.4: Replaced update/download URLs with release
 // version 2.0.3: Added alt row highlighting on member/request lists.
 // version 2.0.2: Group Leader Notice now links to your group's requests page
@@ -52,7 +53,7 @@ var linkGroupLeaderNotice = true; // (Default: true)
 var colorAltRows = true; // (Default: true)
 
 // Debug Mode - Print certain results to console
-var debug = true; // (Default: false)
+var debug = false; // (Default: false)
 // ------------------------------ ON PAGE LOAD ------------------------------
 // Global variables
 var uid = $(location).attr('href').replace(/[^0-9]/g, '');

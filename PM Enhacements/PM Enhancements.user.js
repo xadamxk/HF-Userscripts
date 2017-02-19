@@ -2,7 +2,7 @@
 // @name       PM Enhancements
 // @author xadamxk
 // @namespace  https://github.com/xadamxk/HF-Scripts
-// @version    1.0.5
+// @version    1.0.6
 // @description  Adds various features to the PM system.
 // @require https://code.jquery.com/jquery-3.1.1.js
 // @require https://raw.githubusercontent.com/xadamxk/HF-Userscripts/master/JS%20Libraries/GM_config.js
@@ -19,6 +19,7 @@
 // @grant       GM_info
 // @iconURL https://raw.githubusercontent.com/xadamxk/HF-Userscripts/master/scripticon.jpg
 // ------------------------------ Change Log ----------------------------
+// version 1.0.6: Support for 2 lines in PM Signature (||| is line break)
 // version 1.0.5: Fixed PM notification alert
 // version 1.0.4: Deny PM Receipt feature
 // version 1.0.3: Replaced update/download URLs with release
@@ -27,7 +28,6 @@
 // version 1.0.0: Beta Release
 // ==/UserScript==
 // ------------------------------ Dev Notes -----------------------------
-// TODO: Easy Deny Responces? (http://userscripts-mirror.org/scripts/review/163767)
 // https://www.dropbox.com/developers/saver
 // ------------------------------ SETTINGS ------------------------------
 // Siiiike, integrated settings panel
@@ -89,6 +89,12 @@ function onPMSystem(){
 }
 function pmSignature(){
     if(GM_config.get('enablePMSignature')){
+        var sigStr = "";
+        if(GM_config.get('textPMSignature').includes("|||"))
+            sigStr = GM_config.get('textPMSignature').replace("|||","\n");
+        else
+            sigStr = GM_config.get('textPMSignature');
+        console.log(sigStr);
         // Format fixer
         if(GM_config.get('enableQuoteStripping') && window.location.href.includes("&pmid="))
             $(".tborder tr:last td:last span").append("<br>");
@@ -100,18 +106,18 @@ function pmSignature(){
         // Add new line on page load
         $("#message_new").val($("#message_new").val() + "\n");
         // Add Signature by default
-        $("#message_new").val($("#message_new").val() + "\n" + GM_config.get('textPMSignature'));
+        $("#message_new").val($("#message_new").val() + "\n" + sigStr);
         // Onclick Event
         $('.sendMessage').on("click",function(){
             if($(this).is(':checked')){
                 // get value & add it to message body
-                $("#message_new").val($("#message_new").val() + "\n" + GM_config.get('textPMSignature'));
+                $("#message_new").val($("#message_new").val() + "\n" + sigStr);
             }
             else{
                 // Remove if it exists
                 var tempSig = $("#message_new").val();
                 if(tempSig.includes(GM_config.get('textPMSignature'))){
-                    $("#message_new").val(tempSig.replace(GM_config.get('textPMSignature'),""));
+                    $("#message_new").val(tempSig.replace(sigStr,""));
                     // All Hail StackOverflow (http://stackoverflow.com/a/5497333)
                     var pos = $("#message_new").val().lastIndexOf('\n');
                     $("#message_new").val($("#message_new").val().substring(0,pos) + $("#message_new").val().substring(pos+1));
