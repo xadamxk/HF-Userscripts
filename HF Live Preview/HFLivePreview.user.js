@@ -25,8 +25,9 @@
 var prevBackColor = "#333333";
 // ------------------------------ On Page ------------------------------
 // http://www.freeformatter.com/javascript-escape.html
-// https://rawgit.com/xadamxk/ThreadDesignGenerator/master/CSS/xbbcode.css
-$("head").append('<link '+ "href='https:\/\/rawgit.com\/xadamxk\/ThreadDesignGenerator\/master\/CSS\/xbbcode.css'" + 'rel="stylesheet" type="text/css">');
+// Dev: https://rawgit.com/xadamxk/ThreadDesignGenerator/master/CSS/xbbcode.css
+// Prod: https:\/\/cdn.rawgit.com\/xadamxk\/ThreadDesignGenerator\/8c58d68e\/CSS\/xbbcode.css
+$("head").append('<link '+ "href='https:\/\/cdn.rawgit.com\/xadamxk\/ThreadDesignGenerator\/8c58d68e\/CSS\/xbbcode.css'" + 'rel="stylesheet" type="text/css">');
 
 // Quick Reply
 if ( window.location.href.includes("hackforums.net/showthread.php?tid=")){
