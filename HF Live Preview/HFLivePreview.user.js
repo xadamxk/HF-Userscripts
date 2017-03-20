@@ -2,7 +2,7 @@
 // @name       HF Live Preview
 // @author xadamxk
 // @namespace  https://github.com/xadamxk/HF-Scripts
-// @version    1.0.1
+// @version    1.0.2
 // @description  Adds live preview when composing posts and threads
 // @require https://code.jquery.com/jquery-3.1.1.js
 // @require https://raw.githubusercontent.com/xadamxk/ThreadDesignGenerator/master/JS/xbbcode.js
@@ -11,10 +11,11 @@
 // @match      *://hackforums.net/newthread.php?fid=*
 // @match      *://hackforums.net/editpost.php?pid=*
 // @copyright  2016+
-// @updateURL https://github.com/xadamxk/HF-Userscripts/raw/master/HF%20Live%20Preview/HFLivePreview.user.js
-// @downloadURL https://github.com/xadamxk/HF-Userscripts/raw/master/HF%20Live%20Preview/HFLivePreview.user.js
+// @updateURL https://github.com/xadamxk/HF-Userscripts/releases/download/HFLP/HFLivePreview.user.js
+// @downloadURL https://github.com/xadamxk/HF-Userscripts/releases/download/HFLP/HFLivePreview.user.js
 // @iconURL https://raw.githubusercontent.com/xadamxk/HF-Userscripts/master/scripticon.jpg
 // ------------------------------ Change Log ----------------------------
+// version 1.0.2: Release URL
 // version 1.0.1: Update/Download URLs
 // version 1.0.0: Beta Release
 // ==/UserScript==
