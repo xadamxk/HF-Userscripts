@@ -16,6 +16,30 @@ US managers (ex. <a href="https://tampermonkey.net/">TamperMonkey</a>) allow use
 
 <h3><b><big>Scripts</big></b></h3>
 <ul><li>Below are the scripts listed under this repository along with a short description.
+<ul><li><b><a href ="">HF Live Preview</a>(<a href="">Install</a>):</b> A live WYSIWYG viewer for HF.
+<ul>Release Date: 3/19/2017
+<ul>
+<details> 
+  <summary>More Info:</summary>
+    <ul><li><b></b></ul></li><br>
+  <ul><li><b>WYSIWYG Viewer: </b>Parsers MyCode into HTML for a live preview.
+  <br>
+  <p align="center">
+  <img src="https://github.com/xadamxk/HF-Userscripts/blob/master/HF%20Live%20Preview/Capture02.png?raw=true" title="HFLP Screenshot 01"  />
+  </p>
+  </ul></li>
+  <br>
+  <ul><li><b>Supported Pages: </b>Quick Reply, Full Edit, New Reply, Thread compose.
+  <br>
+  <p align="center">
+  <img src="https://github.com/xadamxk/HF-Userscripts/blob/master/HF%20Live%20Preview/Capture03.gif?raw=true" title="HFLP Screenshot 02"  />
+  </p>
+  </ul></li>
+  <br>
+</details>
+</ul><hr>
+</ul> 
+</li></ul>
 <ul><li><b><a href ="https://hackforums.net/showthread.php?tid=5536003">PM Enhancement</a>(<a href="https://github.com/xadamxk/HF-Userscripts/releases/download/HFPE/PM.Enhancements.user.js">Install</a>):</b> Adds various features to the PM system.
 <ul>Release Date: 1/28/2017
 <ul>
