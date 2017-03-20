@@ -16,7 +16,7 @@ US managers (ex. <a href="https://tampermonkey.net/">TamperMonkey</a>) allow use
 
 <h3><b><big>Scripts</big></b></h3>
 <ul><li>Below are the scripts listed under this repository along with a short description.
-<ul><li><b><a href ="">HF Live Preview</a>(<a href="">Install</a>):</b> A live WYSIWYG viewer for HF.
+<ul><li><b><a href ="">HF Live Preview</a>(<a href="https://github.com/xadamxk/HF-Userscripts/releases/download/HFLP/HFLivePreview.user.js">Install</a>):</b> A live WYSIWYG viewer for HF.
 <ul>Release Date: 3/19/2017
 <ul>
 <details> 
