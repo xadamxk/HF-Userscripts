@@ -2,24 +2,24 @@
 // @name       HF Live Preview
 // @author xadamxk
 // @namespace  https://github.com/xadamxk/HF-Scripts
-// @version    1.0.0
+// @version    1.0.1
 // @description  Adds live preview when composing posts and threads
 // @require https://code.jquery.com/jquery-3.1.1.js
 // @require https://raw.githubusercontent.com/xadamxk/ThreadDesignGenerator/master/JS/xbbcode.js
 // @match      *://hackforums.net/showthread.php?tid=*
 // @match      *://hackforums.net/newreply.php?tid=*
 // @match      *://hackforums.net/newthread.php?fid=*
+// @match      *://hackforums.net/editpost.php?pid=*
 // @copyright  2016+
-// @updateURL 
-// @downloadURL 
+// @updateURL https://github.com/xadamxk/HF-Userscripts/raw/master/HF%20Live%20Preview/HFLivePreview.user.js
+// @downloadURL https://github.com/xadamxk/HF-Userscripts/raw/master/HF%20Live%20Preview/HFLivePreview.user.js
 // @iconURL https://raw.githubusercontent.com/xadamxk/HF-Userscripts/master/scripticon.jpg
 // ------------------------------ Change Log ----------------------------
 // version 1.0.1: Update/Download URLs
 // version 1.0.0: Beta Release
 // ==/UserScript==
 // ------------------------------ Dev Notes -----------------------------
-// Hide after post
-// Work in quick edit/full edit
+//
 // ------------------------------ SETTINGS ------------------------------
 // Preview Background Color
 var prevBackColor = "#333333";
@@ -50,16 +50,25 @@ if ( window.location.href.includes("hackforums.net/showthread.php?tid=")){
             $("#livePreview").toggle();
             toggleCollapseAttr();
         });
+        $("#quick_reply_submit").on("click", function () {
+            updatePreview($("#message").val(), "#livePreview");
+        });
     }
 }
-// Thread Reply
-else if (window.location.href.includes("hackforums.net/newreply.php?tid=")){
-
+// Thread Reply & New Thread
+else if (window.location.href.includes("hackforums.net/newreply.php?tid=")||
+         window.location.href.includes("hackforums.net/newthread.php?fid=")||
+         window.location.href.includes("hackforums.net/editpost.php?pid=")){
+    $("strong:contains(Your Message:)").parent().parent().after($("<tr>")
+                                                                .append($("<td>").addClass("trow1").css("width","20%")
+                                                                        .append($("<strong>").text("Live Preview:")))
+                                                                .append($("<td>").addClass("trow1").append($("<div>").attr("id","livePreview"))));
+    // Event Listeners
+        $(".messageEditor").on("click input onpropertychange", function () {
+            updatePreview($("#message_new").val(), "#livePreview");
+        });
 }
-// New Thread
-else if(window.location.href.includes("hackforums.net/newthread.php?fid=")){
 
-}
 
 
 function updatePreview(input, outContainer) {
