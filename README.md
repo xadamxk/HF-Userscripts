@@ -21,6 +21,7 @@ US managers (ex. <a href="https://tampermonkey.net/">TamperMonkey</a>) allow use
 <ul>
 <details> 
   <summary>More Info:</summary>
+  <ul><li><b>v1.0.3:</b> 150 Downloads</ul></li><br>
     <ul><li><b>v1.0.2:</b> 50 Downloads</ul></li><br>
   <ul><li><b>WYSIWYG Viewer: </b>Parsers MyCode into HTML for a live preview.
   <br>
