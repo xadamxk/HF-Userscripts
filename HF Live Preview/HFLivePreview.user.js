@@ -2,19 +2,21 @@
 // @name       HF Live Preview
 // @author xadamxk
 // @namespace  https://github.com/xadamxk/HF-Scripts
-// @version    1.0.3
-// @description  Adds live preview when composing posts and threads
+// @version    1.0.4
+// @description  Adds live preview when composing posts, threads, and private messages
 // @require https://code.jquery.com/jquery-3.1.1.js
 // @require https://raw.githubusercontent.com/xadamxk/ThreadDesignGenerator/master/JS/xbbcode.js
 // @match      *://hackforums.net/showthread.php?tid=*
 // @match      *://hackforums.net/newreply.php?tid=*
 // @match      *://hackforums.net/newthread.php?fid=*
 // @match      *://hackforums.net/editpost.php?pid=*
+// @match      *://hackforums.net/private.php?action=send*
 // @copyright  2016+
 // @updateURL https://github.com/xadamxk/HF-Userscripts/releases/download/HFLP/HFLivePreview.user.js
 // @downloadURL https://github.com/xadamxk/HF-Userscripts/releases/download/HFLP/HFLivePreview.user.js
 // @iconURL https://raw.githubusercontent.com/xadamxk/HF-Userscripts/master/scripticon.jpg
 // ------------------------------ Change Log ----------------------------
+// version 1.0.4: Error alerts, Error fix implementation, PM Support
 // version 1.0.3: Supports smilies, [hr], and [help] tags.
 // version 1.0.2: Release URL
 // version 1.0.1: Update/Download URLs
@@ -29,7 +31,7 @@ var prevBackColor = "#333333";
 // http://www.freeformatter.com/javascript-escape.html
 // Dev: https://rawgit.com/xadamxk/ThreadDesignGenerator/master/CSS/xbbcode.css
 // Prod: https:\/\/cdn.rawgit.com\/xadamxk\/ThreadDesignGenerator\/8c58d68e\/CSS\/xbbcode.css
-$("head").append('<link '+ "href='https:\/\/cdn.rawgit.com\/xadamxk\/ThreadDesignGenerator\/8c58d68e\/CSS\/xbbcode.css'" + 'rel="stylesheet" type="text/css">');
+$("head").append('<link '+ "href='https:\/\/cdn.rawgit.com\/xadamxk\/ThreadDesignGenerator\/c598f2e7\/CSS\/xbbcode.css'" + 'rel="stylesheet" type="text/css">');
 
 // Quick Reply
 if ( window.location.href.includes("hackforums.net/showthread.php?tid=")){
@@ -40,50 +42,68 @@ if ( window.location.href.includes("hackforums.net/showthread.php?tid=")){
                                                   .append($("<div>").addClass("expcolimage")
                                                           .append("<img id='livePreviewCollapse' alt='[-]' title='[-]' style='cursor: pointer;' src='https://hackforums.net/images/modern_bl/collapse.gif' />"))
                                                   .append($("<div>")
-                                                          .append($("<strong>").text("Live Preview")))));
+                                                          .append($("<strong>").text("Live Preview")).append("<br>").append($("<span>").attr("id","livePreviewErrors")))));
         $("#quickreply_e tr:eq(2)").after($("<tr>")
                                           .append($("<td>").attr("colspan","2").css("background-color",prevBackColor)
                                                   //.append("<hr>")
                                                   .append($("<div>").attr("id","livePreview"))));
         // Event Listeners
-        $("#message").on("input", function () {
-            updatePreview($("#message").val(), "#livePreview");
+        $("#message").on("input click", function () {
+            updatePreview($("#message").val(), false, "#livePreview");
         });
         $("#livePreviewCollapse").on("click", function () {
             $("#livePreview").toggle();
             toggleCollapseAttr();
         });
         $("#quick_reply_submit").on("click", function () {
-            updatePreview($("#message").val(), "#livePreview");
+            updatePreview($("#message").val(), false, "#livePreview");
         });
     }
 }
 // Thread Reply & New Thread
 else if (window.location.href.includes("hackforums.net/newreply.php?tid=")||
          window.location.href.includes("hackforums.net/newthread.php?fid=")||
-         window.location.href.includes("hackforums.net/editpost.php?pid=")){
-    $("strong:contains(Your Message:)").parent().parent().after($("<tr>")
+         window.location.href.includes("hackforums.net/editpost.php?pid=")||
+         window.location.href.includes("hackforums.net/private.php?action=send")){
+    $("strong:contains(Message:)").parent().parent().after($("<tr>")
                                                                 .append($("<td>").addClass("trow1").css("width","20%")
-                                                                        .append($("<strong>").text("Live Preview:")))
+                                                                        .append($("<strong>").text("Live Preview:")).append("<br>").append($("<span>").attr("id","livePreviewErrors")))
                                                                 .append($("<td>").addClass("trow1").append($("<div>").attr("id","livePreview"))));
     // Event Listeners
     $(".messageEditor, .smilie").on("click input onpropertychange", function () {
-        updatePreview($("#message_new").val(), "#livePreview");
+        updatePreview($("#message_new").val(), false, "#livePreview");
     });
 }
 
 
 
-function updatePreview(input, outContainer) {
+function updatePreview(input, removeTag, outContainer) {
     // Instanciate xbb
     var preview = XBBCODE.process({
         text: input,
-        removeMisalignedTags: false,
+        removeMisalignedTags: removeTag,
         addInLineBreaks: true
     });
-    //console.error("Errors", preview.error);
-    //console.dir(preview.errorQueue);
     $(outContainer).html(filterKeywords(preview.html));
+    //console.error("Errors", preview.error);
+    //console.log(preview.errorQueue);
+    // Errors
+    if(preview.error){
+        $("#livePreviewErrors").text("ERROR: " +preview.errorQueue).css("color","red");
+        if($("#livePreviewErrors").parent().has("a").length < 1){
+            $("#livePreviewErrors").after($("<a>").attr("class","fixLivePreviewErrors").attr("href","#fix").text("(Attempt to fix)"))
+                .after($("<br>").attr("class","fixLivePreviewErrors"));
+            // Event for error fix
+            $(".fixLivePreviewErrors").click(function() {
+                updatePreview(input, true, outContainer);
+            });
+        }
+    } else{
+        $("#livePreviewErrors").text("");
+        if($("#livePreviewErrors").parent().has("a").length > 0){
+            $(".fixLivePreviewErrors").remove();
+        }
+    }
 }
 
 function toggleCollapseAttr(){
