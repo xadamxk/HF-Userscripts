@@ -19,4 +19,5 @@ $(".post_body").css({
    'padding-top' : '10px',
    'padding-right' : '30px',
    'padding-bottom' : '10px',
+   'padding-left' : '30px'
 });
