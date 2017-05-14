@@ -159,7 +159,7 @@ US managers (ex. <a href="https://tampermonkey.net/">TamperMonkey</a>) allow use
   </p>
   </ul></li>
   <br>
-    <ul><li><b>Bypass Global Ignore: </b>Load content from members using global ignore (feature discontinues as of 1/17/2017).
+    <ul><li><b>Bypass Global Ignore: </b>Load content from members using global ignore (feature discontinued as of 1/17/2017).
   </ul></li>
 </details>
 </ul><hr>
