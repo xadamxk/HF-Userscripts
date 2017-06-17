@@ -165,7 +165,7 @@
                         if (status === 'error') {
                             return _destroy();
                         }
-                        var $next = $(this).find(_options.nextSelector).first();
+                        var $next = $(body).find(_options.nextSelector).first();
                         data.waiting = false;
                         data.nextHref = $next.attr('href') ? $.trim($next.attr('href') + ' ' + _options.contentSelector) : false;
                         $('.jscroll-next-parent', $e).remove(); // Remove the previous next link now that we have a new one
