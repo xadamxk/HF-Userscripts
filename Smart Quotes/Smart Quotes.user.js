@@ -21,6 +21,7 @@
 // version 1.0.1: Initial Release
 // version 1.0.0: Beta Release
 // ------------------------------ Dev Notes -----------------------------
+// Bug: If title contains :)
 // TODO: Add support for code and other blocks.
 // Colors: http://ios7colors.com/
 // ------------------------------ SETTINGS ------------------------------
