@@ -1,0 +1,71 @@
+.shadetabs {
+	padding: 1px 0;
+	margin-left: 15px;
+	margin-top: 1px;
+	margin-bottom: 1px;
+	font: bold 12px Verdana;
+	list-style-type: none;
+	text-align: left;
+}
+
+.shadetabs li {
+display: inline;
+margin: 0;
+padding: 2px;
+
+}
+
+.shadetabs li a {
+   background-color: #072948;
+   box-shadow: 0 1px 0 0 #0F5799 inset !important;
+   border-radius: 6px 6px 0px 0px !important;
+	color:#efefef;
+	font-family:arial;
+	font-size:15px;
+	font-weight:bold;
+	padding:3px 6px;
+	text-decoration:none;
+	text-shadow:1px 1px 0px #000;
+}
+
+.shadetabs li a:hover {
+	color: #499FED;
+           background: #0F5799;
+	text-decoration:none;
+}
+
+.shadetabs li a.selected {
+           position: relative;
+           top: 1px;
+           background:#0F5799;
+           color: #499FED;
+	text-shadow:1px 1px 0px #000;
+}
+
+.shadetabs li a.selected:hover {
+text-decoration: none;
+}
+
+.tabcontent {
+display:none;
+}
+
+@
+media print {
+.tabcontent {
+display:block !important;
+}
+
+
+}
+
+
+		
+/*
+     FILE ARCHIVED ON 03:33:40 Sep 29, 2017 AND RETRIEVED FROM THE
+     INTERNET ARCHIVE ON 14:01:55 Oct 23, 2017.
+     JAVASCRIPT APPENDED BY WAYBACK MACHINE, COPYRIGHT INTERNET ARCHIVE.
+
+     ALL OTHER CONTENT MAY ALSO BE PROTECTED BY COPYRIGHT (17 U.S.C.
+     SECTION 108(a)(3)).
+*/
