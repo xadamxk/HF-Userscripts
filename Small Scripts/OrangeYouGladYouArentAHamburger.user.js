@@ -9,11 +9,12 @@
 // @match      *://hackforums.net*
 // @match      *://hackforums.net/*
 // @copyright  2017+
-// @updateURL
-// @downloadURL
+// @updateURL https://github.com/xadamxk/HF-Userscripts/raw/master/Small%20Scripts/OrangeYouGladYouArentAHamburger.user.js
+// @downloadURL https://github.com/xadamxk/HF-Userscripts/raw/master/Small%20Scripts/OrangeYouGladYouArentAHamburger.user.js
 // @iconURL https://raw.githubusercontent.com/xadamxk/HF-Userscripts/master/scripticon.jpg
 // ==/UserScript==
 // ------------------------------ Change Log ----------------------------
+// version 1.0.1: Public Release (Update/Download URLs)
 // version 1.0.0: Beta Release
 // ------------------------------ Dev Notes -----------------------------
 /*
