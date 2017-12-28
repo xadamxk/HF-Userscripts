@@ -1,17 +1,17 @@
 // ==UserScript==
-// @name            Prestige Helper 2.0
+// @name            Prestige Helper 3.0
 // @namespace       Xerotic
-// @description     Tools to help calculate prestige. Tweaked by Adam
+// @description     Tools to help calculate prestige. Updated by Adam
 // @require         http://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js
 // @include         *hackforums.net/member.php?action=profile&uid=*
-// @version         1.0
+// @version         3.0
 // ==/UserScript==
 
-var postCoeff = 50;
-var threadCoeff = 10;
-var repCoeff = 19;
-var timeCoeff = 100000;
-var awardCoeff = 20;
+var repCoeff = 18.2;
+var postCoeff = 50.4;
+var threadCoeff = 12.6;
+var timeCoeff = 97000;
+var awardCoeff = 20.5;
 
 var $table = $("table.tborder:contains(Forum Info)")
 // Posts
