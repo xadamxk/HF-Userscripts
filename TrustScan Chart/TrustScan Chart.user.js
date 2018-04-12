@@ -15,7 +15,6 @@
 // version 1.0.0: Beta Release
 // ------------------------------ Dev Notes  ----------------------------
 // Add IF conditional on None to check for default (gray?) text
-// tcat class is DARK
 // ------------------------------ Classes -----------------------------
 class TSItem {
     constructor(label, weight, color, finalWeight) {
@@ -33,8 +32,8 @@ class TSItem {
     }
 }
 class TSOverall {
-    constructor(totalOveral, totalActual, countRed, countYellow, countGreen) {
-        this.totalOveral = totalOveral;
+    constructor(totalOverall, totalActual, countRed, countYellow, countGreen) {
+        this.totaloverall = totalOverall;
         this.totalActual = totalActual;
         this.countRed = countRed;
         this.countYellow = countYellow;
@@ -42,7 +41,7 @@ class TSOverall {
         this.set();
     }
     set() {
-        this.totalOveral = 0;
+        this.totalOverall = 0;
         this.totalActual = 0;
         this.countRed = 0;
         this.countYellow = 0;
@@ -54,7 +53,7 @@ var trustScanList= [];
 
 var gauth2FA = new TSItem();
 gauth2FA.label = "Gauth/2FA:";
-gauth2FA.weight = 9;
+gauth2FA.weight = 12;
 trustScanList.push(gauth2FA);
 
 var lastGauth = new TSItem();
@@ -99,7 +98,7 @@ trustScanList.push(ipMatchMembers);
 
 var dealDisputes = new TSItem();
 dealDisputes.label = "Deal Disputes (Claimant/Defendant)";
-dealDisputes.weight = 9;
+dealDisputes.weight = 12;
 trustScanList.push(dealDisputes);
 
 //var usernameChange = new TSItem();
@@ -121,15 +120,22 @@ trustScanList.push(accountAge);
 var trustScanListStats = new TSOverall();
 var TSSearchDiv = $( "table").find("strong:contains(Trust Scan Search)").parent().parent().parent().parent().parent();
 TSSearchDiv.after("<br>").after($("<table>").css("width", "100%").css("margin-right", "auto").css("margin-left", "0px").attr('id', 'hfxTSDiv').attr('border', 0).attr('cellspacing', 1)
-                                .attr('cellpadding', 4).attr('colspan', 6).addClass('tborder')).append('<tbody>').attr('colspan', 6);
+                                .attr('cellpadding', 4).attr('colspan', 4).addClass('tborder').append('<tbody>').attr('colspan', 4)).after("<br>");
 // Insert thead (title, thread hyperlink)
-$('#hfxTSDiv').append($('<tr>').append($('<td>').addClass('thead').attr('colspan', 2).append($('<strong>').text("HFX: Trust Scan Graph"))
+$('#hfxTSDiv').append($('<tr>').append($('<td>').addClass('thead').attr('colspan', 4).append($('<strong>').text("HFX: Trust Scan Graphs"))
                                        .append($('<a>').attr('href', '')
                                                .append($('<strong>').text('Brought to you by HFX').addClass('float_right')))));
 //
 $('#hfxTSDiv').append($('<tr>')
-                      .append($('<td>').append($('<strong>').text('Overall:')).addClass('trow1').attr('colspan', 1).attr('align', 'left').css("font-size", "14px").css("width", "80%")
-                             .append($('<div>').attr("id","hfxTSGraph").addClass('trow1').css('float', 'right').css("font-size", "14px").css("width", "50%")))
+                      .append($('<td>').append($('<strong>').text('This table is part of HFX (browser extension you have installed). '+
+                                                                 'This feature is only meant to help visualize Trust Scan data. Use results AT YOUR OWN RISK!'))
+                              .addClass('tcat').attr('colspan', 4).css("font-size", "12px").css("width", "100%").css("color","red")));
+//
+$('#hfxTSDiv').append($('<tr>')
+                      .append($('<td>').append($('<strong>').text('')).addClass('trow1').attr('colspan', 3).attr('align', 'left').css("font-size", "14px").css("width", "80%")
+                              .append($('<td>').attr("id","hfxTSGraphSummary").addClass('trow1').attr('colspan', 1).css("font-size", "14px"))
+                              .append($('<td>').attr("id","hfxTSGraphSpacer").addClass('').attr('colspan', 1).css("font-size", "14px").css("width","20px"))
+                              .append($('<td>').attr("id","hfxTSGraphWeight").addClass('trow1').attr('colspan', 1).css("font-size", "14px")))
                       .append($('<td>').attr("id","hfxTSFinalScore").append("Calculating...").addClass('trow1').attr('colspan', 1).attr('align', 'left').css("font-size", "14px").css("width", "20%")));
 
 // .append($('<td>').attr("id","hfxTSGraph").addClass('trow1').attr('colspan', 1).attr('align', 'left').css("font-size", "14px").css("width", "50%")));
@@ -144,7 +150,7 @@ for (var tsListIndex = 0; tsListIndex < trustScanList.length; tsListIndex++) {
             // Get Final weight
             trustScanList[tsListIndex].finalWeight = (trustScanList[tsListIndex].weight/3) * trustScanList[tsListIndex].color;
             // Add to final stats
-            trustScanListStats.totalOveral += trustScanList[tsListIndex].weight;
+            trustScanListStats.totalOverall += trustScanList[tsListIndex].weight;
             trustScanListStats.totalActual += trustScanList[tsListIndex].finalWeight;
             switch (trustScanList[tsListIndex].color){
                 case 0:
@@ -162,25 +168,30 @@ for (var tsListIndex = 0; tsListIndex < trustScanList.length; tsListIndex++) {
     });
 }
 
-console.log(trustScanListStats);
-$("#hfxTSFinalScore").text(trustScanListStats.totalActual + "/" + trustScanListStats.totalOveral +
-                           " (" + parseFloat(Math.round(((trustScanListStats.totalActual/trustScanListStats.totalOveral)*100) * 100) / 100).toFixed(2) + "%)");
+//console.log(trustScanListStats);
+var finalStatsString = "Weaknesses: " + trustScanListStats.countRed;
+finalStatsString += "\nWarnings: " + trustScanListStats.countYellow;
+finalStatsString += "\nStrengths: " + trustScanListStats.countGreen;
+finalStatsString += "\n\nWeighted Points: " + trustScanListStats.totalActual + "/" + trustScanListStats.totalOverall;
+finalStatsString += "\nWeighted Grade: " + parseFloat(Math.round(((trustScanListStats.totalActual/trustScanListStats.totalOverall)*100) * 100) / 100).toFixed(2) + "%";
 
-console.log(trustScanList);
+$("#hfxTSFinalScore").html(finalStatsString.replace(/\n/g, '<br />'));
 
+//console.log(trustScanList);
+
+// ----- Summary -----
 var canvasTotal = document.createElement('canvas');
-canvasTotal.id = "hfxTSCanvas";
-//$(canvaslastRep).css("vertical-align", "middle");
-$("#hfxTSGraph").append(canvasTotal);
+canvasTotal.id = "hfxTSCanvasSummary";
+$("#hfxTSGraphSummary").append(canvasTotal);
 // Canvas instance
-var hfxTSCanvas = document.getElementById('hfxTSCanvas').getContext('2d');
+var hfxTSCanvas = document.getElementById('hfxTSCanvasSummary').getContext('2d');
 // Total rep pie chart
-var hfxTSChart = new Chart(hfxTSCanvas, {
+var hfxTSChart = new Chart(hfxTSCanvasSummary, {
     type: 'pie',
     data: {
-        labels: ["Flags",
-                 "Warnings",
-                 "Confirmations"],
+        labels: ["Weaknesses (" + trustScanListStats.countRed + ")",
+                 "Warnings (" + trustScanListStats.countYellow + ")",
+                 "Strengths (" + trustScanListStats.countGreen + ")"],
         datasets: [{
             backgroundColor: [
                 "#ff0000",
@@ -199,7 +210,7 @@ var hfxTSChart = new Chart(hfxTSCanvas, {
         title: {
             display: true,
             fontColor: "#cccccc",
-            text: 'Trust Scan Summary',
+            text: 'Summary',
             fontSize: 18
         },
         legend: {
@@ -214,7 +225,50 @@ var hfxTSChart = new Chart(hfxTSCanvas, {
         },
     }
 });
-
+// ----- Weighted -----
+var canvasWeight = document.createElement('canvas');
+canvasWeight.id = "hfxTSCanvasWeight";
+$("#hfxTSGraphWeight").append(canvasWeight);
+// Canvas instance
+var hfxTSCanvasWeight = document.getElementById('hfxTSCanvasWeight').getContext('2d');
+// Total rep pie chart
+var hfxTSChartWeight = new Chart(hfxTSCanvasWeight, {
+    type: 'pie',
+    data: {
+        labels: ["Missed (" + parseFloat(Math.round((((trustScanListStats.totalOverall-trustScanListStats.totalActual)/trustScanListStats.totalOverall)*100) * 100) / 100).toFixed(0) + "%)",
+                 "Score (" + parseFloat(Math.round(((trustScanListStats.totalActual/trustScanListStats.totalOverall)*100) * 100) / 100).toFixed(0) + "%)"],
+        datasets: [{
+            backgroundColor: [
+                "#FFA500",
+                "#0000FF"
+            ],
+            data: [(trustScanListStats.totalOverall-trustScanListStats.totalActual), trustScanListStats.totalActual]
+        }]
+    },
+    options: {
+        cutoutPercentage: 50,
+        animateRotate: true,
+        hover: {
+            animationDuration: 750
+        },
+        title: {
+            display: true,
+            fontColor: "#cccccc",
+            text: 'Weighted (custom)',
+            fontSize: 18
+        },
+        legend: {
+            display: true,
+            fullWidth: true,
+            position: 'top',
+            labels: {
+                fontColor: "white",
+                boxWidth: 20,
+                fontSize: 12,
+            },
+        },
+    }
+});
 // ------------------------------ Functions ------------------------------
 function getStatLevel(leftCol){
     var level, tsColor;
