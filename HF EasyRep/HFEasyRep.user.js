@@ -2,7 +2,7 @@
 // @name       HF EasyRep
 // @author xadamxk
 // @namespace  https://github.com/xadamxk/HF-Scripts
-// @version    1.0.1
+// @version    1.0.2
 // @description Makes giving away reps super easy
 // @require https://code.jquery.com/jquery-3.1.1.js
 // @match      *://hackforums.net/reputation.php?uid=*
@@ -21,17 +21,13 @@
 // None atm
 // ------------------------------ Script ------------------------------
 // Ripped from HFX
-if ($(".posts").length > 0){
+if ($("#posts").length > 0){
     $(".post").each(function (index) {
-        // Post ID Selector
-        var postIDSelector = $(this).find(".post_head > .float_right > strong > a:eq(0)");
         // If post collapsed
         if (!$(this).find(".author_information > strong > span > a").attr('href') > 0)
             return true;
         var usernameUID = $(this).find(".author_information > strong > span > a").attr('href').replace(/\D/g, '');
         var usernameName = $(this).find(".author_information > strong > span > a").text();
-        //
-        const potLinkConst = "search.php?action=finduser&uid=";
         // Append button
         $(this).find(".author_buttons").append($("<a>").attr({
             "title": "Quick Rep " + usernameName,
