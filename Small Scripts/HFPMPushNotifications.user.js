@@ -2,19 +2,21 @@
 // @name       HF PM Push Notifications
 // @author xadamxk
 // @namespace  https://github.com/xadamxk/
-// @version    1.0.1
+// @version    1.0.2
 // @description  Receive push notifications for PMs from HF.
 // @require https://code.jquery.com/jquery-3.1.1.js
-// @match      *://?????
+// @match      *://hackforums.net/apikey.php
 // @copyright  2017+
 // @iconURL https://raw.githubusercontent.com/xadamxk/HF-Userscripts/master/scripticon.jpg
 // ------------------------------ Change Log ----------------------------
+// version 1.0.2: Updated endpoints with newest HF API (v1), Fixed memory logic
 // version 1.0.1: UID -> Username in notifications
 // version 1.0.0: Beta Release
 // ==/UserScript==
 // ------------------------------ Dev Notes -----------------------------
 // 
 // ------------------------------ SETTINGS ------------------------------
+var debug = false;
 // HF API Key
 var apikey = "";
 // Pushover API Token
@@ -22,52 +24,53 @@ var pushoverAPIToken = "";
 // Pushover UserKey
 var pushoverUserKey = "";
 // Site
-var siteAPI = "";
+var siteAPI = "hackforums.net";
 // Dateline List
 var datelineList = [];
 // Check interval
-var interval = 1000 * 60 * 10; // 1000 milli * 60 secs * x = minutes (No lower than 5 or timeout!)
+var interval = 1000 * 60 * 5; // 1000 milli * 60 secs * x = minutes (No lower than 5 or timeout!)
 // ------------------------------ On Page ------------------------------
 setInterval(function(){
 var xhr = new XMLHttpRequest();
-xhr.open('GET', "https://"+siteAPI+"/apicall.php?key="+apikey+"&inbox", false); // true for async
+xhr.open('GET', "https://"+siteAPI+"/api/v1/inbox", false); // true for async
+xhr.setRequestHeader("Authentication","Basic am52b1FpWUJWSHljSTJGZWNKeU1JeVlyN0hZUjRuTDc6");
 xhr.send();
 
 var jsonObj = steralizeJson(xhr.response);
 // Json Response
-console.log(jsonObj);
+if(debug){console.log(jsonObj);}
 
 // Get list of pm ids
-$.each(jsonObj.result.pminfo, function(pmID, item) {
+$.each(jsonObj.result.pms, function(item) {
     // If message is unread
     if($(this)[0].status == "0"){
-        generateOutput(pmID,$(this)[0].dateline,$(this)[0].sender,$(this)[0].subject);
+        generateOutput($(this)[0].pmid,$(this)[0].dateline,$(this)[0].senderusername,$(this)[0].subject);
     }
 });
 }, interval);
 // ------------------------------ Functions ------------------------------
 // Generate output info
-function generateOutput(pmid,date,sender,subject){
+function generateOutput(pmid,date,senderusername,subject){
     var existingRecord = false;
-    for (var i = 0; i < datelineList; i++) {
+    console.log(datelineList);
+    for (var i = 0; i < datelineList.length; i++) {
+        if(debug){console.log("List: " + datelineList[i]);}
+        if(debug){console.log("Date: " + date);}
         if(datelineList[i] == date)
+            if (debug){console.log("Existing Record Found!");}
             existingRecord = true;
     }
     // If not existing
     if (!existingRecord){
+        if (debug){console.log("New Record Found!");}
         // Add to list
         datelineList.push(date);
-        // Get username of uid
-        var xhrUsername = new XMLHttpRequest();
-        xhrUsername.open('GET', "https://"+siteAPI+"/apicall.php?key="+apikey+"&uid="+sender, false); // true for async
-        xhrUsername.send();
-        var jsonObjname = steralizeJson(xhrUsername.response);
         // Send notification
         $.post("https://api.pushover.net/1/messages.json",
                {
             "token": pushoverAPIToken,
             "user": pushoverUserKey,
-            "message": "From: "+jsonObjname.result.username+".",
+            "message": "From: "+senderusername,
             "title": "New Mesage: "+subject,
             "url": "https://"+siteAPI+"/private.php?action=read&pmid="+pmid,
             "url_title": "Click to Open PM",
