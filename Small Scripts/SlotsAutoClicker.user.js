@@ -14,7 +14,7 @@ var iteration = 0;
 (function loop() {
     setTimeout(function () {
         if (parseInt($("#credits").text()) > byteLimit){
-            iteration++;
+            iteration  = iteration+1;
             console.clear();
             console.log("Iteration " + iteration);
             $("#spinButton").click();
