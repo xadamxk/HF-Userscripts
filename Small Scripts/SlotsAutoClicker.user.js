@@ -83,6 +83,7 @@ function calcSessionWinnings(){
 }
 
 function calcSessionTotalOutput(){
+    $('title').text("Rate: " + calcSessionTotal() + " Bet: " + $('#bet').text() + " Credits: " + $('#credits').text());
     console.log("Session Total: " + calcSessionTotal());
 }
 
