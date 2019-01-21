@@ -55,7 +55,6 @@ function handleCardResult() {
 
     }
 
-    ScratchCardsBalanceChange(ScratchCards.balance);
 }
 
 function generatePrizeText(prize, payout) {
