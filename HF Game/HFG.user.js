@@ -60,6 +60,22 @@ batteryElement.after($("<span>").css({"margin-left":"10px", "color": batteryElem
 if (batteryPercent < batteryThreshold && !isPowerCenter){
     console.log("Battery threshold hit. Navigating to battery...");
     naviagteToBattery();
+} else if (isPowerCenter){
+    // Full recharge time
+    var extractedRechargeTime = (
+        $("#game_content_currentpage").find(".tinytext > span").attr('title') ?
+        $("#game_content_currentpage").find(".tinytext > span").attr('title') :
+        $("#game_content_currentpage").find("em").text()
+    );
+    var batteryTimeElement = (
+        $("#game_content_currentpage").find(".tinytext > span") ?
+        $("#game_content_currentpage").find(".tinytext > span") :
+        $(".gmiddle").parent().find("em")
+    );
+    var rechargeDate = moment(extractedRechargeTime, "MMMM Do, YYYY, hh:mm A"); // May 13th, 2019, 02:45 AM
+    var differenceInMS = Math.abs(moment().diff(rechargeDate, 'milliseconds')); // Diff in MS from now until recharge time
+    batteryTimeElement.after($("<span>").text("(Reload time: " + rechargeDate.format('YYYY-MM-DD @ hh:mm A') + ")"));
+    setInterval(naviagteToGame, differenceInMS);
 }
 else if (isCooldown) {
     console.log("Cooldown is active. Waiting...");
@@ -70,25 +86,7 @@ else if (isLocked){
     // Grab time from FBI page (are there other pages?)
     $("#gameStatusContainer").append("Reload Time: " + localDate + " + (" + intervalVariableHigh + ")");
     setInterval(reloadPage, intervalVariableHigh);
-}
-else if (isPowerCenter){
-    // Full recharge time
-    var extractedRechargeTime = (
-        $(".gmiddle").parent().find("em > span").attr('title') ?
-        $(".gmiddle").parent().find("em > span").attr('title') :
-        $(".gmiddle").parent().find("em").text()
-    );
-    var batteryTimeElement = (
-        $(".gmiddle").parent().find("em > span").attr('title') ?
-        $(".gmiddle").parent().find("em > span") :
-        $(".gmiddle").parent().find("em")
-    );
-    var rechargeDate = moment(extractedRechargeTime, "MMMM Do, YYYY, hh:mm A"); // May 13th, 2019, 02:45 AM
-    var differenceInMS = Math.abs(moment().diff(rechargeDate, 'milliseconds')); // Diff in MS from now until recharge time
-    batteryTimeElement.after($("<span>").text("(Reload time: " + rechargeDate.format('YYYY-MM-DD @ hh:mm A') + ")"));
-    setInterval(naviagteToGame, differenceInMS);
-}
-else {
+} else {
     console.log("Game is ready. Playing...");
     runOnGame();
 }
