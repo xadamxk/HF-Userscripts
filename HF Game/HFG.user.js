@@ -6,11 +6,11 @@
 // @description Adds various helpful tools to HF's Game (battery indicator & recharge time)
 // @require     https://code.jquery.com/jquery-3.1.1.js
 // @require     https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.js
-// @match      *://hackforums.net/gamecp.php
 // @match      *://hackforums.net/gamecp.php?action=smallhacks*
 // @match      *://hackforums.net/gamecp.php?action=battery*
 // @match      *://hackforums.net/gamecp.php?action=logs*
 // @match      *://https://hackforums.net/gamecp.php?action=leaderboard&type=1*
+// @match      *://https://hackforums.net/gamecp.php?action=profile*
 // @copyright  2016+
 // ==/UserScript==
 // ------------------------------ Dev Notes -----------------------------
@@ -120,7 +120,7 @@ else if (isCooldown) {
 else if (isLocked) {
     // Grab time from FBI page (are there other pages?)
     $("#gameStatusContainer").append("Reload Time: " + localDate + " + (" + intervalVariableHigh + ")");
-    setInterval(reloadPage, intervalVariableHigh);
+    setInterval(reloadPage, (intervalVariableHigh* 1000));
 } else {
     console.log("Game is ready. Playing...");
     runOnGame();
