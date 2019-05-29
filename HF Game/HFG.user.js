@@ -2,7 +2,7 @@
 // @name       HF The Game
 // @author xadamxk
 // @namespace  https://github.com/xadamxk/HF-Scripts
-// @version    1.0.0
+// @version    1.0.1
 // @description Adds various helpful tools to HF's Game (battery indicator & recharge time)
 // @require     https://code.jquery.com/jquery-3.1.1.js
 // @require     https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.js
@@ -12,12 +12,19 @@
 // @match      *://https://hackforums.net/gamecp.php?action=leaderboard&type=1*
 // @match      *://https://hackforums.net/gamecp.php?action=profile*
 // @copyright  2016+
+// @updateURL https://github.com/xadamxk/HF-Userscripts/raw/master/HF%20Game/HFG.user.js
+// @downloadURL https://github.com/xadamxk/HF-Userscripts/raw/master/HF%20Game/HFG.user.js
+// @iconURL https://raw.githubusercontent.com/xadamxk/HF-Userscripts/master/scripticon.jpg
 // ==/UserScript==
 // ------------------------------ Changelog -----------------------------
 // v 1.0.1: Added UpdateURL to script meta tag
 // v 1.0.0: Job, threshold, and interval settings; Added shortcuts (leaderboard, logs)
 // ------------------------------ Dev Notes -----------------------------
 // Use at your own risk :)
+// TODO:
+// - Improve page logic so script runs on all gamecp pages
+// - Option for more game shortcuts
+// - Automate missions (buying requirements at minimum)?
 // ------------------------------ SETTINGS ------------------------------
 var debug = false;
 const jobs = {
@@ -38,8 +45,7 @@ const jobs = {
 const batteryThreshold = 5; // %
 const intervalVariableLow = 60; // 15 secs
 const intervalVariableHigh = 420; // 1 mins
-// ------------------------------ Page Load -----------------------------
-var isCooldown = ($(".game_nav_content_system_container > a:eq(2)").find('.game-nav-countdown').length > 0 ? true : false);
+// ------------------------------ Page LoadScripttent_system_container > a:eq(2)").find('.game-nav-countdown').length > 0 ? true : false);
 var isLocked = ($("img[src$='/game/fbi-interrogating.jpg']").length > 0 ? true : false);
 var isPowerCenter = ($("#progress-bar-percentage").length > 0 ? true : false);
 var batteryPercent = (
