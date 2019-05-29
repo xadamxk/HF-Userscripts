@@ -13,6 +13,9 @@
 // @match      *://https://hackforums.net/gamecp.php?action=profile*
 // @copyright  2016+
 // ==/UserScript==
+// ------------------------------ Changelog -----------------------------
+// v 1.0.1: Added UpdateURL to script meta tag
+// v 1.0.0: Job, threshold, and interval settings; Added shortcuts (leaderboard, logs)
 // ------------------------------ Dev Notes -----------------------------
 // Use at your own risk :)
 // ------------------------------ SETTINGS ------------------------------
@@ -33,8 +36,8 @@ const jobs = {
     hackNasaMoonLanding: "#job_id_23"           //  9%
 }
 const batteryThreshold = 5; // %
-const intervalVariableLow = 15; // 15 secs
-const intervalVariableHigh = 60; // 1 mins
+const intervalVariableLow = 60; // 15 secs
+const intervalVariableHigh = 420; // 1 mins
 // ------------------------------ Page Load -----------------------------
 var isCooldown = ($(".game_nav_content_system_container > a:eq(2)").find('.game-nav-countdown').length > 0 ? true : false);
 var isLocked = ($("img[src$='/game/fbi-interrogating.jpg']").length > 0 ? true : false);
@@ -120,7 +123,7 @@ else if (isCooldown) {
 else if (isLocked) {
     // Grab time from FBI page (are there other pages?)
     $("#gameStatusContainer").append("Reload Time: " + localDate + " + (" + intervalVariableHigh + ")");
-    setInterval(reloadPage, (intervalVariableHigh* 1000));
+    setInterval(reloadPage, (intervalVariableHigh * 1000));
 } else {
     console.log("Game is ready. Playing...");
     runOnGame();
