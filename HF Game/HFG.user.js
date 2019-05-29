@@ -45,7 +45,8 @@ const jobs = {
 const batteryThreshold = 5; // %
 const intervalVariableLow = 60; // 15 secs
 const intervalVariableHigh = 420; // 1 mins
-// ------------------------------ Page LoadScripttent_system_container > a:eq(2)").find('.game-nav-countdown').length > 0 ? true : false);
+// ------------------------------ Page Load -----------------------------
+var isCooldown = ($(".game_nav_content_system_container > a:eq(2)").find('.game-nav-countdown').length > 0 ? true : false);
 var isLocked = ($("img[src$='/game/fbi-interrogating.jpg']").length > 0 ? true : false);
 var isPowerCenter = ($("#progress-bar-percentage").length > 0 ? true : false);
 var batteryPercent = (
