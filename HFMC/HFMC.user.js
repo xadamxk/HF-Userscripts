@@ -16,8 +16,13 @@
 // ------------------------------ Dev Notes -----------------------------
 // Match the color pallete of existing blue theme:
 // - https://www.colorhexa.com/2f3b5d
+// possible orange: ffa64d
 // ------------------------------ SETTINGS ------------------------------
 const colors = {
+    cyan: {
+        mosaic: "https://github.com/xadamxk/HF-Userscripts/blob/master/HFMC/mosaics/mosaic_cyan.png?raw=true",
+        color: "#2f525d"
+    },
     purple: {
         mosaic: "//hackforums.net/images/mobale/mosaic_pl.png",
         color: "#3a2f5d"
@@ -26,12 +31,30 @@ const colors = {
         mosaic: "//hackforums.net/images/mosaic_green.png",
         color: "#3b5d2f" //2f5d51
     },
+    green_light: {
+        mosaic: "https://github.com/xadamxk/HF-Userscripts/blob/master/HFMC/mosaics/mosaic_green2.png?raw=true",
+        color: "#2f5d3a" //2f5d51
+    },
+    magenta: {
+        mosaic: "https://github.com/xadamxk/HF-Userscripts/blob/master/HFMC/mosaics/mosaic_magenta.png?raw=true",
+        color: "#5d2f52"
+    },
+    // Needs lighter mosaic
+    pink: {
+        mosaic: "https://github.com/xadamxk/HF-Userscripts/blob/master/HFMC/mosaics/mosaic_pink.png?raw=true",
+        color: "#5d2f47"
+    },
     rainbow: {
         mosaic: "https://t3.ftcdn.net/jpg/01/25/27/70/240_F_125277074_lg9KkZlJYwKIiIiFzciXjnh7edM4cNRD.jpg",
         color: "linear-gradient(to right, red,orange,green,blue,purple)"
+    },
+    // Needs to be darker
+    yellow: {
+        mosaic: "https://github.com/xadamxk/HF-Userscripts/blob/master/HFMC/mosaics/mosaic_yellow.png?raw=true",
+        color: "#ffe14d"
     }
 }
-var selectedTheme = colors.rainbow;
+var selectedTheme = colors.magenta;
 // ------------------------------ Script ------------------------------
 var mosaic = selectedTheme.mosaic;
 var color = selectedTheme.color;
