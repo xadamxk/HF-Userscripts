@@ -2,7 +2,7 @@
 // @name       HF Game Additions
 // @author xadamxk
 // @namespace  https://github.com/xadamxk/HF-Scripts
-// @version    1.0.1
+// @version    1.0.2
 // @description Adds various helpful tools to HF's Game
 // @require     https://code.jquery.com/jquery-3.1.1.js
 // @require     https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.js
@@ -13,6 +13,7 @@
 // @iconURL https://raw.githubusercontent.com/xadamxk/HF-Userscripts/master/scripticon.jpg
 // ==/UserScript==
 // ------------------------------ Changelog -----------------------------
+// v 1.0.2: New extracted date format
 // v 1.0.1: Update/Download URL
 // v 1.0.0: Absolute battery timestamp, battery percentage, shortcut icons (logs and leaderboard)
 // ------------------------------ Dev Notes -----------------------------
@@ -39,7 +40,7 @@ var batteryTimeElement = (
         $("#game_content_currentpage").find(".tinytext > span") :
         $(".gmiddle").parent().find("em")
 );
-var rechargeDate = moment(extractedRechargeTime, "MMMM Do, YYYY, hh:mm A"); // June 25th, 2019, 07:35 PM
+var rechargeDate = moment(extractedRechargeTime, "MM-DD-YYYY, hh:mm A"); // 06-25-2019, 07:35 PM
 var differenceInMS = Math.abs(moment().diff(rechargeDate, 'milliseconds')); // Diff in MS from now until recharge time
 batteryTimeElement.after($("<span>").text("(" + rechargeDate.format('MM-DD-YYYY @ hh:mm A') + ")"));
 
