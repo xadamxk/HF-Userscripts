@@ -39,7 +39,7 @@ var batteryTimeElement = (
         $("#game_content_currentpage").find(".tinytext > span") :
         $(".gmiddle").parent().find("em")
 );
-var rechargeDate = moment(extractedRechargeTime, "MMMM Do, YYYY, hh:mm A"); // June 25th, 2019, 07:35 PM
+var rechargeDate = moment(extractedRechargeTime, "MM-DD-YYYY, hh:mm A"); // 06-25-2019, 07:35 PM
 var differenceInMS = Math.abs(moment().diff(rechargeDate, 'milliseconds')); // Diff in MS from now until recharge time
 batteryTimeElement.after($("<span>").text("(" + rechargeDate.format('MM-DD-YYYY @ hh:mm A') + ")"));
 
