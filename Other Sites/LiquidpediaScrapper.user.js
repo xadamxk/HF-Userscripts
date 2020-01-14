@@ -1,12 +1,14 @@
 // ==UserScript==
 // @name         Liquidpedia Scrapper
 // @namespace    xadamxk
-// @version      0.0.1
+// @version      0.0.2
 // @description  Scraps player information on team pages
 // @require https://code.jquery.com/jquery-3.1.1.js
 // @author       Adam K
 // @match        *://liquipedia.net/*
 // @grant    GM_setClipboard
+// @updateURL https://github.com/xadamxk/HF-Userscripts/raw/master/Other%20Sites/LiquidpediaScrapper.user.js
+// @downloadURL https://github.com/xadamxk/HF-Userscripts/raw/master/Other%20Sites/LiquidpediaScrapper.user.js
 // ==/UserScript==
 // === Settings ===
 const ID_TEXT = "ID";
