@@ -1,0 +1,74 @@
+// ==UserScript==
+// @name         HackForums Chat Commands
+// @namespace    http://tampermonkey.net/
+// @version      0.1
+// @description  HackForums Game Automater
+// @author       Nachfolger
+// @include      https://hackforums.net/convo.php*
+// @grant        none
+// ==/UserScript==
+
+(function() {
+    'use strict';
+    let timeout = false;
+    let timeout2 = false;
+    let showCommands = false;
+    let timeoutLength = 30; // Seconds
+    let currentTimeout = 0;
+    let messages = ["ur a pleb", "horny boi?", "get a gf", "freakin kids bro", "hmm..."];
+    let list = ["https://imgur.com/qLF8jOI.jpg", "https://i.imgur.com/CBLlPA5.jpg", "https://i.imgur.com/NWVENKc.jpg", "https://i.imgur.com/KS70i7B.jpg", "https://i.imgur.com/wtOQt7m.jpg", "https://i.imgur.com/GT0KUMl.jpg", "https://i.imgur.com/GT0KUMl.jpg", "https://i.imgur.com/YNQQDoi.jpg", "https://i.imgur.com/hKOhnqW.jpg", "https://i.imgur.com/niTu4vp.jpg", "https://i.imgur.com/Nf2xgbU.jpg", "https://i.imgur.com/0PJouHB.jpg", "https://i.imgur.com/GIU6ifz.jpg"];        
+    let bypass = [1834476, 1, 175033];
+    let globalCooldown = true;
+
+    // Events
+    Convo.socket.on('convo_receivemessage', function(data) {
+        // Checks
+        if (!data || typeof(data.message) !== "string") { log("Event did not return a message"); return false }
+        if (!data.uid) { return false }
+        if (globalCooldown) { log("Script commands on global cooldown"); return false }
+        if (data.message === "/nudes") {
+            if (timeout === true && bypass.indexOf(data.uid) < 0) { log("Command under cooldown"); return false }
+
+            // Send
+            sendMessage(list[Math.floor(Math.random() * list.length)] + " " + messages[Math.floor(Math.random() * messages.length)]);
+
+            // Timeout
+            timeout = true;
+            currentTimeout = timeoutLength;
+            manageTimeout()
+        } else if (data.message === "/help") {
+            if (timeout === true && bypass.indexOf(data.uid) < 0) { log("Command under cooldown"); return false }
+
+            // Send
+            sendMessage("We recommend you take the time to read the HF Help Documents section (help docs). The answer to your questions should be contained in there.");
+
+            // Timeout
+            timeout = true;
+            currentTimeout = timeoutLength;
+            manageTimeout()
+        }
+    });
+
+    // Disabled for 1 second to ignore initial messages
+    setTimeout(function() {
+        globalCooldown = false;
+
+        if (showCommands == false) { return false }       
+    }, 1000);
+
+    // Functions
+    function sendMessage(msg) {
+        Convo.socket.emit('convo_newmessage', {partyID: convo_party_id, message: msg});
+    }
+    function log(msg) { console.log(msg) }
+    function manageTimeout() {
+        currentTimeout--;
+
+        if (currentTimeout <= 0) {
+            currentTimeout = 0;
+            timeout = false;
+        } else {
+            setTimeout(manageTimeout, 1000);
+        }
+    }
+})();
