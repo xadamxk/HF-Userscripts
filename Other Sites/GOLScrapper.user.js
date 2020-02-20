@@ -2,18 +2,19 @@
 // @name       GOL Scrapper
 // @author xadamxk
 // @namespace  https://github.com/xadamxk/HF-Scripts
-// @version    1.0.0
+// @version    1.0.1
 // @description Copies GOL data to your clipboard
 // @require     https://code.jquery.com/jquery-3.1.1.js
 // @match      *://gol.gg/champion/list/*
 // @copyright  2016+
-// @updateURL
-// @downloadURL
+// @updateURL https://github.com/xadamxk/HF-Userscripts/raw/master/Other%20Sites/GOLScrapper.user.js
+// @downloadURL https://github.com/xadamxk/HF-Userscripts/raw/master/Other%20Sites/GOLScrapper.user.js
 // @iconURL https://raw.githubusercontent.com/xadamxk/HF-Userscripts/master/scripticon.jpg
 // @grant    GM_setClipboard
 // ==/UserScript==
 // ------------------------------ Changelog -----------------------------
-// v 1.0.0: Initial Release
+// v 1.0.0: Initial release
+// v 1.0.1: Update and download links
 // ------------------------------ Dev Notes -----------------------------
 // I put notes here - nothing yet!
 // ------------------------------ SETTINGS ------------------------------
