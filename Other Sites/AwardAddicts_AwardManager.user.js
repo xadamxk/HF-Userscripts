@@ -9,8 +9,8 @@
 // @match      *://awardaddicts.com/member.php?action=profile&uid=*
 // @match      *://awardaddicts.com/Thread-*
 // @copyright  2020+
-// @updateURL
-// @downloadURL
+// @updateURL https://github.com/xadamxk/HF-Userscripts/raw/master/Other%20Sites/AwardAddicts_AwardManager.user.js
+// @downloadURL https://github.com/xadamxk/HF-Userscripts/raw/master/Other%20Sites/AwardAddicts_AwardManager.user.js
 // ==/UserScript==
 // ------------------------------ Changelog -----------------------------
 // v 1.0.0: Initial Release
