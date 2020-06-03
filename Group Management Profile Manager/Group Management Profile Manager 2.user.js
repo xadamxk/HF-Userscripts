@@ -7,8 +7,8 @@
 // @require     https://code.jquery.com/jquery-3.1.1.js
 // @match      *://hackforums.net/*
 // @copyright  2016+
-// @updateURL
-// @downloadURL
+// @updateURL https://github.com/xadamxk/HF-Userscripts/raw/master/Group%20Management%20Profile%20Manager/Group%20Management%20Profile%20Manager%202.user.js
+// @downloadURL https://github.com/xadamxk/HF-Userscripts/raw/master/Group%20Management%20Profile%20Manager/Group%20Management%20Profile%20Manager%202.user.js
 // @grant       GM_getValue
 // @grant       GM_setValue
 // @grant       GM_deleteValue
