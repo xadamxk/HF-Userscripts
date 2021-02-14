@@ -5,7 +5,7 @@
 
 .mentions-input-box textarea {
 
-  display: block;
+  display: none;
   padding: 9px;
   border-radius:3px;
   overflow: hidden;
