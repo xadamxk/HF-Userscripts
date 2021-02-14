@@ -5,13 +5,14 @@
 
 .mentions-input-box textarea {
 
-  background: #2a2a2a;
-  color: #cecece;
-  border: 1px solid #222;
-  padding: 2px;
-  line-height: 1.4;
-  font-family: "-apple-system", "BlinkMacSystemFont", "Segoe UI", "Roboto", "Helvetica", "Arial", "sans-serif", "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
-  font-size: 15px;
+  display: block;
+  padding: 9px;
+  border-radius:3px;
+  overflow: hidden;
+  background: transparent;
+  position: relative;
+  outline: 0;
+  resize: none;
 
   -webkit-box-sizing: border-box;
      -moz-box-sizing: border-box;
@@ -94,6 +95,7 @@
   top: 1px;
   bottom: 0;
   padding: 9px;
+  color: #fff;
   overflow: hidden;
 
   white-space: pre-wrap;
@@ -101,6 +103,7 @@
 }
 
 .mentions-input-box .mentions > div {
+  color: #fff;
   white-space: pre-wrap;
   width: 100%;
 }
@@ -112,4 +115,4 @@
 
 .mentions-input-box .mentions > div > strong > span {
   filter: progid:DXImageTransform.Microsoft.Alpha(opacity=0);
-}
+} 
