@@ -5,14 +5,13 @@
 
 .mentions-input-box textarea {
 
-  display: none;
-  padding: 9px;
-  border-radius:3px;
-  overflow: hidden;
-  background: transparent;
-  position: relative;
-  outline: 0;
-  resize: none;
+  background: #2a2a2a;
+  color: #cecece;
+  border: 1px solid #222;
+  padding: 2px;
+  line-height: 1.4;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+  font-size: 15px;
 
   -webkit-box-sizing: border-box;
      -moz-box-sizing: border-box;
@@ -103,6 +102,7 @@
 }
 
 .mentions-input-box .mentions > div {
+  display: none;
   color: #fff;
   white-space: pre-wrap;
   width: 100%;
