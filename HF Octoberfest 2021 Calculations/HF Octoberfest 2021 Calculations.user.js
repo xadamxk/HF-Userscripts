@@ -2,12 +2,12 @@
 // @name        HF Octoberfest 2021 Calculations
 // @author      xadamxk
 // @namespace   https://github.com/xadamxk/HF-Userscripts
-// @version     0.0.1
+// @version     1.0.0
 // @description Calculates estimated posts, avg daily posts needed, and more for the 2021 Octoberfest event.
 // @match       ://hackforums.net/awardgoals.php
 // @copyright   2021+
-// @updateURL
-// @downloadURL
+// @updateURL   https://github.com/xadamxk/HF-Userscripts/raw/master/HF%20Octoberfest%202021%20Calculations/HF%20Octoberfest%202021%20Calculations.user.js
+// @downloadURL https://github.com/xadamxk/HF-Userscripts/raw/master/HF%20Octoberfest%202021%20Calculations/HF%20Octoberfest%202021%20Calculations.user.js
 // ==/UserScript==
 // ------------------------------ Changelog -----------------------------
 // v1.0.0: Update and Download URLs
