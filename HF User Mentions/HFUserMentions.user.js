@@ -2,7 +2,7 @@
 // @name        HF User Mentions
 // @author      xadamxk
 // @namespace   https://github.com/xadamxk/HF-Scripts
-// @version     1.0.0
+// @version     1.0.1
 // @description Adds user mention functionality to threads.
 // @require     https://code.jquery.com/jquery-3.1.1.js
 // @require     https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.12.0/underscore.min.js
@@ -16,6 +16,7 @@
 // @grant       GM_getResourceText
 // ==/UserScript==
 // ------------------------------ Change Log ----------------------------
+// version 1.0.1: Fixed bug with formatted overlay
 // version 1.0.0: Initial Release
 // ------------------------------ Dev Notes -----------------------------
 //
@@ -27,16 +28,19 @@ const jQueryMentionsInputCSS = GM_getResourceText("jQueryMentionsInputCSS");
 GM_addStyle(jQueryMentionsInputCSS);
 
 
-$("#message").addClass("mention").css({
-"background":"#2a2a2a !important",
-"color":"#cecece !important"
-});
+$("#message").addClass("mention");
+
+GM_addStyle ( `
+    .mentions-input-box .mentions > div {
+        display:none !important
+    }
+` );
 
 $('#message.mention').mentionsInput({
     onDataRequest:function (mode, query, callback) {
         $.getJSON('https://hackforums.net/xmlhttp.php?action=get_users&query=' + query, function(responseData) {
             let data = responseData.map(user => {
-                return {"id":user.id, "name":`@${user.text}@`, "type": "contact"};
+                return {"id":user.id, "name":` @${user.text}@`, "type": "contact"};
             })
             data = _.filter(data, function(item) { return item.id.toLowerCase().indexOf(query.toLowerCase()) > -1 });
             callback.call(this, data);
