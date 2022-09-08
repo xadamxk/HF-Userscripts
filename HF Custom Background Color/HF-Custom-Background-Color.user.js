@@ -2,14 +2,17 @@
 // @name        HF Custom Background Color
 // @author      xadamxk
 // @namespace   https://github.com/xadamxk/HF-Scripts
-// @version     1.0.0
+// @version     1.0.1
 // @description Makes donating bytes super easy
+// @updateURL   https://github.com/xadamxk/HF-Userscripts/raw/master/HF%20Custom%20Background%20Color/HF-Custom-Background-Color.user.js
+// @downloadURL https://github.com/xadamxk/HF-Userscripts/raw/master/HF%20Custom%20Background%20Color/HF-Custom-Background-Color.user.js
 // @require     https://code.jquery.com/jquery-3.1.1.js
 // @match       *://hackforums.net/*
 // @grant       GM_cookie
 // @copyright   2022+
 // ==/UserScript==
 // ------------------------------ Change Log ----------------------------
+// version 1.0.1: Support auto-updates
 // version 1.0.0: Release
 // ------------------------------ Dev Notes -----------------------------
 // grumble grumble
