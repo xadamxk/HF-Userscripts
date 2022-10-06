@@ -2,7 +2,7 @@
 // @name        HackForumsToolBar Lite
 // @author      xadamxk
 // @namespace   https://github.com/xadamxk/HF-Userscripts
-// @version     1.0.2
+// @version     1.0.3
 // @description Custom HF Header
 // @match       https://hackforums.net/*
 // @copyright   2022+
