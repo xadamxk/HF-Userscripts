@@ -1,0 +1,82 @@
+// ==UserScript==
+// @name        HackForumsToolBar Lite
+// @author      xadamxk
+// @namespace   https://github.com/xadamxk/HF-Userscripts
+// @version     0.0.1
+// @description Custom HF Header
+// @match       ://hackforums.net/*
+// @copyright   2022+
+// @grant       GM_setValue
+// @grant       GM_getValue
+// ==/UserScript==
+// ------------------------------ Changelog -----------------------------
+// v1.0.0: Update and Download URLs
+// v0.0.1: Initial commit
+// ------------------------------ Dev Notes -----------------------------
+// Mobile friendly input
+//
+// const settingsElement = `<span id="HFTBLiteSettings" style='float:right; padding:5px;'><i class="fa fa-cog" /></span>`;
+// document.getElementById("HFTBLiteSettings").addEventListener("click", () => {
+//     //
+//     window.alert("click!")
+// });
+// ------------------------------ SETTINGS ------------------------------
+const favoritesKey = "HFTBLite_Favorites";
+const debug = false;
+// ------------------------------ SCRIPT ------------------------------
+function dPrint(str) {
+    return debug && console.log(str);
+}
+
+function createFavoriteElements(favorites) {
+    if (!favorites) return [];
+    return Object.entries(favorites).map((entry, index) => {
+        const [url, text] = entry;
+        return `<a href='${url}' style='margin:0px 2px'><button style='padding:5px; font-weight:600;'>${text}</button></a>`;
+    })
+}
+
+function getBreadcrumbText() {
+    const breadcrumb = document.getElementsByClassName("breadcrumb")[0];
+    const currentPage = breadcrumb.querySelector("a:last-of-type").textContent;
+    dPrint(`Current breadcrumb page: ${currentPage}`);
+    return currentPage || '';
+}
+
+function promptForFavoriteText(currentPage) {
+    return prompt("Favorite label for current page:", currentPage);
+}
+
+const favorites = GM_getValue(favoritesKey) || {};
+const currentUrl = window.location;
+const isFavorite = currentUrl in favorites;
+
+
+dPrint(`Favorites: ${JSON.stringify(favorites)}`);
+dPrint(`Current URL: ${currentUrl}`);
+dPrint(`Is current page favorite: ${isFavorite}`);
+
+const toggleText = isFavorite ? 'Remove' : 'Add';
+const toggleFavoriteElement = `<a onclick="return false;" id="HFTBLiteToggle" style='float:right; margin:0px 2px;'><button style='padding:5px'>${toggleText}</button></a>`;
+const favoriteElements = createFavoriteElements(favorites).join('');
+
+// Append favorites row
+$("#logo").append(`<div style='text-align:left; margin:auto'>${favoriteElements} ${toggleFavoriteElement}</div>`);
+
+
+// Add/Remove button event listener
+document.getElementById("HFTBLiteToggle").addEventListener("click", () => {
+    if (isFavorite) {
+        delete favorites[currentUrl];
+    } else {
+        // Default favorite text to current page per breadcrumb - allow override
+        const favoriteText = promptForFavoriteText(getBreadcrumbText());
+        favorites[currentUrl] = favoriteText;
+    }
+    dPrint(`Updated favorites: ${JSON.stringify(favorites)}`);
+    GM_setValue(favoritesKey, favorites)
+    // Reload page so UI doesn't have to be updated
+    if (confirm("Reload page to update favorites?")) {
+        location.reload();
+    }
+});
