@@ -51,7 +51,8 @@ function promptForFavoriteText(currentPage) {
     return prompt("Favorite label for current page:", currentPage);
 }
 
-const favorites = JSON.parse(Cookies.get(favoritesKey)) || {};
+const cookie = Cookies.get(favoritesKey) || "{}";
+const favorites = JSON.parse(cookie) || {};
 console.log(typeof favorites)
 const currentUrl = window.location;
 const isFavorite = currentUrl in favorites;
