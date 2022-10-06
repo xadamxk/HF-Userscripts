@@ -2,7 +2,7 @@
 // @name        HackForumsToolBar Lite
 // @author      xadamxk
 // @namespace   https://github.com/xadamxk/HF-Userscripts
-// @version     0.0.1
+// @version     1.0.1
 // @description Custom HF Header
 // @match       ://hackforums.net/*
 // @copyright   2022+
@@ -10,6 +10,7 @@
 // @grant       GM_getValue
 // ==/UserScript==
 // ------------------------------ Changelog -----------------------------
+// v1.0.1: Switch from GM_getValue/GM_setValue to Cookies.get/Cookies.set
 // v1.0.0: Update and Download URLs
 // v0.0.1: Initial commit
 // ------------------------------ Dev Notes -----------------------------
@@ -20,6 +21,8 @@
 //     //
 //     window.alert("click!")
 // });
+//const favorites = GM_getValue(favoritesKey) || {};
+//GM_setValue(favoritesKey, favorites)
 // ------------------------------ SETTINGS ------------------------------
 const favoritesKey = "HFTBLite_Favorites";
 const debug = false;
@@ -47,7 +50,8 @@ function promptForFavoriteText(currentPage) {
     return prompt("Favorite label for current page:", currentPage);
 }
 
-const favorites = GM_getValue(favoritesKey) || {};
+const favorites = JSON.parse(Cookies.get(favoritesKey)) || {};
+console.log(typeof favorites)
 const currentUrl = window.location;
 const isFavorite = currentUrl in favorites;
 
@@ -74,7 +78,7 @@ document.getElementById("HFTBLiteToggle").addEventListener("click", () => {
         favorites[currentUrl] = favoriteText;
     }
     dPrint(`Updated favorites: ${JSON.stringify(favorites)}`);
-    GM_setValue(favoritesKey, favorites)
+    Cookies.set(favoritesKey, favorites);
     // Reload page so UI doesn't have to be updated
     if (confirm("Reload page to update favorites?")) {
         location.reload();
