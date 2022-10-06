@@ -2,14 +2,15 @@
 // @name        HackForumsToolBar Lite
 // @author      xadamxk
 // @namespace   https://github.com/xadamxk/HF-Userscripts
-// @version     1.0.1
+// @version     1.0.2
 // @description Custom HF Header
-// @match       ://hackforums.net/*
+// @match       https://hackforums.net/*
 // @copyright   2022+
 // @updateUrl   https://github.com/xadamxk/HF-Userscripts/raw/master/HF%20ToolBar%20Lite/HFTB-lite.user.js
 // @downloadUrl https://github.com/xadamxk/HF-Userscripts/raw/master/HF%20ToolBar%20Lite/HFTB-lite.user.js
 // ==/UserScript==
 // ------------------------------ Changelog -----------------------------
+// v1.0.2: Specify protocol for match
 // v1.0.1: Switch from GM_getValue/GM_setValue to Cookies.get/Cookies.set
 // v1.0.0: Update and Download URLs
 // v0.0.1: Initial commit
