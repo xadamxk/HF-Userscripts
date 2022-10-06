@@ -6,8 +6,8 @@
 // @description Custom HF Header
 // @match       ://hackforums.net/*
 // @copyright   2022+
-// @grant       GM_setValue
-// @grant       GM_getValue
+// @updateUrl   https://github.com/xadamxk/HF-Userscripts/raw/master/HF%20ToolBar%20Lite/HFTB-lite.user.js
+// @downloadUrl https://github.com/xadamxk/HF-Userscripts/raw/master/HF%20ToolBar%20Lite/HFTB-lite.user.js
 // ==/UserScript==
 // ------------------------------ Changelog -----------------------------
 // v1.0.1: Switch from GM_getValue/GM_setValue to Cookies.get/Cookies.set
@@ -25,7 +25,7 @@
 //GM_setValue(favoritesKey, favorites)
 // ------------------------------ SETTINGS ------------------------------
 const favoritesKey = "HFTBLite_Favorites";
-const debug = false;
+const debug = true;
 // ------------------------------ SCRIPT ------------------------------
 function dPrint(str) {
     return debug && console.log(str);
