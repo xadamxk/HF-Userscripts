@@ -2,10 +2,12 @@
 // @name        HackForumsToolBar Lite
 // @author      xadamxk
 // @namespace   https://github.com/xadamxk/HF-Userscripts
-// @version     0.0.1
+// @version     1.0.0
 // @description Custom HF Header
 // @match       ://hackforums.net/*
 // @copyright   2022+
+// @updateUrl   https://github.com/xadamxk/HF-Userscripts/raw/master/HF%20ToolBar%20Lite/HFTB-lite.user.js
+// @downloadUrl https://github.com/xadamxk/HF-Userscripts/raw/master/HF%20ToolBar%20Lite/HFTB-lite.user.js
 // @grant       GM_setValue
 // @grant       GM_getValue
 // ==/UserScript==
@@ -22,7 +24,7 @@
 // });
 // ------------------------------ SETTINGS ------------------------------
 const favoritesKey = "HFTBLite_Favorites";
-const debug = false;
+const debug = true;
 // ------------------------------ SCRIPT ------------------------------
 function dPrint(str) {
     return debug && console.log(str);
