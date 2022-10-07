@@ -2,32 +2,36 @@
 // @name        HackForumsToolBar Lite
 // @author      xadamxk
 // @namespace   https://github.com/xadamxk/HF-Userscripts
-// @version     1.0.3
+// @version     1.0.4
 // @description Custom HF Header
 // @match       https://hackforums.net/*
 // @copyright   2022+
-// @updateUrl   https://github.com/xadamxk/HF-Userscripts/raw/master/HF%20ToolBar%20Lite/HFTB-lite.user.js
-// @downloadUrl https://github.com/xadamxk/HF-Userscripts/raw/master/HF%20ToolBar%20Lite/HFTB-lite.user.js
+// @updateURL   https://github.com/xadamxk/HF-Userscripts/raw/master/HF%20ToolBar%20Lite/HFTB-lite.user.js
+// @downloadURL https://github.com/xadamxk/HF-Userscripts/raw/master/HF%20ToolBar%20Lite/HFTB-lite.user.js
 // ==/UserScript==
 // ------------------------------ Changelog -----------------------------
+// v1.0.4: Tweaking storage logic to make mobile Safari happy >:|
+// v1.0.3: Tweak favorites storage
 // v1.0.2: Specify protocol for match
 // v1.0.1: Switch from GM_getValue/GM_setValue to Cookies.get/Cookies.set
 // v1.0.0: Update and Download URLs
 // v0.0.1: Initial commit
 // ------------------------------ Dev Notes -----------------------------
-// Mobile friendly input
+// TODO: Add setting cog back - ability to reorder favorites
+// Other mobile features - HFX Mobile - PM Tracking Links, Award Goal Additions, Search Your Threads, Theme Customizer, HFX Badges, Annoyance fixers (limit number of awards, hide awards, etc), better mobile layout
+// Keep inputs mobile friendly - 1 input with recommended value already set
 //
 // const settingsElement = `<span id="HFTBLiteSettings" style='float:right; padding:5px;'><i class="fa fa-cog" /></span>`;
 // document.getElementById("HFTBLiteSettings").addEventListener("click", () => {
 //     //
 //     window.alert("click!")
 // });
-//const favorites = GM_getValue(favoritesKey) || {};
-//GM_setValue(favoritesKey, favorites)
 // ------------------------------ SETTINGS ------------------------------
 const favoritesKey = "HFTBLite_Favorites";
 const debug = true;
 // ------------------------------ SCRIPT ------------------------------
+const currentUrl = window.location;
+
 function dPrint(str) {
     return debug && console.log(str);
 }
@@ -36,7 +40,8 @@ function createFavoriteElements(favorites) {
     if (!favorites) return [];
     return Object.entries(favorites).map((entry, index) => {
         const [url, text] = entry;
-        return `<a href='${url}' style='margin:0px 2px'><button style='padding:5px; font-weight:600;'>${text}</button></a>`;
+        const isActive = currentUrl == url;
+        return `<a href='${url}' style='margin:0px 2px;'><button style='padding:5px; font-weight:600;${isActive ? 'background-color:#1d1d1d;' : ''}'>${text}</button></a>`;
     })
 }
 
@@ -51,10 +56,18 @@ function promptForFavoriteText(currentPage) {
     return prompt("Favorite label for current page:", currentPage);
 }
 
-const cookie = Cookies.get(favoritesKey) || "{}";
-const favorites = JSON.parse(cookie) || {};
-console.log(typeof favorites)
-const currentUrl = window.location;
+function storeFavorites(favorites) {
+    //Cookies.set(favoritesKey, favorites, { expires: 365, path: 'hackforums.net' });
+    localStorage.setItem(favoritesKey, JSON.stringify(favorites));
+}
+
+function retrieveFavorites() {
+    //return Cookies.get(favoritesKey);
+    return localStorage.getItem(favoritesKey);
+}
+
+const cookie = retrieveFavorites() || "{}"; // Initial state
+const favorites = JSON.parse(cookie) || {}; // If cookie becomes corrupt
 const isFavorite = currentUrl in favorites;
 
 
@@ -80,7 +93,7 @@ document.getElementById("HFTBLiteToggle").addEventListener("click", () => {
         favorites[currentUrl] = favoriteText;
     }
     dPrint(`Updated favorites: ${JSON.stringify(favorites)}`);
-    Cookies.set(favoritesKey, favorites);
+    storeFavorites(favorites);
     // Reload page so UI doesn't have to be updated
     if (confirm("Reload page to update favorites?")) {
         location.reload();
