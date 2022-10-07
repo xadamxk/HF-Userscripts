@@ -1,8 +1,8 @@
 // ==UserScript==
-// @name        HackForumsToolBar Lite
+// @name        HF Favorites Lite
 // @author      xadamxk
 // @namespace   https://github.com/xadamxk/HF-Userscripts
-// @version     1.0.4
+// @version     1.0.5
 // @description Custom HF Header
 // @match       https://hackforums.net/*
 // @copyright   2022+
@@ -10,6 +10,7 @@
 // @downloadURL https://github.com/xadamxk/HF-Userscripts/raw/master/HF%20ToolBar%20Lite/HFTB-lite.user.js
 // ==/UserScript==
 // ------------------------------ Changelog -----------------------------
+// v1.0.5: Fix storage of null favorite label
 // v1.0.4: Tweaking storage logic to make mobile Safari happy >:|
 // v1.0.3: Tweak favorites storage
 // v1.0.2: Specify protocol for match
@@ -18,19 +19,17 @@
 // v0.0.1: Initial commit
 // ------------------------------ Dev Notes -----------------------------
 // TODO: Add setting cog back - ability to reorder favorites
-// Other mobile features - HFX Mobile - PM Tracking Links, Award Goal Additions, Search Your Threads, Theme Customizer, HFX Badges, Annoyance fixers (limit number of awards, hide awards, etc), better mobile layout
-// Keep inputs mobile friendly - 1 input with recommended value already set
 //
 // const settingsElement = `<span id="HFTBLiteSettings" style='float:right; padding:5px;'><i class="fa fa-cog" /></span>`;
 // document.getElementById("HFTBLiteSettings").addEventListener("click", () => {
-//     //
-//     window.alert("click!")
+//     // Reorder settings
 // });
 // ------------------------------ SETTINGS ------------------------------
-const favoritesKey = "HFTBLite_Favorites";
-const debug = true;
+const favoritesKey = "HF_FAVORITES_LITE";
+const debug = false;
 // ------------------------------ SCRIPT ------------------------------
 const currentUrl = window.location;
+dPrint(`Current URL: ${currentUrl}`);
 
 function dPrint(str) {
     return debug && console.log(str);
@@ -68,11 +67,9 @@ function retrieveFavorites() {
 
 const cookie = retrieveFavorites() || "{}"; // Initial state
 const favorites = JSON.parse(cookie) || {}; // If cookie becomes corrupt
-const isFavorite = currentUrl in favorites;
-
-
 dPrint(`Favorites: ${JSON.stringify(favorites)}`);
-dPrint(`Current URL: ${currentUrl}`);
+
+const isFavorite = currentUrl in favorites;
 dPrint(`Is current page favorite: ${isFavorite}`);
 
 const toggleText = isFavorite ? 'Remove' : 'Add';
@@ -82,7 +79,6 @@ const favoriteElements = createFavoriteElements(favorites).join('');
 // Append favorites row
 $("#logo").append(`<div style='text-align:left; margin:auto'>${favoriteElements} ${toggleFavoriteElement}</div>`);
 
-
 // Add/Remove button event listener
 document.getElementById("HFTBLiteToggle").addEventListener("click", () => {
     if (isFavorite) {
@@ -90,6 +86,9 @@ document.getElementById("HFTBLiteToggle").addEventListener("click", () => {
     } else {
         // Default favorite text to current page per breadcrumb - allow override
         const favoriteText = promptForFavoriteText(getBreadcrumbText());
+        if (!favoriteText) {
+            return;
+        }
         favorites[currentUrl] = favoriteText;
     }
     dPrint(`Updated favorites: ${JSON.stringify(favorites)}`);
