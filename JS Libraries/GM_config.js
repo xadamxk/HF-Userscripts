@@ -1,29 +1,56 @@
 /*
-Copyright 2009-2013, GM_config Contributors
-All rights reserved.
-GM_config Contributors:
+Copyright 2009+, GM_config Contributors (https://github.com/sizzlemctwizzle/GM_config)
+
+GM_config Collaborators/Contributors:
     Mike Medley <medleymind@gmail.com>
     Joe Simmons
     Izzy Soft
     Marti Martz
+    Adam Thompson-Sharpe
+
 GM_config is distributed under the terms of the GNU Lesser General Public License.
+
     GM_config is free software: you can redistribute it and/or modify
     it under the terms of the GNU Lesser General Public License as published by
     the Free Software Foundation, either version 3 of the License, or
     (at your option) any later version.
+
     This program is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
     GNU Lesser General Public License for more details.
+
     You should have received a copy of the GNU Lesser General Public License
-    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+    along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
+
+// ==UserScript==
+// @exclude       *
+// @author        Mike Medley <medleymind@gmail.com> (https://github.com/sizzlemctwizzle/GM_config)
+// @icon          https://raw.githubusercontent.com/sizzlemctwizzle/GM_config/master/gm_config_icon_large.png
+
+// ==UserLibrary==
+// @name          GM_config
+// @description   A lightweight, reusable, cross-browser graphical settings framework for inclusion in user scripts.
+// @copyright     2009+, Mike Medley (https://github.com/sizzlemctwizzle)
+// @license       LGPL-3.0-or-later; https://raw.githubusercontent.com/sizzlemctwizzle/GM_config/master/LICENSE
+
+// @homepageURL   https://openuserjs.org/libs/sizzle/GM_config
+// @homepageURL   https://github.com/sizzlemctwizzle/GM_config
+// @supportURL    https://github.com/sizzlemctwizzle/GM_config/issues
+
+// ==/UserScript==
+
+// ==/UserLibrary==
+
 
 // The GM_config constructor
 function GM_configStruct() {
   // call init() if settings were passed to constructor
-  if (arguments.length)
+  if (arguments.length) {
     GM_configInit(this, arguments);
+    this.onInit();
+  }
 }
 
 // This is the initializer function
@@ -31,39 +58,39 @@ function GM_configInit(config, args) {
   // Initialize instance variables
   if (typeof config.fields == "undefined") {
     config.fields = {};
-    config.onInit = config.onInit || null;
-    config.onOpen = config.onOpen || function() {};
-    config.onSave = config.onSave || function() {};
-    config.onClose = config.onClose || function() {};
-    config.onReset = config.onReset || function() {};
+    config.onInit = config.onInit || function () { };
+    config.onOpen = config.onOpen || function () { };
+    config.onSave = config.onSave || function () { };
+    config.onClose = config.onClose || function () { };
+    config.onReset = config.onReset || function () { };
     config.isOpen = false;
     config.title = 'User Script Settings';
     config.css = {
-      basic: "#GM_config * { font-family: arial,tahoma,myriad pro,sans-serif; }"
-             + '\n' + "#GM_config { background: #FFF; }"
-             + '\n' + "#GM_config input[type='radio'] { margin-right: 8px; }"
-             + '\n' + "#GM_config .indent40 { margin-left: 40%; }"
-             + '\n' + "#GM_config .field_label { font-size: 12px; font-weight: bold; margin-right: 6px; }"
-             + '\n' + "#GM_config .block { display: block; }"
-             + '\n' + "#GM_config .saveclose_buttons { margin: 16px 10px 10px; padding: 2px 12px; }"
-             + '\n' + "#GM_config .reset, #GM_config .reset a,"
-                    + " #GM_config_buttons_holder { color: #000; text-align: right; }"
-             + '\n' + "#GM_config .config_header { font-size: 20pt; margin: 0; }"
-             + '\n' + "#GM_config .config_desc, #GM_config .section_desc, #GM_config .reset { font-size: 9pt; }"
-             + '\n' + "#GM_config .center { text-align: center; }"
-             + '\n' + "#GM_config .section_header_holder { margin-top: 8px; }"
-             + '\n' + "#GM_config .config_var { margin: 0 0 4px; }"
-             + '\n' + "#GM_config .section_header { background: #414141; border: 1px solid #000; color: #FFF;"
-                    + " font-size: 13pt; margin: 0; }"
-             + '\n' + "#GM_config .section_desc { background: #EFEFEF; border: 1px solid #CCC; color: #575757;"
-                    + " font-size: 9pt; margin: 0 0 6px; }"
-             + '\n',
+      basic: [
+        "#GM_config * { font-family: arial,tahoma,myriad pro,sans-serif; }",
+        "#GM_config { background: #FFF; }",
+        "#GM_config input[type='radio'] { margin-right: 8px; }",
+        "#GM_config .indent40 { margin-left: 40%; }",
+        "#GM_config .field_label { font-size: 12px; font-weight: bold; margin-right: 6px; }",
+        "#GM_config .radio_label { font-size: 12px; }",
+        "#GM_config .block { display: block; }",
+        "#GM_config .saveclose_buttons { margin: 16px 10px 10px; padding: 2px 12px; }",
+        "#GM_config .reset, #GM_config .reset a," +
+        " #GM_config_buttons_holder { color: #000; text-align: right; }",
+        "#GM_config .config_header { font-size: 20pt; margin: 0; }",
+        "#GM_config .config_desc, #GM_config .section_desc, #GM_config .reset { font-size: 9pt; }",
+        "#GM_config .center { text-align: center; }",
+        "#GM_config .section_header_holder { margin-top: 8px; }",
+        "#GM_config .config_var { margin: 0 0 4px; }",
+        "#GM_config .section_header { background: #414141; border: 1px solid #000; color: #FFF;",
+        " font-size: 13pt; margin: 0; }",
+        "#GM_config .section_desc { background: #EFEFEF; border: 1px solid #CCC; color: #575757;" +
+        " font-size: 9pt; margin: 0 0 6px; }"
+      ].join('\n') + '\n',
+      basicPrefix: "GM_config",
       stylish: ""
     };
   }
-
-  // Save the previous initialize callback
-  var oldInitCb = config.onInit;
 
   if (args.length == 1 &&
     typeof args[0].id == "string" &&
@@ -94,7 +121,7 @@ function GM_configInit(config, args) {
           }
           break;
         case 'function': // passing a bare function is set to open callback
-          settings.events = {onOpen: arg};
+          settings.events = { onOpen: arg };
           break;
         case 'string': // could be custom CSS or the title string
           if (/\w+\s*\{\s*\w+\s*:\s*\w+[\s|\S]*\}/.test(arg))
@@ -123,15 +150,16 @@ function GM_configInit(config, args) {
   // Set the event callbacks
   if (settings.events) {
     var events = settings.events;
-    for (e in events) 
+    for (var e in events)
       config["on" + e.charAt(0).toUpperCase() + e.slice(1)] = events[e];
   }
 
   // Create the fields
   if (settings.fields) {
     var stored = config.read(), // read the stored settings
-        fields = settings.fields,
-        customTypes = settings.types || {};
+      fields = settings.fields,
+      customTypes = settings.types || {},
+      configId = config.id;
 
     for (var id in fields) {
       var field = fields[id];
@@ -139,27 +167,30 @@ function GM_configInit(config, args) {
       // for each field definition create a field object
       if (field)
         config.fields[id] = new GM_configField(field, stored[id], id,
-          customTypes[field.type]);
+          customTypes[field.type], configId);
       else if (config.fields[id]) delete config.fields[id];
     }
   }
 
   // If the id has changed we must modify the default style
-  if (config.id != 'GM_config')
-    config.css.basic = config.css.basic.replace(/#GM_config/gm, '#' + config.id);
-
-  // Call the previous init() callback function if set
-  (oldInitCb || config.onInit || (function() {}))();
+  if (config.id != config.css.basicPrefix) {
+    config.css.basic = config.css.basic.replace(
+      new RegExp('#' + config.css.basicPrefix, 'gm'), '#' + config.id);
+    config.css.basicPrefix = config.id;
+  }
 }
 
 GM_configStruct.prototype = {
   // Support old method of initalizing
-  init: function() { GM_configInit(this, arguments); },
+  init: function () {
+    GM_configInit(this, arguments);
+    this.onInit();
+  },
 
   // call GM_config.open() from your script to open the menu
   open: function () {
     // Die if the menu is already open on this page
-    // You can have multiple instances but they can't be open at the same time
+    // You can have multiple instances but you can't open the same instance twice
     var match = document.getElementById(this.id);
     if (match && (match.tagName == "IFRAME" || match.childNodes.length > 0)) return;
 
@@ -167,72 +198,71 @@ GM_configStruct.prototype = {
     var config = this;
 
     // Function to build the mighty config window :)
-    function buildConfigWin (body, head) {
+    function buildConfigWin(body, head) {
       var create = config.create,
-          fields = config.fields,
-          configId = config.id,
-          bodyWrapper = create('div', {id: configId + '_wrapper'});
+        fields = config.fields,
+        configId = config.id,
+        bodyWrapper = create('div', { id: configId + '_wrapper' });
 
       // Append the style which is our default style plus the user style
       head.appendChild(
         create('style', {
-        type: 'text/css',
-        textContent: config.css.basic + config.css.stylish
-      }));
+          type: 'text/css',
+          textContent: config.css.basic + config.css.stylish
+        }));
 
       // Add header and title
       bodyWrapper.appendChild(create('div', {
         id: configId + '_header',
-        className: 'config_header block center',
-        innerHTML: config.title
-      }));
+        className: 'config_header block center'
+      }, config.title));
 
       // Append elements
       var section = bodyWrapper,
-          secNum = 0; // Section count
+        secNum = 0; // Section count
 
       // loop through fields
       for (var id in fields) {
-        var field = fields[id].settings;
+        var field = fields[id],
+          settings = field.settings;
 
-        if (field.section) { // the start of a new section
+        if (settings.section) { // the start of a new section
           section = bodyWrapper.appendChild(create('div', {
-              className: 'section_header_holder',
-              id: configId + '_section_' + secNum
-            }));
+            className: 'section_header_holder',
+            id: configId + '_section_' + secNum
+          }));
 
-          if (typeof field.section == "string") field.section = [field.section];
+          if (Object.prototype.toString.call(settings.section) !== '[object Array]')
+            settings.section = [settings.section];
 
-          if (typeof field.section[0] == "string")
+          if (settings.section[0])
             section.appendChild(create('div', {
               className: 'section_header center',
-              id: configId + '_section_header_' + secNum,
-              innerHTML: field.section[0]
-            }));
+              id: configId + '_section_header_' + secNum
+            }, settings.section[0]));
 
-          if (typeof field.section[1] == "string")
+          if (settings.section[1])
             section.appendChild(create('p', {
               className: 'section_desc center',
-              id: configId + '_section_desc_' + secNum,
-              innerHTML: field.section[1]
-            }));
+              id: configId + '_section_desc_' + secNum
+            }, settings.section[1]));
           ++secNum;
         }
 
         // Create field elements and append to current section
-        section.appendChild(fields[id].toNode(configId));
+        section.appendChild((field.wrapper = field.toNode()));
       }
 
       // Add save and close buttons
       bodyWrapper.appendChild(create('div',
-        {id: configId + '_buttons_holder'},
+        { id: configId + '_buttons_holder' },
 
         create('button', {
           id: configId + '_saveBtn',
           textContent: 'Save',
           title: 'Save settings',
           className: 'saveclose_buttons',
-          onclick: function () { config.save();config.close(); }
+          onclick: function () { config.save() }
         }),
 
         create('button', {
@@ -240,22 +270,22 @@ GM_configStruct.prototype = {
           textContent: 'Close',
           title: 'Close window',
           className: 'saveclose_buttons',
-          onclick: function () {config.close();}
+          onclick: function () { config.close() }
         }),
 
         create('div',
-          {className: 'reset_holder block'},
+          { className: 'reset_holder block' },
 
           // Reset link
           create('a', {
             id: configId + '_resetLink',
-            textContent: 'Reset all Settings',
+            textContent: 'Reset to defaults',
             href: '#',
-            title: 'Restore settings to default',
+            title: 'Reset fields to default values',
             className: 'reset',
-            onclick: function(e) {e.preventDefault();config.reset();}
+            onclick: function (e) { e.preventDefault(); config.reset() }
           })
-      )));
+        )));
 
       body.appendChild(bodyWrapper); // Paint everything to window at once
       config.center(); // Show and center iframe
@@ -263,12 +293,12 @@ GM_configStruct.prototype = {
 
       // Call the open() callback function
       config.onOpen(config.frame.contentDocument || config.frame.ownerDocument,
-                    config.frame.contentWindow || window,
-                    config.frame);
+        config.frame.contentWindow || window,
+        config.frame);
 
       // Close frame on window close
       window.addEventListener('beforeunload', function () {
-          config.close();
+        config.close();
       }, false);
 
       // Now that everything is loaded, make it visible
@@ -276,15 +306,15 @@ GM_configStruct.prototype = {
       config.isOpen = true;
     }
 
-    // Either use the element passed to init() or create an iframe
+    // Change this in the onOpen callback using this.frame.setAttribute('style', '')
     var defaultStyle = 'bottom: auto; border: 1px solid #000; display: none; height: 75%;'
-                       + ' left: 0; margin: 0; max-height: 95%; max-width: 95%; opacity: 0;'
-                       + ' overflow: auto; padding: 0; position: fixed; right: auto; top: 0;'
-                       + ' width: 75%; z-index: 999;';
+      + ' left: 0; margin: 0; max-height: 95%; max-width: 95%; opacity: 0;'
+      + ' overflow: auto; padding: 0; position: fixed; right: auto; top: 0;'
+      + ' width: 75%; z-index: 9999;';
 
-
+    // Either use the element passed to init() or create an iframe
     if (this.frame) {
-      this.frame.id = this.id;
+      this.frame.id = this.id; // Allows for prefixing styles with the config id
       this.frame.setAttribute('style', defaultStyle);
       buildConfigWin(this.frame, this.frame.ownerDocument.getElementsByTagName('head')[0]);
     } else {
@@ -294,28 +324,31 @@ GM_configStruct.prototype = {
         style: defaultStyle
       })));
 
-      this.frame.src = 'about:blank'; // In WebKit src can't be set until it is added to the page
+      // In WebKit src can't be set until it is added to the page
+      this.frame.src = 'about:blank';
       // we wait for the iframe to load before we can modify it
-      this.frame.addEventListener('load', function(e) {
-          var frame = config.frame;
-          var body = frame.contentDocument.getElementsByTagName('body')[0];
-          body.id = config.id; // Allows for prefixing styles with "#GM_config"
-          buildConfigWin(body, frame.contentDocument.getElementsByTagName('head')[0]);
+      var that = this;
+      this.frame.addEventListener('load', function (e) {
+        var frame = config.frame;
+        if (frame.src && !frame.contentDocument) {
+          // Some agents need this as an empty string for newer context implementations
+          frame.src = "";
+        } else if (!frame.contentDocument) {
+          that.log("GM_config failed to initialize default settings dialog node!");
+        }
+        var body = frame.contentDocument.getElementsByTagName('body')[0];
+        body.id = config.id; // Allows for prefixing styles with the config id
+        buildConfigWin(body, frame.contentDocument.getElementsByTagName('head')[0]);
       }, false);
     }
   },
 
   save: function () {
-    var fields = this.fields;
-    for (var id in fields)
-      if (fields[id].toValue() === null) // invalid value encountered
-        return;
-
     var forgotten = this.write();
     this.onSave(forgotten); // Call the save() callback function
   },
 
-  close: function() {
+  close: function () {
     // If frame is an iframe then remove it
     if (this.frame.contentDocument) {
       this.remove(this.frame);
@@ -327,8 +360,11 @@ GM_configStruct.prototype = {
 
     // Null out all the fields so we don't leak memory
     var fields = this.fields;
-    for (var id in fields)
-      fields[id].node = null;
+    for (var id in fields) {
+      var field = fields[id];
+      field.wrapper = null;
+      field.node = null;
+    }
 
     this.onClose(); //  Call the close() callback function
     this.isOpen = false;
@@ -336,30 +372,46 @@ GM_configStruct.prototype = {
 
   set: function (name, val) {
     this.fields[name].value = val;
+
+    if (this.fields[name].node) {
+      this.fields[name].reload();
+    }
   },
 
-  get: function (name) {
-    return this.fields[name].value;
+  get: function (name, getLive) {
+    var field = this.fields[name],
+      fieldVal = null;
+
+    if (getLive && field.node) {
+      fieldVal = field.toValue();
+    }
+
+    return fieldVal != null ? fieldVal : field.value;
   },
 
   write: function (store, obj) {
     if (!obj) {
       var values = {},
-          forgotten = {},
-          fields = this.fields;
+        forgotten = {},
+        fields = this.fields;
 
       for (var id in fields) {
         var field = fields[id];
+        var value = field.toValue();
+
         if (field.save) {
-          if (field.settings.type != "button")
+          if (value != null) {
+            values[id] = value;
+            field.value = value;
+          } else
             values[id] = field.value;
         } else
-          forgotten[id] = field.value;
+          forgotten[id] = value;
       }
     }
     try {
       this.setValue(store || this.id, this.stringify(obj || values));
-    } catch(e) {
+    } catch (e) {
       this.log("GM_config failed to save settings!");
     }
 
@@ -369,7 +421,7 @@ GM_configStruct.prototype = {
   read: function (store) {
     try {
       var rval = this.parser(this.getValue(store || this.id, '{}'));
-    } catch(e) {
+    } catch (e) {
       this.log("GM_config failed to read saved settings!");
       var rval = {};
     }
@@ -386,24 +438,27 @@ GM_configStruct.prototype = {
   },
 
   create: function () {
-    switch(arguments.length) {
+    switch (arguments.length) {
       case 1:
         var A = document.createTextNode(arguments[0]);
         break;
       default:
         var A = document.createElement(arguments[0]),
-            B = arguments[1];
+          B = arguments[1];
         for (var b in B) {
           if (b.indexOf("on") == 0)
             A.addEventListener(b.substring(2), B[b], false);
           else if (",style,accesskey,id,name,src,href,which,for".indexOf("," +
-                   b.toLowerCase()) != -1)
+            b.toLowerCase()) != -1)
             A.setAttribute(b, B[b]);
           else
             A[b] = B[b];
         }
-        for (var i = 2, len = arguments.length; i < len; ++i)
-          A.appendChild(arguments[i]);
+        if (typeof arguments[2] == "string")
+          A.innerHTML = arguments[2];
+        else
+          for (var i = 2, len = arguments.length; i < len; ++i)
+            A.appendChild(arguments[i]);
     }
     return A;
   },
@@ -412,7 +467,7 @@ GM_configStruct.prototype = {
     var node = this.frame;
     if (!node) return;
     var style = node.style,
-        beforeOpacity = style.opacity;
+      beforeOpacity = style.opacity;
     if (style.display == 'none') style.opacity = '0';
     style.display = '';
     style.top = Math.floor((window.innerHeight / 2) - (node.offsetHeight / 2)) + 'px';
@@ -426,17 +481,17 @@ GM_configStruct.prototype = {
 };
 
 // Define a bunch of API stuff
-(function() {
+(function () {
   var isGM = typeof GM_getValue != 'undefined' &&
-             typeof GM_getValue('a', 'b') != 'undefined',
-      setValue, getValue, stringify, parser;
+    typeof GM_getValue('a', 'b') != 'undefined',
+    setValue, getValue, stringify, parser;
 
   // Define value storing and reading API
   if (!isGM) {
     setValue = function (name, value) {
       return localStorage.setItem(name, value);
     };
-    getValue = function(name, def){
+    getValue = function (name, def) {
       var s = localStorage.getItem(name);
       return s == null ? def : s
     };
@@ -448,13 +503,13 @@ GM_configStruct.prototype = {
     setValue = GM_setValue;
     getValue = GM_getValue;
     stringify = typeof JSON == "undefined" ?
-      function(obj) {
+      function (obj) {
         return obj.toSource();
-    } : JSON.stringify;
+      } : JSON.stringify;
     parser = typeof JSON == "undefined" ?
-      function(jsonData) {
+      function (jsonData) {
         return (new Function('return ' + jsonData + ';'))();
-    } : JSON.parse;
+      } : JSON.parse;
   }
 
   GM_configStruct.prototype.isGM = isGM;
@@ -462,7 +517,11 @@ GM_configStruct.prototype = {
   GM_configStruct.prototype.getValue = getValue;
   GM_configStruct.prototype.stringify = stringify;
   GM_configStruct.prototype.parser = parser;
-  GM_configStruct.prototype.log = isGM ? GM_log : (window.opera ? opera.postError : console.log);
+  GM_configStruct.prototype.log = window.console ?
+    console.log : (isGM && typeof GM_log != 'undefined' ?
+      GM_log : (window.opera ?
+        opera.postError : function () { /* no logging */ }
+      ));
 })();
 
 function GM_configDefaultValue(type, options) {
@@ -489,29 +548,30 @@ function GM_configDefaultValue(type, options) {
   return value;
 }
 
-function GM_configField(settings, stored, id, customType) {
+function GM_configField(settings, stored, id, customType, configId) {
   // Store the field's settings
   this.settings = settings;
   this.id = id;
+  this.configId = configId;
   this.node = null;
+  this.wrapper = null;
   this.save = typeof settings.save == "undefined" ? true : settings.save;
 
-  // if a setting was passed to init but wasn't stored then
-  //   if a default value wasn't passed through init() then
-  //     if the type is custom use its default
-  //       else use default value for type
-  //   else use the default value passed through init()
-  // else use the stored value
-  var value = typeof stored == "undefined" ?
-                typeof settings['default'] == "undefined" ?
-                  customType ? 
-                    customType['default']
-                    : GM_configDefaultValue(settings.type, settings.options)
-                : settings['default']
-              : stored;
+  // Buttons are static and don't have a stored value
+  if (settings.type == "button") this.save = false;
+
+  // if a default value wasn't passed through init() then
+  //   if the type is custom use its default value
+  //   else use default value for type
+  // else use the default value passed through init()
+  this['default'] = typeof settings['default'] == "undefined" ?
+    customType ?
+      customType['default']
+      : GM_configDefaultValue(settings.type, settings.options)
+    : settings['default'];
 
   // Store the field's value
-  this.value = value;
+  this.value = typeof stored == "undefined" ? this['default'] : stored;
 
   // Setup methods for a custom type
   if (customType) {
@@ -524,34 +584,54 @@ function GM_configField(settings, stored, id, customType) {
 GM_configField.prototype = {
   create: GM_configStruct.prototype.create,
 
-  toNode: function(configId) {
+  toNode: function () {
     var field = this.settings,
-        value = this.value,
-        options = field.options,
-        id = this.id,
-        create = this.create;
+      value = this.value,
+      options = field.options,
+      type = field.type,
+      id = this.id,
+      configId = this.configId,
+      labelPos = field.labelPos,
+      create = this.create;
 
-    var retNode = create('div', { className: 'config_var',
-          id: configId + '_' + this.id + '_var',
-          title: field.title || '' }),
-        firstProp;
+    function addLabel(pos, labelEl, parentNode, beforeEl) {
+      if (!beforeEl) beforeEl = parentNode.firstChild;
+      switch (pos) {
+        case 'right': case 'below':
+          if (pos == 'below')
+            parentNode.appendChild(create('br', {}));
+          parentNode.appendChild(labelEl);
+          break;
+        default:
+          if (pos == 'above')
+            parentNode.insertBefore(create('br', {}), beforeEl);
+          parentNode.insertBefore(labelEl, beforeEl);
+      }
+    }
+
+    var retNode = create('div', {
+      className: 'config_var',
+      id: configId + '_' + id + '_var',
+      title: field.title || ''
+    }),
+      firstProp;
 
     // Retrieve the first prop
     for (var i in field) { firstProp = i; break; }
 
-    var label = typeof field.label == "string" && field.type != "button" ? 
+    var label = field.label && type != "button" ?
       create('label', {
-        innerHTML: field.label,
-        id: configId + '_' + this.id + '_field_label',
-        for: configId + '_field_' + this.id,
+        id: configId + '_' + id + '_field_label',
+        for: configId + '_field_' + id,
         className: 'field_label'
-      }) : null;
+      }, field.label) : null;
 
-    switch (field.type) {
+    switch (type) {
       case 'textarea':
         retNode.appendChild((this.node = create('textarea', {
-          id: configId + '_field_' + this.id,
           innerHTML: value,
+          id: configId + '_field_' + id,
+          className: 'block',
           cols: (field.cols ? field.cols : 20),
           rows: (field.rows ? field.rows : 2)
         })));
@@ -563,25 +643,22 @@ GM_configField.prototype = {
         this.node = wrap;
 
         for (var i = 0, len = options.length; i < len; ++i) {
-          var labelI = create('label', {});
+          var radLabel = create('label', {
+            className: 'radio_label'
+          }, options[i]);
 
-          var radLabel = labelI.appendChild(create('span', {
-            innerHTML: options[i]
-          }));
-
-          var rad = labelI.appendChild(create('input', {
+          var rad = wrap.appendChild(create('input', {
             value: options[i],
             type: 'radio',
             name: id,
-            checked: options[i] == value ? true : false
+            checked: options[i] == value
           }));
 
-          if (firstProp == "options")
-            labelI.insertBefore(radLabel, rad);
-          else
-            labelI.appendChild(radLabel);
+          var radLabelPos = labelPos &&
+            (labelPos == 'left' || labelPos == 'right') ?
+            labelPos : firstProp == 'options' ? 'left' : 'right';
 
-          wrap.appendChild(labelI);
+          addLabel(radLabelPos, radLabel, wrap, rad);
         }
 
         retNode.appendChild(wrap);
@@ -592,78 +669,64 @@ GM_configField.prototype = {
         });
         this.node = wrap;
 
-        for (var i in options)
+        for (var i = 0, len = options.length; i < len; ++i) {
+          var option = options[i];
           wrap.appendChild(create('option', {
-            innerHTML: options[i],
-            value: i,
-            selected: i == value
-          }));
+            value: option,
+            selected: option == value
+          }, option));
+        }
 
         retNode.appendChild(wrap);
         break;
-      case 'checkbox':
-        retNode.appendChild((this.node = create('input', {
+      default: // fields using input elements
+        var props = {
           id: configId + '_field_' + id,
-          type: 'checkbox',
-          value: value,
-          checked: value
-        })));
-        break;
-      case 'button':
-        var btn = create('input', {
-          id: configId + '_field_' + id,
-          type: 'button',
-          value: field.label,
-          size: (field.size ? field.size : 25),
-          title: field.title || ''
-        });
-        this.node = btn;
+          type: type,
+          value: type == 'button' ? field.label : value
+        };
 
-        if (field.script || field.click) {
-          btn.addEventListener('click', function () {
-            field[field.script ? 'script' : 'click']();
-          }, false);
+        switch (type) {
+          case 'checkbox':
+            props.checked = value;
+            break;
+          case 'button':
+            props.size = field.size ? field.size : 25;
+            if (field.script) field.click = field.script;
+            if (field.click) props.onclick = field.click;
+            break;
+          case 'hidden':
+            break;
+          default:
+            // type = text, int, or float
+            props.type = 'text';
+            props.size = field.size ? field.size : 25;
         }
 
-        retNode.appendChild(btn);
-        break;
-      case 'hidden':
-        retNode.appendChild((this.node = create('input', {
-          id: configId + '_field_' + id,
-          type: 'hidden',
-          value: value
-        })));
-        break;
-      default:
-        // type = text, int, or float
-        retNode.appendChild((this.node = create('input', {
-          id: configId + '_field_' + id,
-          type: 'text',
-          value: value,
-          size: (field.size ? field.size : 25)
-        })));
+        retNode.appendChild((this.node = create('input', props)));
     }
 
-    // If the label is passed first, insert it before the field
-    // else insert it after
     if (label) {
-      if (firstProp == "label" || field.type == "radio")
-        retNode.insertBefore(label, retNode.firstChild);
-      else
-        retNode.appendChild(label);
+      // If the label is passed first, insert it before the field
+      // else insert it after
+      if (!labelPos)
+        labelPos = firstProp == "label" || type == "radio" ?
+          "left" : "right";
+
+      addLabel(labelPos, label, retNode);
     }
 
     return retNode;
   },
 
-  toValue: function() {
+  toValue: function () {
     var node = this.node,
-        field = this.settings,
-        type = field.type,
-        unsigned = false,
-        rval;
+      field = this.settings,
+      type = field.type,
+      unsigned = false,
+      rval = null;
 
-    if (!node) return null;
+    if (!node) return rval;
 
     if (type.indexOf('unsigned ') == 0) {
       type = type.substring(9);
@@ -672,87 +735,90 @@ GM_configField.prototype = {
 
     switch (type) {
       case 'checkbox':
-        this.value = node.checked;
+        rval = node.checked;
         break;
       case 'select':
-        this.value = node[node.selectedIndex].value;
+        rval = node[node.selectedIndex].value;
         break;
       case 'radio':
         var radios = node.getElementsByTagName('input');
         for (var i = 0, len = radios.length; i < len; ++i)
           if (radios[i].checked)
-            this.value = radios[i].value;
+            rval = radios[i].value;
         break;
       case 'button':
         break;
       case 'int': case 'integer':
+      case 'float': case 'number':
         var num = Number(node.value);
         var warn = 'Field labeled "' + field.label + '" expects a' +
           (unsigned ? ' positive ' : 'n ') + 'integer value';
-        if (isNaN(num) || Math.ceil(num) != Math.floor(num) ||
-            (unsigned && num < 0)) {
+
+        if (isNaN(num) || (type.substr(0, 3) == 'int' &&
+          Math.ceil(num) != Math.floor(num)) ||
+          (unsigned && num < 0)) {
           alert(warn + '.');
           return null;
         }
+
         if (!this._checkNumberRange(num, warn))
           return null;
-        this.value = num;
-        break;
-      case 'float': case 'number':
-        var num = Number(node.value);
-        var warn = 'Field labeled "' + field.label + '" expects a ' +
-          (unsigned ? 'positive ' : '') + 'number value';
-        if (isNaN(num) || (unsigned && num < 0)) {
-          alert(warn + '.');
-          return null;
-        }
-        if (!this._checkNumberRange(num, warn))
-          return null;
-        this.value = num;
+        rval = num;
         break;
       default:
-        this.value = node.value;
+        rval = node.value;
         break;
     }
 
-    return this.value; // value read successfully
+    return rval; // value read successfully
   },
 
-  reset: function() {
+  reset: function () {
     var node = this.node,
-        field = this.settings,
-        noDefault = typeof field['default'] == "undefined",
-        type = field.type;
+      field = this.settings,
+      type = field.type;
 
     if (!node) return;
 
     switch (type) {
       case 'checkbox':
-        node.checked = noDefault ? GM_configDefaultValue(type) : field['default'];
+        node.checked = this['default'];
         break;
       case 'select':
-        if (field['default']) {
-          for (var i = 0, len = node.options.length; i < len; ++i)
-            if (node.options[i].textContent == field['default'])
-              node.selectedIndex = i;
-        } else
-          node.selectedIndex = 0;
+        for (var i = 0, len = node.options.length; i < len; ++i)
+          if (node.options[i].textContent == this['default'])
+            node.selectedIndex = i;
         break;
       case 'radio':
         var radios = node.getElementsByTagName('input');
         for (var i = 0, len = radios.length; i < len; ++i)
-          if (radios[i].value == field['default'])
+          if (radios[i].value == this['default'])
             radios[i].checked = true;
         break;
-      case 'button' :
+      case 'button':
         break;
       default:
-        node.value = noDefault ? GM_configDefaultValue(type) : field['default'];
+        node.value = this['default'];
         break;
-      }
+    }
   },
 
-  _checkNumberRange: function(num, warn) {
+  remove: function (el) {
+    GM_configStruct.prototype.remove(el || this.wrapper);
+    this.wrapper = null;
+    this.node = null;
+  },
+
+  reload: function () {
+    var wrapper = this.wrapper;
+    if (wrapper) {
+      var fieldParent = wrapper.parentNode;
+      fieldParent.insertBefore((this.wrapper = this.toNode()), wrapper);
+      this.remove(wrapper);
+    }
+  },
+
+  _checkNumberRange: function (num, warn) {
     var field = this.settings;
     if (typeof field.min == "number" && num < field.min) {
       alert(warn + ' greater than or equal to ' + field.min + '.');
