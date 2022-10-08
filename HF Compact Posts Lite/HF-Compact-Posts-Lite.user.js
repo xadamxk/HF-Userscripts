@@ -2,7 +2,7 @@
 // @name        HF Compact Posts Lite
 // @author      xadamxk
 // @namespace   https://github.com/xadamxk/HF-Userscripts
-// @version     1.0.0
+// @version     1.0.1
 // @description Mobile Friendly Author Format
 // @match       https://hackforums.net/*
 // @copyright   2022+
@@ -10,6 +10,7 @@
 // @downloadURL https://github.com/xadamxk/HF-Userscripts/raw/master/HF%20Compact%20Posts%20Lite/HF-Compact-Posts-Lite.user.js
 // ==/UserScript==
 // ------------------------------ Changelog -----------------------------
+// v1.0.1: Update layout to use table for improved layout
 // v1.0.0: Update and Download URLs
 // v0.0.1: Initial commit
 // ------------------------------ Dev Notes -----------------------------
@@ -20,19 +21,19 @@ const widthThreshold = 530; // Minimum screen width to trigger script
 // ------------------------------ SCRIPT ------------------------------
 if (screen.width > widthThreshold) return;
 
-const posts = document.getElementsByClassName("post");
+const posts = document.getElementsByClassName('post');
 for (const post of posts) {
-    const postAuthor = post.querySelector("div.post_wrapper > div.post_author");
-    const opIcon = postAuthor.querySelector('span[data-tooltip="Original Poster"]');
-    const postAuthorAvatar = postAuthor.querySelector("div.author_avatar"); // All author info
-    const postAuthorInformation = postAuthor.querySelector("div.author_information"); // Username, usertitle, stars, userbar, awards
-    const postAuthorAwards = postAuthor.querySelector("div.post_myawards"); // Awards
+    const postAuthor = post.querySelector('div.post_wrapper > div.post_author');
+    const opIcon = postAuthor.querySelector('span[data-tooltip="Original Poster"]'); // OP feather icon (only present on post #1)
+    const postAuthorAvatar = postAuthor.querySelector('div.author_avatar'); // All author info
+    const postAuthorInformation = postAuthor.querySelector('div.author_information'); // Username, usertitle, stars, userbar, awards
+    const postAuthorAwards = postAuthor.querySelector('div.post_myawards'); // Awards
     postAuthorAwards.style.width = '100%'
-    postAuthorAwards && postAuthorInformation.removeChild(postAuthorAwards);
-    const postAuthorStatistics = postAuthor.querySelector("div.author_statistics"); // Stats table
-    postAuthorStatistics.style["border-bottom-style"] = 'none';
-    postAuthorStatistics.style.margin = '0px';
-    postAuthorStatistics.style.padding = '0px';
+    postAuthorAwards && postAuthorInformation.removeChild(postAuthorAwards); // Remove awards from author information
+    const postAuthorStatistics = postAuthor.querySelector('div.author_statistics'); // Stats table
+    postAuthorStatistics.style['border-bottom-style'] = 'none'; // Remove default border
+    postAuthorStatistics.style.margin = '0px'; // Reset default margin
+    postAuthorStatistics.style.padding = '0px'; // Reset default padding
 
     // Remove OP Feather if present
     opIcon && postAuthor.removeChild(opIcon)
@@ -45,26 +46,37 @@ for (const post of posts) {
 
     // Append elements back
     // Left
-    const topLeft = document.createElement('div');
-    topLeft.appendChild(postAuthorAvatar)
-    const bottomLeft = document.createElement('div');
-    bottomLeft.appendChild(postAuthorInformation)
-    const left = document.createElement('div');
-    left.append(topLeft, bottomLeft);
+    const avatarContainer = document.createElement('div');
+    avatarContainer.appendChild(postAuthorAvatar)
+    const authorInfoContainer = document.createElement('div');
+    authorInfoContainer.appendChild(postAuthorInformation)
+    const leftColumn = document.createElement('td');
+    leftColumn.append(avatarContainer, authorInfoContainer);
     // Right
-    const right = document.createElement('div');
-    right.appendChild(postAuthorStatistics);
-    left.style.width = '50%';
-    left.style.display = 'inline-block';
-    right.style.width = '50%';
-    right.style.display = 'inline-block';
-    right.style.position = 'absolute';
-    right.style.top = '0px';
-    // Row
-    const row1Wrapper = document.createElement('div');
-    row1Wrapper.append(left, right)
-    row1Wrapper.style['border-bottom'] = '1px dashed #232323';
+    const rightColumn = document.createElement('td');
+    rightColumn.appendChild(postAuthorStatistics);
+
+    // Rows
+    const row1 = document.createElement('tr');
+    row1.style.width = "100%"
+    row1.append(leftColumn, rightColumn);
+
+    const row2 = document.createElement('tr');
+    row2.style.width = "100%"
+
+    const awardColumn = document.createElement('td');
+    awardColumn.setAttribute('colspan', '2')
+    awardColumn.append(postAuthorAwards);
+    row2.append(awardColumn)
+
+    const tbody = document.createElement('tbody');
+    tbody.append(row1);
+    tbody.append(row2);
+
+    const table = document.createElement('table');
+    table.style.display = 'table';
+    table.style.width = '100%';
+    table.append(tbody);
     postAuthorAwards.style['border-bottom'] = '1px dashed #232323';
-    postAuthor.append(row1Wrapper)
-    postAuthor.append(postAuthorAwards)
+    postAuthor.append(table)
 }
