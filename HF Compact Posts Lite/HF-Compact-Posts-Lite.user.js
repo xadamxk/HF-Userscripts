@@ -2,18 +2,18 @@
 // @name        HF Compact Posts Lite
 // @author      xadamxk
 // @namespace   https://github.com/xadamxk/HF-Userscripts
-// @version     0.0.1
+// @version     1.0.0
 // @description Mobile Friendly Author Format
 // @match       https://hackforums.net/*
 // @copyright   2022+
-// @updateURL   
-// @downloadURL 
+// @updateURL   https://github.com/xadamxk/HF-Userscripts/raw/master/HF%20Compact%20Posts%20Lite/HF-Compact-Posts-Lite.user.js
+// @downloadURL https://github.com/xadamxk/HF-Userscripts/raw/master/HF%20Compact%20Posts%20Lite/HF-Compact-Posts-Lite.user.js
 // ==/UserScript==
 // ------------------------------ Changelog -----------------------------
 // v1.0.0: Update and Download URLs
 // v0.0.1: Initial commit
 // ------------------------------ Dev Notes -----------------------------
-//
+// Mobile layouts are hard
 // ------------------------------ SETTINGS ------------------------------
 const debug = false;
 const widthThreshold = 530; // Minimum screen width to trigger script
@@ -31,6 +31,8 @@ for (const post of posts) {
     postAuthorAwards && postAuthorInformation.removeChild(postAuthorAwards);
     const postAuthorStatistics = postAuthor.querySelector("div.author_statistics"); // Stats table
     postAuthorStatistics.style["border-bottom-style"] = 'none';
+    postAuthorStatistics.style.margin = '0px';
+    postAuthorStatistics.style.padding = '0px';
 
     // Remove OP Feather if present
     opIcon && postAuthor.removeChild(opIcon)
