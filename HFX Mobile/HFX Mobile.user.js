@@ -2,15 +2,17 @@
 // @name        HFX Mobile
 // @author      xadamxk
 // @namespace   https://github.com/xadamxk/HFX-Mobile
-// @require     https://raw.githubusercontent.com/xadamxk/HF-Userscripts/master/JS%20Libraries/GM_config.js
-// @version     0.0.1
+// @require     https://raw.githubusercontent.com/xadamxk/HF-Userscripts/f0ef16fb4952368af9735aa7371ce8654558ed73/JS%20Libraries/GM_config.js
+// @version     0.0.2
 // @description Enhance your mobile HF Experience!
 // @match       https://hackforums.net/*
 // @copyright   2022+
 // @updateURL   https://github.com/xadamxk/HF-Userscripts/blob/master/HFX%20Mobile/HFX%20Mobile.user.js
 // @downloadURL https://github.com/xadamxk/HF-Userscripts/blob/master/HFX%20Mobile/HFX%20Mobile.user.js
+// @grant       GM_info
 // ------------------------------ Changelog -----------------------------
 // v1.0.0: Update and Download URLs
+// v0.0.2: Experimenting with settings library
 // v0.0.1: Initial commit
 // ==/UserScript==
 // ------------------------------ Dev Notes -----------------------------
