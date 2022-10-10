@@ -15,6 +15,7 @@
 // @grant       GM_info
 // ------------------------------ Changelog -----------------------------
 // v1.0.0: Update and Download URLs
+// v0.0.3: Add SearchYourThreads feature
 // v0.0.2: Experimenting with settings library
 // v0.0.1: Initial commit
 // ==/UserScript==
@@ -23,16 +24,14 @@
 // // @require     https://github.com/xadamxk/HF-Userscripts/raw/master/JS%20Libraries/GM_config.js
 // ------------------------------ SETTINGS ------------------------------
 const settingsAccentColor = '#2f3b5d'; // Previously: 072948
+const compactPostsMinScreenWidthThreshold = 530;// Minimum screen width to trigger script
 const debug = false;
-//GM_config.open();
 // ------------------------------ SCRIPT ------------------------------
-function dPrint(str) {
-    return debug && console.log(`[HFXM] DEBUG: ${str}`);
-}
 const currentUrl = window.location;
 dPrint(`Current URL: ${currentUrl}`);
 
 initializeSettings();
+appendHFXMSettings();
 
 // Global features
 GM_config.get('enableFavorites') && injectFavorites();
@@ -44,13 +43,18 @@ switch (currentUrl) {
     };
         break;
 }
+
 // ------------------------------ FUNCTIONS: Settings ------------------------------
+function dPrint(str) {
+    return debug && console.log(`[HFXM] DEBUG: ${str}`);
+}
+
 function initializeSettings() {
     const recentChanges = getRecentChanges();
     var defaultConfiguration = {
         'enableFavorites': {
             'label': 'Favorites',
-            'section': ['Global', "Side-wide modifications."],
+            'section': ['Global Features'],
             'title': 'Adds favorites to the HF header.',
             'type': 'checkbox',
             'default': true,
@@ -64,21 +68,21 @@ function initializeSettings() {
         },
         'enableCompactPosts': {
             'label': 'Compact Posts',
-            'section': ['Threads', 'Thread modifications.'],
+            'section': ['Thread Features', 'Thread modifications.'],
             'title': 'Condense author information in posts.',
             'type': 'checkbox',
             'default': true
         },
         // NOTE: Stay app doesn't currently support .updateURL
-        'HFXMversion': {
-            'title': 'About HFX Mobile',
-            'section': ['About HFX Mobile',
-                `Author: ${GM_info.script.author}<br>` +
-                (true ? `<a href='${GM_info.script.updateURL}'>New Update Available (click to update)</a>` : `Up to date`) + `<br>` + // GM_info.scriptWillUpdate
-                recentChanges],
-            'value': '0',
-            'type': 'hidden'
-        },
+        //         'HFXMversion':{
+        //             'title':'About HFX Mobile',
+        //             'section': ['About HFX Mobile',
+        //                         `Author: ${GM_info.script.author}<br>` +
+        //                         (true ? `<a href='${GM_info.script.updateURL}'>New Update Available (click to update)</a>` : `Up to date`) + `<br>` + // GM_info.scriptWillUpdate
+        //                         recentChanges],
+        //             'value': '0',
+        //             'type': 'hidden'
+        //         },
     };
 
     // Instance of settings
@@ -110,9 +114,30 @@ function getRecentChanges() {
         return metadataRow.includes(GM_info.script.version) && !metadataRow.includes('@version')
     }) || 'No Changelog Entry Found.';
 }
+
+function appendHFXMSettings() {
+    const sideNav = document.getElementById('mySidenav');
+    sideNav.insertAdjacentHTML('beforeend', `<button class="accordion" id="HFXMSettings">
+    <div style="display:inline-block;width:50%;">
+    <span class="accordion-icon"><i class="fa fa-cog" aria-hidden="true"></i></span>
+    HFXM Settings
+    </div></button>`);
+    // Move default spacer below HFXM settings
+    const panelSpacer = sideNav.querySelector('span.panel_spacer');
+    sideNav.removeChild(panelSpacer);
+    sideNav.append(panelSpacer);
+
+    document.getElementById("HFXMSettings").addEventListener("click", () => {
+        // Open settings
+        GM_config.open();
+        // Close sidenav
+        closeNav();
+    });
+}
+
 // ------------------------------ FUNCTIONS: CompactPosts ------------------------------
 function injectCompactPosts() {
-    if (screen.width > widthThreshold) return;
+    if (screen.width > compactPostsMinScreenWidthThreshold) return;
 
     const posts = document.getElementsByClassName('post');
     for (const post of posts) {
@@ -224,7 +249,8 @@ function injectFavorites() {
     const favoriteElements = createFavoriteElements(favorites).join('');
 
     // Append favorites row
-    $("#logo").append(`<div style='text-align:left; margin:auto;'>${favoriteElements} ${toggleFavoriteElement}</div>`);
+    const logoElement = document.getElementById('logo');
+    logoElement.insertAdjacentHTML('beforeend', `<div style='text-align:left; margin:auto;'>${favoriteElements} ${toggleFavoriteElement}</div>`);
 
     // Add/Remove button event listener
     document.getElementById("HFXMFavoriteToggle").addEventListener("click", () => {
