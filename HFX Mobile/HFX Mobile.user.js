@@ -24,10 +24,9 @@
 // // @require     https://github.com/xadamxk/HF-Userscripts/raw/master/JS%20Libraries/GM_config.js
 // ------------------------------ SETTINGS ------------------------------
 const settingsAccentColor = '#2f3b5d'; // Previously: 072948
-const compactPostsMinScreenWidthThreshold = 530;// Minimum screen width to trigger script
-const debug = false;
+const debug = true;
 // ------------------------------ SCRIPT ------------------------------
-const currentUrl = window.location;
+const currentUrl = window.location.href;
 dPrint(`Current URL: ${currentUrl}`);
 
 initializeSettings();
@@ -37,9 +36,18 @@ appendHFXMSettings();
 GM_config.get('enableFavorites') && injectFavorites();
 
 // Page features
+const findPageMatch = (term) => {
+    if (currentUrl && currentUrl.includes(term)) {
+        return currentUrl;
+    }
+}
 switch (currentUrl) {
-    case '/showthread.php?': {
+    case findPageMatch('/showthread.php?'): {
         GM_config.get('enableCompactPosts') && injectCompactPosts();
+    };
+        break;
+    case findPageMatch('/forumdisplay.php?'): {
+        GM_config.get('enableSearchYourThreads') && injectSearchYourThreads();
     };
         break;
 }
@@ -70,6 +78,13 @@ function initializeSettings() {
             'label': 'Compact Posts',
             'section': ['Thread Features', 'Thread modifications.'],
             'title': 'Condense author information in posts.',
+            'type': 'checkbox',
+            'default': true
+        },
+        'enableSearchYourThreads': {
+            'label': 'Search Your Threads (Filter forums by your threads)',
+            'section': ['Forum Features', 'Forum modifications.'],
+            'title': 'Button in forums that filters threads by a given username.',
             'type': 'checkbox',
             'default': true
         },
@@ -137,7 +152,7 @@ function appendHFXMSettings() {
 
 // ------------------------------ FUNCTIONS: CompactPosts ------------------------------
 function injectCompactPosts() {
-    if (screen.width > compactPostsMinScreenWidthThreshold) return;
+    if (screen.width > 530) return; // Minimum screen width to trigger script
 
     const posts = document.getElementsByClassName('post');
     for (const post of posts) {
@@ -272,3 +287,7 @@ function injectFavorites() {
         }
     });
 }
+// ------------------------------ FUNCTIONS: SearchYourThreads ------------------------------
+function injectSearchYourThreads() {
+    //
+};
