@@ -3,7 +3,7 @@
 // @author      xadamxk
 // @namespace   https://github.com/xadamxk/HFX-Mobile
 // @require     https://github.com/sizzlemctwizzle/GM_config/raw/master/gm_config.js
-// @version     0.0.2
+// @version     0.0.3
 // @description Enhance your mobile HF Experience!
 // @match       https://hackforums.net/*
 // @copyright   2022+
@@ -24,7 +24,7 @@
 // // @require     https://github.com/xadamxk/HF-Userscripts/raw/master/JS%20Libraries/GM_config.js
 // ------------------------------ SETTINGS ------------------------------
 const settingsAccentColor = '#2f3b5d'; // Previously: 072948
-const debug = true;
+const debug = false;
 // ------------------------------ SCRIPT ------------------------------
 const currentUrl = window.location.href;
 dPrint(`Current URL: ${currentUrl}`);
@@ -289,5 +289,20 @@ function injectFavorites() {
 }
 // ------------------------------ FUNCTIONS: SearchYourThreads ------------------------------
 function injectSearchYourThreads() {
-    //
+    const fid = window.location.href.split("fid=")[1];
+    const welcomeUser = document.getElementById("panel").querySelector('span.welcome > strong > a');
+    const userID = welcomeUser.getAttribute("href").split("&uid=")[1];
+    const username = welcomeUser.innerText;
+
+    // Append button
+    const forumActionsContainer = document.getElementById("content").querySelector('td.thead > div.float_right > span.smalltext > strong');
+    forumActionsContainer.insertAdjacentHTML('beforeend', `&nbsp;&nbsp;|&nbsp;&nbsp;<form method="post" action="search.php" style="display:inline">
+        <input type="hidden" name="action" value="do_search">
+        <input type="hidden" name="matchusername" value="1">
+        <input type="hidden" name="forums" value="${fid}">
+        <input type="hidden" name="threadprefix" value="any">
+        <input type="hidden" name="showresults" value="threads">
+        <input type="hidden" name="author" value="${username}">
+        <button type="submit" class="" name="submit" title="Search Your Threads" style=" background: initial; border: initial; padding: initial; color: white; "><i class="fas fa-user-edit fa-lg"></i></button>
+    </form>`);
 };
