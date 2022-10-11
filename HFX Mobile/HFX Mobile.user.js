@@ -34,7 +34,6 @@
 // Redesign forum thread list (remove pagination and replace with action=lastpost/action=newpost)
 // Theme changer (accent color + mosaic + logo)
 // ------------------------------ SETTINGS ------------------------------
-const settingsAccentColor = '#2f3b5d'; // Previously: 072948
 const debug = false;
 // ------------------------------ SCRIPT ------------------------------
 const currentUrl = window.location.href;
@@ -68,7 +67,7 @@ function dPrint(str) {
 }
 
 function initializeSettings() {
-    const recentChanges = getRecentChanges();
+    //const recentChanges = getRecentChanges();
     var defaultConfiguration = {
         'enableFavorites': {
             'label': 'Favorites',
@@ -118,6 +117,7 @@ function initializeSettings() {
     };
 
     // Instance of settings
+    const settingsAccentColor = '#2f3b5d'; // Previously: 072948
     GM_config.init({
         'id': 'HFXM_config',
         'title': "HFX Mobile",
