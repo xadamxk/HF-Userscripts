@@ -3,7 +3,7 @@
 // @author      xadamxk
 // @namespace   https://github.com/xadamxk/HFX-Mobile
 // @require     https://github.com/sizzlemctwizzle/GM_config/raw/master/gm_config.js
-// @version     0.0.3
+// @version     0.0.4
 // @description Enhance your mobile HF Experience!
 // @match       https://hackforums.net/*
 // @copyright   2022+
@@ -15,6 +15,7 @@
 // @grant       GM_info
 // ------------------------------ Changelog -----------------------------
 // v1.0.0: Update and Download URLs
+// v0.0.4: Add PMTrackingLinks feature
 // v0.0.3: Add SearchYourThreads feature
 // v0.0.2: Experimenting with settings library
 // v0.0.1: Initial commit
@@ -50,6 +51,10 @@ switch (currentUrl) {
         GM_config.get('enableSearchYourThreads') && injectSearchYourThreads();
     };
         break;
+    case findPageMatch('/private.php?action=tracking'): {
+        GM_config.get('enablePMTrackingLinks') && injectPMTrackingLinks();
+    };
+        break;
 }
 
 // ------------------------------ FUNCTIONS: Settings ------------------------------
@@ -78,6 +83,13 @@ function initializeSettings() {
             'label': 'Compact Posts',
             'section': ['Thread Features', 'Thread modifications.'],
             'title': 'Condense author information in posts.',
+            'type': 'checkbox',
+            'default': true
+        },
+        'enablePMTrackingLinks': {
+            'label': 'PM Tracking Links',
+            'section': ['Private Message Features', 'Private Message modifications.'],
+            'title': 'Links message titles to their corresponding linked PM.',
             'type': 'checkbox',
             'default': true
         },
@@ -305,4 +317,42 @@ function injectSearchYourThreads() {
         <input type="hidden" name="author" value="${username}">
         <button type="submit" class="" name="submit" title="Search Your Threads" style=" background: initial; border: initial; padding: initial; color: white; "><i class="fas fa-user-edit fa-lg"></i></button>
     </form>`);
+};
+// ------------------------------ FUNCTIONS: PMTrackingLinks ------------------------------
+function getTrackingTableByText(tableHeaderStr) {
+    const tables = document.getElementById("content").querySelectorAll("table.tborder") || [];
+    return Array.from(tables).find(table => {
+        const tableHeader = table.querySelector("tbody > tr > td > strong").innerText;
+        return tableHeader.includes(tableHeaderStr);
+    });
+};
+function linkMessageTitles(table) {
+    if (!table) return;
+
+    const rowsNodeList = table.querySelectorAll("tbody > tr");
+    const rows = Array.from(rowsNodeList);
+    rows.map((row, index) => {
+        // First 2 rows and last row are not messages
+        if (index < 2 || index == rows.length - 1) return row;
+        // Everything else will be a message with a title that needs linking
+        const columns = row.querySelectorAll("td");
+        const titleTd = columns[1];
+        const checkbox = columns[4].querySelector("input");
+        const readCheckId = checkbox.getAttribute("name").replace(/\D/g, "");
+        const messageId = parseInt(readCheckId) + 1; // message id is always 1 greater than the readcheck id
+
+        // Clear existing title
+        const pmTitle = titleTd.innerHTML;
+        titleTd.innerHTML = "";
+        titleTd.insertAdjacentHTML('beforeend', `<a href="https://hackforums.net/private.php?action=read&pmid=${messageId}">${pmTitle}</a>`);
+        return row;
+    });
+};
+function injectPMTrackingLinks() {
+    // Read table
+    const readTable = getTrackingTableByText("Read Messages");
+    linkMessageTitles(readTable);
+    // Unread table
+    const unreadTable = getTrackingTableByText("Unread Messages");
+    linkMessageTitles(unreadTable);
 };
