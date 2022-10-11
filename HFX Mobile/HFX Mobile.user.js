@@ -22,7 +22,17 @@
 // ==/UserScript==
 // ------------------------------ Dev Notes -----------------------------
 // If new update is available, prompt user (hideUpdateModal in configuration if they dont want to update)
-// // @require     https://github.com/xadamxk/HF-Userscripts/raw/master/JS%20Libraries/GM_config.js
+// Features to add:
+// Expanded profile sections
+// Character Counter
+// Interactive Post Stats
+// Add Join Date on Posts
+// Posts on Thread postbit button
+// PM From Post postbit button
+// Quick Unsubscribe
+// Thread mention postbit button
+// Redesign forum thread list (remove pagination and replace with action=lastpost/action=newpost)
+// Theme changer (accent color + mosaic + logo)
 // ------------------------------ SETTINGS ------------------------------
 const settingsAccentColor = '#2f3b5d'; // Previously: 072948
 const debug = false;
@@ -37,11 +47,6 @@ appendHFXMSettings();
 GM_config.get('enableFavorites') && injectFavorites();
 
 // Page features
-const findPageMatch = (term) => {
-    if (currentUrl && currentUrl.includes(term)) {
-        return currentUrl;
-    }
-}
 switch (currentUrl) {
     case findPageMatch('/showthread.php?'): {
         GM_config.get('enableCompactPosts') && injectCompactPosts();
@@ -162,6 +167,12 @@ function appendHFXMSettings() {
     });
 }
 
+function findPageMatch(term) {
+    if (!term) return '';
+    if (currentUrl && currentUrl.includes(term)) {
+        return currentUrl;
+    }
+}
 // ------------------------------ FUNCTIONS: CompactPosts ------------------------------
 function injectCompactPosts() {
     if (screen.width > 530) return; // Minimum screen width to trigger script
