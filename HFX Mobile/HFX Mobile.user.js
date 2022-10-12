@@ -3,7 +3,7 @@
 // @author      xadamxk
 // @namespace   https://github.com/xadamxk/HFX-Mobile
 // @require     https://github.com/sizzlemctwizzle/GM_config/raw/master/gm_config.js
-// @version     0.0.4
+// @version     0.0.5
 // @description Enhance your mobile HF Experience!
 // @match       https://hackforums.net/*
 // @copyright   2022+
@@ -15,6 +15,7 @@
 // @grant       GM_info
 // ------------------------------ Changelog -----------------------------
 // v1.0.0: Update and Download URLs
+// v0.0.5: Add Posts on Thread feature
 // v0.0.4: Add PMTrackingLinks feature
 // v0.0.3: Add SearchYourThreads feature
 // v0.0.2: Experimenting with settings library
@@ -27,7 +28,6 @@
 // Character Counter
 // Interactive Post Stats
 // Add Join Date on Posts
-// Posts on Thread postbit button
 // PM From Post postbit button
 // Quick Unsubscribe
 // Thread mention postbit button
@@ -49,6 +49,7 @@ GM_config.get('enableFavorites') && injectFavorites();
 switch (currentUrl) {
     case findPageMatch('/showthread.php?'): {
         GM_config.get('enableCompactPosts') && injectCompactPosts();
+        GM_config.get('enablePostsOnThread') && injectPostsOnThread();
     };
         break;
     case findPageMatch('/forumdisplay.php?'): {
@@ -86,6 +87,12 @@ function initializeSettings() {
         'enableCompactPosts': {
             'label': 'Compact Posts',
             'section': ['Thread Features', 'Thread modifications.'],
+            'title': 'Condense author information in posts.',
+            'type': 'checkbox',
+            'default': true
+        },
+        'enablePostsOnThread': {
+            'label': `Posts on Thread (Postbit button to view all of a user's posts on the current thread)`,
             'title': 'Condense author information in posts.',
             'type': 'checkbox',
             'default': true
@@ -337,6 +344,7 @@ function getTrackingTableByText(tableHeaderStr) {
         return tableHeader.includes(tableHeaderStr);
     });
 };
+
 function linkMessageTitles(table) {
     if (!table) return;
 
@@ -359,6 +367,7 @@ function linkMessageTitles(table) {
         return row;
     });
 };
+
 function injectPMTrackingLinks() {
     // Read table
     const readTable = getTrackingTableByText("Read Messages");
@@ -366,4 +375,28 @@ function injectPMTrackingLinks() {
     // Unread table
     const unreadTable = getTrackingTableByText("Unread Messages");
     linkMessageTitles(unreadTable);
+};
+// ------------------------------ FUNCTIONS: PostsOnThread ------------------------------
+function getUrlParams() {
+    const queryString = window.location.search;
+    return new URLSearchParams(queryString);
+};
+
+function injectPostsOnThread() {
+    const threadId = getUrlParams().get('tid')
+    const posts = document.getElementsByClassName('post');
+    if (!posts) return;
+
+    for (const [index, post] of Array.from(posts).entries()) {
+        const postAuthor = post.querySelector('div.post_wrapper > div.post_author');
+        const authorProfile = postAuthor.querySelector('div.author_information > strong > span.largetext > a').getAttribute('href');
+        const userId = authorProfile.split('&uid=')[1];
+        const authorButtons = post.querySelector('.author_buttons');
+        authorButtons.insertAdjacentHTML('beforeend', `
+        <a id="HFXMPostsOnThread${index}" class="postbit_quote" href="/showthread.php?tid=${threadId}&mode=single&uid=${userId}" data-tooltip="Posts on Thread">
+          <span>
+            <i class="fa fa-file-signature fa-lg" aria-hidden="true"></i>
+          </span>
+        </a>`)
+    }
 };
