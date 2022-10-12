@@ -3,7 +3,7 @@
 // @author      xadamxk
 // @namespace   https://github.com/xadamxk/HFX-Mobile
 // @require     https://github.com/sizzlemctwizzle/GM_config/raw/master/gm_config.js
-// @version     0.0.5
+// @version     0.0.6
 // @description Enhance your mobile HF Experience!
 // @match       https://hackforums.net/*
 // @copyright   2022+
@@ -13,24 +13,24 @@
 // @grant       GM_setValue
 // @grant       GM_log
 // @grant       GM_info
+// ==/UserScript==
 // ------------------------------ Changelog -----------------------------
 // v1.0.0: Update and Download URLs
+// v0.0.6: Add Thread Mentions feature
 // v0.0.5: Add Posts on Thread feature
 // v0.0.4: Add PMTrackingLinks feature
 // v0.0.3: Add SearchYourThreads feature
 // v0.0.2: Experimenting with settings library
 // v0.0.1: Initial commit
-// ==/UserScript==
 // ------------------------------ Dev Notes -----------------------------
 // If new update is available, prompt user (hideUpdateModal in configuration if they dont want to update)
 // Features to add:
+// Quick Unsubscribe
+// Add Join Date on Posts
+// Interactive Post Stats
 // Expanded profile sections
 // Character Counter
-// Interactive Post Stats
-// Add Join Date on Posts
 // PM From Post postbit button
-// Quick Unsubscribe
-// Thread mention postbit button
 // Redesign forum thread list (remove pagination and replace with action=lastpost/action=newpost)
 // Theme changer (accent color + mosaic + logo)
 // ------------------------------ SETTINGS ------------------------------
@@ -50,6 +50,7 @@ switch (currentUrl) {
     case findPageMatch('/showthread.php?'): {
         GM_config.get('enableCompactPosts') && injectCompactPosts();
         GM_config.get('enablePostsOnThread') && injectPostsOnThread();
+        GM_config.get('enableThreadMentions') && injectThreadMentions();
     };
         break;
     case findPageMatch('/forumdisplay.php?'): {
@@ -92,8 +93,14 @@ function initializeSettings() {
             'default': true
         },
         'enablePostsOnThread': {
-            'label': `Posts on Thread (Postbit button to view all of a user's posts on the current thread)`,
+            'label': `Posts on Thread (Postbit Button)`,
             'title': 'Condense author information in posts.',
+            'type': 'checkbox',
+            'default': true
+        },
+        'enableThreadMentions': {
+            'label': `Thread Mentions (Postbit Button)`,
+            'title': 'Mention user in thread reply.',
             'type': 'checkbox',
             'default': true
         },
@@ -398,5 +405,34 @@ function injectPostsOnThread() {
             <i class="fa fa-file-signature fa-lg" aria-hidden="true"></i>
           </span>
         </a>`)
+    }
+};
+// ------------------------------ FUNCTIONS: ThreadMentions ------------------------------
+function appendMentionToInput(userId) {
+    if (!userId) return;
+
+    const textarea = document.getElementById("message");
+    textarea.value = textarea.value + `[mention=${userId}] `;
+    textarea.scrollIntoView(true);
+    textarea.focus();
+};
+
+function injectThreadMentions() {
+    const posts = document.getElementsByClassName('post');
+    const postInput = document.getElementById("message")
+    if (!posts || !postInput) return;
+
+    for (const [index, post] of Array.from(posts).entries()) {
+        const postAuthor = post.querySelector('div.post_wrapper > div.post_author');
+        const authorProfile = postAuthor.querySelector('div.author_information > strong > span.largetext > a').getAttribute('href');
+        const userId = authorProfile.split('&uid=')[1];
+        const postManagementButtons = post.querySelector('.post_management_buttons');
+        postManagementButtons.insertAdjacentHTML('afterbegin', `
+              <a class="hfxm-user-mention postbit_quote" href="#" id="HFXUserMention${index}" data-tooltip="Mention User" onclick="event.preventDefault()">
+        <span style="padding-top:5px">
+          <i class="fa fa-tag fa-lg" aria-hidden="true"></i>
+        </span>
+      </a>`);
+        document.getElementById(`HFXUserMention${index}`).addEventListener("click", () => { appendMentionToInput(userId); });
     }
 };
