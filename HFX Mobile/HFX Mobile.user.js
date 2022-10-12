@@ -428,11 +428,11 @@ function injectThreadMentions() {
         const userId = authorProfile.split('&uid=')[1];
         const postManagementButtons = post.querySelector('.post_management_buttons');
         postManagementButtons.insertAdjacentHTML('afterbegin', `
-              <a class="hfxm-user-mention postbit_quote" href="#" id="HFXUserMention${index}" data-tooltip="Mention User" onclick="event.preventDefault()">
+              <a class="hfxm-user-mention postbit_quote" href="#" id="HFXMUserMention${index}" data-tooltip="Mention User" onclick="event.preventDefault()">
         <span style="padding-top:5px">
           <i class="fa fa-tag fa-lg" aria-hidden="true"></i>
         </span>
       </a>`);
-        document.getElementById(`HFXUserMention${index}`).addEventListener("click", () => { appendMentionToInput(userId); });
+        document.getElementById(`HFXMUserMention${index}`).addEventListener("click", () => { appendMentionToInput(userId); });
     }
 };
