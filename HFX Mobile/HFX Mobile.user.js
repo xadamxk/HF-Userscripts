@@ -459,11 +459,10 @@ function injectQuickUnsubscribe() {
     const unsubscribeElement = document.querySelector('.subscription_remove');
     if (!unsubscribeElement) return;
 
-    unsubscribeElement.insertAdjacentHTML('beforeend', `
+    unsubscribeElement.insertAdjacentHTML('afterend', `
     <li>
-        <li class="fa fa-sign-out-alt" style="font-family:Font Awesome 5 Pro; font-size: 14px; right: 5px; position: relative; font-weight: 900;">
-            <a href="javascript:void(0)" title="HFXM: Quick Unsubscribe" id="HFXMQuickUnsubscribe">Quick Unsubscribe</a>
-        </li>
+        <i class="fa fa-sign-out-alt" style="font-family:Font Awesome 5 Pro; font-size: 11px; right: 5px; position: relative; font-weight: 900;"></i>
+        <a href="javascript:void(0)" title="HFXM: Quick Unsubscribe" id="HFXMQuickUnsubscribe">Quick Unsubscribe</a>
     </li>
     `);
     document.getElementById(`HFXMQuickUnsubscribe`).addEventListener("click", async () => {
