@@ -3,7 +3,7 @@
 // @author      xadamxk
 // @namespace   https://github.com/xadamxk/HFX-Mobile
 // @require     https://github.com/sizzlemctwizzle/GM_config/raw/master/gm_config.js
-// @version     0.0.6
+// @version     0.0.7
 // @description Enhance your mobile HF Experience!
 // @match       https://hackforums.net/*
 // @copyright   2022+
@@ -16,6 +16,7 @@
 // ==/UserScript==
 // ------------------------------ Changelog -----------------------------
 // v1.0.0: Update and Download URLs
+// v0.0.7: Add Quick Unsubscribe feature
 // v0.0.6: Add Thread Mentions feature
 // v0.0.5: Add Posts on Thread feature
 // v0.0.4: Add PMTrackingLinks feature
@@ -25,9 +26,10 @@
 // ------------------------------ Dev Notes -----------------------------
 // If new update is available, prompt user (hideUpdateModal in configuration if they dont want to update)
 // Features to add:
-// Quick Unsubscribe
 // Add Join Date on Posts
 // Interactive Post Stats
+// List View Swipe Actions (Thread: short to quicklove, long to quote) - https://demo.mobiscroll.com/jquery/listview/swipe-actions
+// Infiniscroll (rate limit)
 // Expanded profile sections
 // Character Counter
 // PM From Post postbit button
@@ -51,6 +53,7 @@ switch (currentUrl) {
         GM_config.get('enableCompactPosts') && injectCompactPosts();
         GM_config.get('enablePostsOnThread') && injectPostsOnThread();
         GM_config.get('enableThreadMentions') && injectThreadMentions();
+        GM_config.get('enableQuickUnsubscribe') && injectQuickUnsubscribe();
     };
         break;
     case findPageMatch('/forumdisplay.php?'): {
@@ -101,6 +104,12 @@ function initializeSettings() {
         'enableThreadMentions': {
             'label': `Thread Mentions (Postbit Button)`,
             'title': 'Mention user in thread reply.',
+            'type': 'checkbox',
+            'default': true
+        },
+        'enableQuickUnsubscribe': {
+            'label': `Quick Unsubscribe (Removes all thread subscriptions)`,
+            'title': 'Remove all thread subscriptions with a single click.',
             'type': 'checkbox',
             'default': true
         },
@@ -389,8 +398,13 @@ function getUrlParams() {
     return new URLSearchParams(queryString);
 };
 
+function getBreadcrumbThreadId() {
+    const breadcrumb = document.getElementsByClassName("breadcrumb")[0];
+    return breadcrumb.querySelector("a:last-of-type").getAttribute('href').split('?tid=')[1];
+}
+
 function injectPostsOnThread() {
-    const threadId = getUrlParams().get('tid')
+    const threadId = getUrlParams().get('tid');
     const posts = document.getElementsByClassName('post');
     if (!posts) return;
 
@@ -400,7 +414,7 @@ function injectPostsOnThread() {
         const userId = authorProfile.split('&uid=')[1];
         const authorButtons = post.querySelector('.author_buttons');
         authorButtons.insertAdjacentHTML('beforeend', `
-        <a id="HFXMPostsOnThread${index}" class="postbit_quote" href="/showthread.php?tid=${threadId}&mode=single&uid=${userId}" data-tooltip="Posts on Thread">
+        <a id="HFXMPostsOnThread${index}" class="postbit_quote" href="/showthread.php?tid=${threadId || getBreadcrumbThreadId()}&mode=single&uid=${userId}" data-tooltip="Posts on Thread">
           <span>
             <i class="fa fa-file-signature fa-lg" aria-hidden="true"></i>
           </span>
@@ -435,4 +449,35 @@ function injectThreadMentions() {
       </a>`);
         document.getElementById(`HFXMUserMention${index}`).addEventListener("click", () => { appendMentionToInput(userId); });
     }
+};
+// ------------------------------ FUNCTIONS: QuickUnsubscribe ------------------------------
+function getUserPostKey() {
+    return document.querySelector('head').innerHTML.match(/my_post_key = "([a-f0-9]+)"/).pop() || null;
+};
+
+function injectQuickUnsubscribe() {
+    const unsubscribeElement = document.querySelector('.subscription_remove');
+    if (!unsubscribeElement) return;
+
+    unsubscribeElement.insertAdjacentHTML('beforeend', `
+    <li>
+        <li class="fa fa-sign-out-alt" style="font-family:Font Awesome 5 Pro; font-size: 14px; right: 5px; position: relative; font-weight: 900;">
+            <a href="javascript:void(0)" title="HFXM: Quick Unsubscribe" id="HFXMQuickUnsubscribe">Quick Unsubscribe</a>
+        </li>
+    </li>
+    `);
+    document.getElementById(`HFXMQuickUnsubscribe`).addEventListener("click", async () => {
+        var data = new FormData();
+        data.append("action", "removesubscription");
+        data.append("my_post_key", getUserPostKey());
+        data.append("tid", getBreadcrumbThreadId());
+        await fetch(`${window.location.origin}/usercp2.php?ajax=1`, {
+            method: 'POST',
+            body: data
+        }).then(data => {
+            location.reload();
+        }).catch((err) => {
+            dPrint("Failed to unsubscribe from thread.")
+        });
+    });
 };
