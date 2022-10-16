@@ -16,6 +16,7 @@
 // ==/UserScript==
 // ------------------------------ Changelog -----------------------------
 // v1.0.0: Update and Download URLs
+// v0.0.7: Add InteractivePostStats feature
 // v0.0.7: Add Quick Unsubscribe feature
 // v0.0.6: Add Thread Mentions feature
 // v0.0.5: Add Posts on Thread feature
@@ -26,8 +27,6 @@
 // ------------------------------ Dev Notes -----------------------------
 // If new update is available, prompt user (hideUpdateModal in configuration if they dont want to update)
 // Features to add:
-// Add Join Date on Posts
-// Interactive Post Stats
 // List View Swipe Actions (Thread: short to quicklove, long to quote) - https://demo.mobiscroll.com/jquery/listview/swipe-actions
 // Infiniscroll (rate limit)
 // Expanded profile sections
@@ -51,6 +50,7 @@ GM_config.get('enableFavorites') && injectFavorites();
 switch (currentUrl) {
     case findPageMatch('/showthread.php?'): {
         GM_config.get('enableCompactPosts') && injectCompactPosts();
+        GM_config.get('enableInteractivePostStats') && ingestInteractivePostStats();
         GM_config.get('enablePostsOnThread') && injectPostsOnThread();
         GM_config.get('enableThreadMentions') && injectThreadMentions();
         GM_config.get('enableQuickUnsubscribe') && injectQuickUnsubscribe();
@@ -92,6 +92,12 @@ function initializeSettings() {
             'label': 'Compact Posts',
             'section': ['Thread Features', 'Thread modifications.'],
             'title': 'Condense author information in posts.',
+            'type': 'checkbox',
+            'default': true
+        },
+        'enableInteractivePostStats': {
+            'label': 'Interactive Post Stats',
+            'title': 'Hyperlink post stat values.',
             'type': 'checkbox',
             'default': true
         },
@@ -479,4 +485,56 @@ function injectQuickUnsubscribe() {
             dPrint("Failed to unsubscribe from thread.")
         });
     });
+};
+// ------------------------------ FUNCTIONS: InteractivePostStats ------------------------------
+function ingestInteractivePostStats() {
+    const threadId = getUrlParams().get('tid');
+    const posts = document.getElementsByClassName('post');
+    if (!posts) return;
+
+    for (const [index, post] of Array.from(posts).entries()) {
+        const authorStatTable = post.querySelector('div.author_statistics > div.author_wrapper');
+        const statRows = authorStatTable.querySelectorAll('div.author_row');
+        const postAuthor = post.querySelector('div.post_wrapper > div.post_author');
+        const authorProfile = postAuthor.querySelector('div.author_information > strong > span.largetext > a').getAttribute('href');
+        const userId = authorProfile.split('&uid=')[1];
+        const postId = post.getAttribute('id').replace("post_", "");
+        statRows.forEach((stat) => {
+            const label = stat.querySelector('div.author_label').innerHTML.toLowerCase();
+            const value = stat.querySelector('div.author_value');
+            const valueText = value.innerHTML;
+            // New interactive post value element
+            const newValue = document.createElement('div');
+            newValue.classList.add("author_value");
+            switch (label) {
+                case "posts:": {
+                    newValue.insertAdjacentHTML('beforeend', `<a href=https://hackforums.net/search.php?action=finduser&uid=${userId}>${valueText}</a>`)
+                    value.replaceWith(newValue);
+                };
+                    break;
+                case "threads:": {
+                    newValue.insertAdjacentHTML('beforeend', `<a href=https://hackforums.net/search.php?action=finduserthreads&uid=${userId}>${valueText}</a>`)
+                    value.replaceWith(newValue);
+                };
+                    break;
+                case "βytes:": {
+                    for (const child of value.childNodes) {
+                        // Byte total is a text node and includes space at beginning of value. ie. " 398"
+                        if (child.nodeType === Node.TEXT_NODE) {
+                            newValue.insertAdjacentHTML('beforeend', `<a style="padding-left:5px;" href="https://hackforums.net/myps.php?action=history&uid=${userId}">${child.nodeValue}</a>`)
+                            child.replaceWith(newValue);
+                        }
+                    }
+                };
+                    break;
+            }
+        });
+        // Append join date
+        const joinDate = post.querySelector("div.author_avatar > a").getAttribute("data-tooltip").replace("Joined ", "");
+        const joinDateStat = document.createElement('div');
+        joinDateStat.classList.add("author_row");
+        joinDateStat.insertAdjacentHTML('beforeend', `<div class="author_label">Join Date:</div>`);
+        joinDateStat.insertAdjacentHTML('beforeend', `<div class="author_value">${joinDate ?? 'N/A'}</div>`);
+        authorStatTable.append(joinDateStat);
+    }
 };
