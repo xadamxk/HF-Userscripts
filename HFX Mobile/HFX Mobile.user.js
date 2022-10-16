@@ -3,7 +3,7 @@
 // @author      xadamxk
 // @namespace   https://github.com/xadamxk/HFX-Mobile
 // @require     https://github.com/sizzlemctwizzle/GM_config/raw/master/gm_config.js
-// @version     0.0.7
+// @version     1.0.0
 // @description Enhance your mobile HF Experience!
 // @match       https://hackforums.net/*
 // @copyright   2022+
@@ -15,7 +15,7 @@
 // @grant       GM_info
 // ==/UserScript==
 // ------------------------------ Changelog -----------------------------
-// v1.0.0: Update and Download URLs
+// v1.0.0: Update and Download URLs, set default favorites
 // v0.0.7: Add InteractivePostStats feature
 // v0.0.7: Add Quick Unsubscribe feature
 // v0.0.6: Add Thread Mentions feature
@@ -76,7 +76,7 @@ function initializeSettings() {
     var defaultConfiguration = {
         'enableFavorites': {
             'label': 'Favorites',
-            'section': ['Global Features'],
+            'section': ['Global Features', 'All Pages'],
             'title': 'Adds favorites to the HF header.',
             'type': 'checkbox',
             'default': true,
@@ -85,12 +85,12 @@ function initializeSettings() {
             'label': '',
             'title': '',
             'type': 'text',
-            'default': '{}',
+            'default': '{"https://hackforums.net/usercp.php":"UserCP", "https://hackforums.net/forumdisplay.php?fid=25":"Lounge", "https://hackforums.net/forumdisplay.php?fid=2":"RANF"}',
             'type': 'hidden'
         },
         'enableCompactPosts': {
             'label': 'Compact Posts',
-            'section': ['Thread Features', 'Thread modifications.'],
+            'section': ['Thread Features', '/showthread.php'],
             'title': 'Condense author information in posts.',
             'type': 'checkbox',
             'default': true
@@ -103,7 +103,7 @@ function initializeSettings() {
         },
         'enablePostsOnThread': {
             'label': `Posts on Thread (Postbit Button)`,
-            'title': 'Condense author information in posts.',
+            'title': 'See all posts of user on current thread.',
             'type': 'checkbox',
             'default': true
         },
@@ -121,14 +121,14 @@ function initializeSettings() {
         },
         'enablePMTrackingLinks': {
             'label': 'PM Tracking Links',
-            'section': ['Private Message Features', 'Private Message modifications.'],
+            'section': ['Private Message Features', '/private.php'],
             'title': 'Links message titles to their corresponding linked PM.',
             'type': 'checkbox',
             'default': true
         },
         'enableSearchYourThreads': {
             'label': 'Search Your Threads (Filter forums by your threads)',
-            'section': ['Forum Features', 'Forum modifications.'],
+            'section': ['Forum Features', '/forumdisplay.php'],
             'title': 'Button in forums that filters threads by a given username.',
             'type': 'checkbox',
             'default': true
