@@ -37,6 +37,7 @@
 // Theme changer (accent color + mosaic + logo)
 // ------------------------------ SETTINGS ------------------------------
 const debug = false;
+const maxMobileScreenWidth = 530;
 // ------------------------------ SCRIPT ------------------------------
 const currentUrl = window.location.href;
 dPrint(`Current URL: ${currentUrl}`);
@@ -212,7 +213,7 @@ function findPageMatch(term) {
 }
 // ------------------------------ FUNCTIONS: CompactPosts ------------------------------
 function injectCompactPosts() {
-    if (screen.width > 530) return; // Minimum screen width to trigger script
+    if (screen.width > maxMobileScreenWidth) return; // Minimum screen width to trigger script
 
     const posts = document.getElementsByClassName('post');
     for (const post of posts) {
@@ -605,6 +606,8 @@ function reformatDumbDate(dateStr) {
 
 };
 function injectMobileForumDisplay() {
+    if (screen.width > maxMobileScreenWidth) return; // Minimum screen width to trigger script
+
     const content = document.querySelector("#content");
     const threadRows = content.querySelectorAll("tr.inline_row");
     threadRows.forEach((row) => {
