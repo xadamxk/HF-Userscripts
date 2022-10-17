@@ -565,8 +565,10 @@ function getRelativeTime(timestampInSeconds) {
         return `${Math.floor(elapsed / msPerHour)}h`;
     } else if (elapsed < msPerMonth) {
         return `${Math.floor(elapsed / msPerDay)}d`;
+    } else if (elapsed < msPerYear) {
+        return `${Math.floor(elapsed / msPerMonth)}M`;
     } else {
-        return `${Math.floor(elapsed / msPerYear)}y`;
+        return `${Math.floor(elapsed / msPerYear)}Y`;
     }
     return '-';
 };
@@ -616,7 +618,6 @@ function injectMobileForumDisplay() {
         // Old threads use string to show absolute timestamp
         const oldLastPost = row.querySelector('td:nth-child(5) > span.smalltext').firstChild;
         const oldLastPostText = oldLastPost.textContent;
-        console.log(oldLastPostText)
         const oldLastPostSeconds = reformatDumbDate(oldLastPostText);
         // Use whichever timestamp exists (recent vs old)
         const lastPostTimestamp = recentLastPostSeconds || oldLastPostSeconds;
