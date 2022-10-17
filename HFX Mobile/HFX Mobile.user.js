@@ -3,7 +3,7 @@
 // @author      xadamxk
 // @namespace   https://github.com/xadamxk/HFX-Mobile
 // @require     https://github.com/sizzlemctwizzle/GM_config/raw/master/gm_config.js
-// @version     1.0.0
+// @version     1.0.1
 // @description Enhance your mobile HF Experience!
 // @match       https://hackforums.net/*
 // @copyright   2022+
@@ -15,6 +15,7 @@
 // @grant       GM_info
 // ==/UserScript==
 // ------------------------------ Changelog -----------------------------
+// v1.0.1: Add MobileForumDisplay feature
 // v1.0.0: Update and Download URLs, set default favorites
 // v0.0.7: Add InteractivePostStats feature
 // v0.0.7: Add Quick Unsubscribe feature
@@ -58,6 +59,7 @@ switch (currentUrl) {
         break;
     case findPageMatch('/forumdisplay.php?'): {
         GM_config.get('enableSearchYourThreads') && injectSearchYourThreads();
+        GM_config.get('enableMobileForumDisplay') && injectMobileForumDisplay();
     };
         break;
     case findPageMatch('/private.php?action=tracking'): {
@@ -130,6 +132,12 @@ function initializeSettings() {
             'label': 'Search Your Threads (Filter forums by your threads)',
             'section': ['Forum Features', '/forumdisplay.php'],
             'title': 'Button in forums that filters threads by a given username.',
+            'type': 'checkbox',
+            'default': true
+        },
+        'enableMobileForumDisplay': {
+            'label': 'Reformat thread lists.',
+            'title': 'Reformats threads to be easier to navigate on mobile',
             'type': 'checkbox',
             'default': true
         },
@@ -537,4 +545,127 @@ function ingestInteractivePostStats() {
         joinDateStat.insertAdjacentHTML('beforeend', `<div class="author_value">${joinDate ?? 'N/A'}</div>`);
         authorStatTable.append(joinDateStat);
     }
+};
+// ------------------------------ FUNCTIONS: MobileForumDisplay ------------------------------
+function getRelativeTime(timestampInSeconds) {
+    if (!timestampInSeconds) return '-';
+    const msPerMin = 60;
+    const msPerHour = msPerMin * 60;
+    const msPerDay = msPerHour * 24;
+    const msPerMonth = msPerDay * 30;
+    const msPerYear = msPerDay * 365;
+
+    const nowInSeconds = new Date().getTime() / 1000;
+    let elapsed = nowInSeconds - parseInt(timestampInSeconds); // seconds to ms
+    if (elapsed < msPerMin) {
+        return '<1m';
+    } else if (elapsed < msPerHour) {
+        return `${Math.floor(elapsed / msPerMin)}m`;
+    } else if (elapsed < msPerDay) {
+        return `${Math.floor(elapsed / msPerHour)}h`;
+    } else if (elapsed < msPerMonth) {
+        return `${Math.floor(elapsed / msPerDay)}d`;
+    } else {
+        return `${Math.floor(elapsed / msPerYear)}y`;
+    }
+    return '-';
+};
+function formatViewCount(viewCountStr) {
+    if (!viewCountStr) return '-';
+
+    const viewCount = parseFloat(viewCountStr.replaceAll(',', ''));
+    if (viewCount < 1000) {
+        return viewCount;
+    } else if (viewCount < 10000) {
+        return `${(viewCount / 1000).toFixed(1)}k`;
+    } else if (viewCount < 100000) {
+        return `${(viewCount / 10000).toFixed(1)}k`;
+    } else if (viewCount < 1000000) {
+        return `${(viewCount / 100000).toFixed(1)}k`;
+    } else if (viewCount < 10000000) {
+        return `${(viewCount / 1000000).toFixed(1)}m`;
+    } else if (viewCount > 1000000000) {
+        return `∞`;
+    }
+    return '-';
+};
+function reformatDumbDate(dateStr) {
+    if (!dateStr) return;
+    try {
+        // ie. October 11th, 2022, 06:26 AM
+        // new Date() can't parse ordinal endings, so remove them.
+        const newDateStr = dateStr.replace("st", "").replace("nd", "").replace("rd", "").replace("th", "");
+        return new Date(newDateStr).getTime() / 1000;
+    } catch (err) {
+        console.log(err)
+        return;
+    }
+
+};
+function injectMobileForumDisplay() {
+    const content = document.querySelector("#content");
+    const threadRows = content.querySelectorAll("tr.inline_row");
+    threadRows.forEach((row) => {
+        // Get content from new thread row
+        const threadStatusIcon = row.querySelector('td:nth-child(1) > span.thread_status');
+        const repliesCount = row.querySelector('td:nth-child(3) > a');
+        const viewsCount = row.querySelector('td:nth-child(4) > span').innerHTML;
+        // Recent threads use smart time to show relative timestamps
+        const recentLastPost = row.querySelector('td:nth-child(5) > span.smalltext > span.smart-time');
+        const recentLastPostSeconds = recentLastPost && recentLastPost.getAttribute('data-timestamp');
+        // Old threads use string to show absolute timestamp
+        const oldLastPost = row.querySelector('td:nth-child(5) > span.smalltext').firstChild;
+        const oldLastPostText = oldLastPost.textContent;
+        console.log(oldLastPostText)
+        const oldLastPostSeconds = reformatDumbDate(oldLastPostText);
+        // Use whichever timestamp exists (recent vs old)
+        const lastPostTimestamp = recentLastPostSeconds || oldLastPostSeconds;
+        const mobileColumn = row.querySelector('td:nth-child(2) > div.mobile-link > div.mobile-link-truncate');
+        const threadTitle = mobileColumn.querySelector('span > span');
+        const author = mobileColumn.querySelector('div.author > a');
+        const relativeLastPost = getRelativeTime(lastPostTimestamp);
+        // Delete row contents
+        row.innerHTML = '';
+
+        // Build new thread row
+        // Author row
+        const authorRow = document.createElement('div');
+        authorRow.classList.add("author");
+        authorRow.classList.add("smalltext");
+        authorRow.append(author);
+        // Author row - post count
+        const postCount = document.createElement('span');
+        postCount.style.marginLeft = '10px';
+        postCount.insertAdjacentHTML('beforeend', `<i class="fa fa-comment" aria-hidden="true" style="padding-right:3px;"></i>`);
+        postCount.append(repliesCount);
+        authorRow.append(postCount);
+        // Author row - views
+        // TODO: use fa-eye-slash if user has viewed thread
+        const viewCount = document.createElement('span');
+        viewCount.style.marginLeft = '10px';
+        viewCount.insertAdjacentHTML('beforeend', `<i class="fa fa-eye" aria-hidden="true" style="padding-right:3px;"></i>`);
+        viewCount.append(formatViewCount(viewsCount));
+        authorRow.append(viewCount);
+        // Author row - Last Post Timestamp
+        const lastPost = document.createElement('span');
+        lastPost.style.marginLeft = '10px';
+        lastPost.insertAdjacentHTML('beforeend', `<i class="fa fa-clock" aria-hidden="true" style="padding-right:3px;"></i>`);
+        lastPost.append(relativeLastPost);
+        authorRow.append(lastPost);
+        // Add thread title/author row to thread column
+        const newThreadColumn = document.createElement('td');
+        newThreadColumn.setAttribute("colspan", 5);
+        newThreadColumn.classList.add("trow2");
+        newThreadColumn.append(threadTitle);
+        newThreadColumn.append(authorRow);
+        // Add thread column to thread row
+        row.append(newThreadColumn);
+        // Add thread status to status column
+        const newStatusColumn = document.createElement('td');
+        newThreadColumn.colspan = 1;
+        newStatusColumn.classList.add("trow2");
+        newStatusColumn.append(threadStatusIcon);
+        // Add status column to thread row
+        row.append(newStatusColumn);
+    });
 };
