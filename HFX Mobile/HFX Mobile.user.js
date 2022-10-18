@@ -15,7 +15,7 @@
 // @grant       GM_info
 // ==/UserScript==
 // ------------------------------ Changelog -----------------------------
-// v1.0.1: Add MobileForumDisplay feature
+// v1.0.1: Add MobileThreadLists feature
 // v1.0.0: Update and Download URLs, set default favorites
 // v0.0.7: Add InteractivePostStats feature
 // v0.0.7: Add Quick Unsubscribe feature
@@ -59,7 +59,11 @@ switch (currentUrl) {
         break;
     case findPageMatch('/forumdisplay.php?'): {
         GM_config.get('enableSearchYourThreads') && injectSearchYourThreads();
-        GM_config.get('enableMobileForumDisplay') && injectMobileForumDisplay();
+        GM_config.get('enableMobileThreadLists') && injectMobileThreadListsForumDisplay();
+    };
+        break;
+    case findPageMatch('/usercp.php'): {
+        GM_config.get('enableMobileThreadLists') && injectMobileThreadListsUserCP();
     };
         break;
     case findPageMatch('/private.php?action=tracking'): {
@@ -89,6 +93,12 @@ function initializeSettings() {
             'type': 'text',
             'default': '{"https://hackforums.net/usercp.php":"UserCP", "https://hackforums.net/forumdisplay.php?fid=25":"Lounge", "https://hackforums.net/forumdisplay.php?fid=2":"RANF"}',
             'type': 'hidden'
+        },
+        'enableMobileThreadLists': {
+            'label': 'Reformat thread lists in forums, search, and usercp.',
+            'title': 'Reformats threads to be easier to navigate on mobile.',
+            'type': 'checkbox',
+            'default': true
         },
         'enableCompactPosts': {
             'label': 'Compact Posts',
@@ -132,12 +142,6 @@ function initializeSettings() {
             'label': 'Search Your Threads (Filter forums by your threads)',
             'section': ['Forum Features', '/forumdisplay.php'],
             'title': 'Button in forums that filters threads by a given username.',
-            'type': 'checkbox',
-            'default': true
-        },
-        'enableMobileForumDisplay': {
-            'label': 'Reformat thread lists.',
-            'title': 'Reformats threads to be easier to navigate on mobile',
             'type': 'checkbox',
             'default': true
         },
@@ -273,7 +277,12 @@ function injectCompactPosts() {
         postAuthorAwards.style['border-bottom'] = '1px dashed #232323';
         postAuthor.append(table)
     }
-
+    // If URL contains post id, scroll to the post
+    const pidUrlParam = getUrlParams().get('pid');
+    if (pidUrlParam) {
+        const urlPost = document.querySelector(`#post_${pidUrlParam}`);
+        urlPost && urlPost.scrollIntoView(true);
+    };
 }
 // ------------------------------ FUNCTIONS: Favorites ------------------------------
 function createFavoriteElements(favorites) {
@@ -572,6 +581,7 @@ function getRelativeTime(timestampInSeconds) {
     }
     return '-';
 };
+
 function formatViewCount(viewCountStr) {
     if (!viewCountStr) return '-';
 
@@ -591,6 +601,7 @@ function formatViewCount(viewCountStr) {
     }
     return '-';
 };
+
 function reformatDumbDate(dateStr) {
     if (!dateStr) return;
     try {
@@ -604,16 +615,29 @@ function reformatDumbDate(dateStr) {
     }
 
 };
-function injectMobileForumDisplay() {
-    if (screen.width > 768) return; // Minimum screen width to trigger script
 
-    const content = document.querySelector("#content");
-    const threadRows = content.querySelectorAll("tr.inline_row");
+function determineThreadStatusLink(threadStatusElement) {
+    const iconClasses = Array.from(threadStatusElement.classList);
+    if (
+        iconClasses.includes("newfolder") ||
+        iconClasses.includes("dot_newfolder") ||
+        iconClasses.includes("dot_newhotfolder") ||
+        iconClasses.includes("newhotfolder")) {
+        return "&action=newpost";
+    } else {
+        return "&action=lastpost";
+    }
+};
+
+function reformatThreadRows(threadRows) {
     threadRows.forEach((row) => {
         // Get content from new thread row
         const threadStatusIcon = row.querySelector('td:nth-child(1) > span.thread_status');
+        threadStatusIcon.style.width = "30px";
+        threadStatusIcon.style.height = "30px";
+        threadStatusIcon.style.fontSize = "28px";
         const repliesCount = row.querySelector('td:nth-child(3) > a');
-        const viewsCount = row.querySelector('td:nth-child(4) > span').innerHTML;
+        const viewsCount = row.querySelector('td:nth-child(4) > span')?.innerHTML || row.querySelector('td:nth-child(4)')?.innerHTML; // ForumDisplay or UserCP
         // Recent threads use smart time to show relative timestamps
         const recentLastPost = row.querySelector('td:nth-child(5) > span.smalltext > span.smart-time');
         const recentLastPostSeconds = recentLastPost && recentLastPost.getAttribute('data-timestamp');
@@ -623,9 +647,11 @@ function injectMobileForumDisplay() {
         const oldLastPostSeconds = reformatDumbDate(oldLastPostText);
         // Use whichever timestamp exists (recent vs old)
         const lastPostTimestamp = recentLastPostSeconds || oldLastPostSeconds;
-        const mobileColumn = row.querySelector('td:nth-child(2) > div.mobile-link > div.mobile-link-truncate');
-        const threadTitle = mobileColumn.querySelector('span > span');
-        const author = mobileColumn.querySelector('div.author > a');
+        const mobileColumn = row.querySelector('td:nth-child(2) > div.mobile-link > div.mobile-link-truncate') || row.querySelector('td:nth-child(2)');
+        const threadTitle = mobileColumn.querySelector('span > span:not(.prefix)') || mobileColumn.querySelector('a:not([title="Go to first unread post"])');
+        const threadLink = threadTitle && threadTitle.querySelector('a')?.getAttribute('href') || threadTitle?.getAttribute('href');
+        const threadPrefix = mobileColumn.querySelector('span.prefix');
+        const author = mobileColumn.querySelector('div.author > a') || mobileColumn.querySelector('span.smalltext > a');
         const relativeLastPost = getRelativeTime(lastPostTimestamp);
         // Delete row contents
         row.innerHTML = '';
@@ -643,7 +669,6 @@ function injectMobileForumDisplay() {
         postCount.append(repliesCount);
         authorRow.append(postCount);
         // Author row - views
-        // TODO: use fa-eye-slash if user has viewed thread
         const viewCount = document.createElement('span');
         viewCount.style.marginLeft = '10px';
         viewCount.insertAdjacentHTML('beforeend', `<i class="fa fa-eye" aria-hidden="true" style="padding-right:3px;"></i>`);
@@ -655,10 +680,14 @@ function injectMobileForumDisplay() {
         lastPost.insertAdjacentHTML('beforeend', `<i class="fa fa-clock" aria-hidden="true" style="padding-right:3px;"></i>`);
         lastPost.append(relativeLastPost);
         authorRow.append(lastPost);
+        // Adv details row
+        const advDetailsRow = document.createElement('div');
+        threadPrefix && advDetailsRow.append(threadPrefix);
         // Add thread title/author row to thread column
         const newThreadColumn = document.createElement('td');
-        newThreadColumn.setAttribute("colspan", 5);
+        newThreadColumn.setAttribute("colspan", 4);
         newThreadColumn.classList.add("trow2");
+        newThreadColumn.append(advDetailsRow);
         newThreadColumn.append(threadTitle);
         newThreadColumn.append(authorRow);
         // Add thread column to thread row
@@ -667,8 +696,36 @@ function injectMobileForumDisplay() {
         const newStatusColumn = document.createElement('td');
         newThreadColumn.colspan = 1;
         newStatusColumn.classList.add("trow2");
-        newStatusColumn.append(threadStatusIcon);
+        const threadStatusLink = document.createElement('a');
+        threadStatusLink.setAttribute('href', `/${threadLink}${determineThreadStatusLink(threadStatusIcon)}`);
+        threadStatusLink.append(threadStatusIcon);
+        newStatusColumn.append(threadStatusLink); // TODO: append to <a> rather than newStatusColumn
         // Add status column to thread row
         row.append(newStatusColumn);
     });
+};
+
+function injectMobileThreadListsForumDisplay() {
+    if (screen.width > 768) return; // Minimum screen width to trigger script
+
+    const content = document.querySelector("#content");
+    const threadRows = content.querySelectorAll("tr.inline_row");
+    reformatThreadRows(threadRows);
+};
+
+function injectMobileThreadListsUserCP() {
+    if (screen.width > 768) return; // Minimum screen width to trigger script
+
+    const desiredTableHeaderTitles = ['Thread Subscriptions With New Posts', 'Threads'];
+
+    const summaryPanel = document.querySelector("#content > div.wrapper > div.oc-container > div.oc-item:nth-child(2)");
+    const desiredTableHeaders = Array.from(summaryPanel.querySelectorAll('strong')).filter(el => desiredTableHeaderTitles.some((text) => text === el.textContent));
+    const desiredTables = desiredTableHeaders.map((tableHeader) => tableHeader.parentElement.parentElement.parentElement.parentElement);
+    const desiredRows = desiredTables.reduce((savedThreadRows, table) => {
+        const rows = table.querySelectorAll('tr');
+        const threadRows = Array.from(rows).filter((row, index) => index > 1); // First and second row are not thread rows
+        return savedThreadRows.concat(threadRows)
+    }, []);
+    console.log(desiredRows)
+    reformatThreadRows(desiredRows);
 };
