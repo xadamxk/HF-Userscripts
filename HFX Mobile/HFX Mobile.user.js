@@ -3,7 +3,7 @@
 // @author      xadamxk
 // @namespace   https://github.com/xadamxk/HFX-Mobile
 // @require     https://github.com/sizzlemctwizzle/GM_config/raw/master/gm_config.js
-// @version     1.0.1
+// @version     1.1.0
 // @description Enhance your mobile HF Experience!
 // @match       https://hackforums.net/*
 // @copyright   2022+
@@ -15,7 +15,7 @@
 // @grant       GM_info
 // ==/UserScript==
 // ------------------------------ Changelog -----------------------------
-// v1.0.1: Add MobileThreadLists feature
+// v1.1.0: Add MobileThreadLists feature
 // v1.0.0: Update and Download URLs, set default favorites
 // v0.0.7: Add InteractivePostStats feature
 // v0.0.7: Add Quick Unsubscribe feature
@@ -68,6 +68,10 @@ switch (currentUrl) {
         break;
     case findPageMatch('/private.php?action=tracking'): {
         GM_config.get('enablePMTrackingLinks') && injectPMTrackingLinks();
+    };
+        break;
+    case findPageMatch('/search.php?action=results&sid='): {
+        GM_config.get('enableMobileThreadLists') && injectMobileThreadListsSearch();
     };
         break;
 }
@@ -588,12 +592,8 @@ function formatViewCount(viewCountStr) {
     const viewCount = parseFloat(viewCountStr.replaceAll(',', ''));
     if (viewCount < 1000) {
         return viewCount;
-    } else if (viewCount < 10000) {
-        return `${(viewCount / 1000).toFixed(1)}k`;
-    } else if (viewCount < 100000) {
-        return `${(viewCount / 10000).toFixed(1)}k`;
     } else if (viewCount < 1000000) {
-        return `${(viewCount / 100000).toFixed(1)}k`;
+        return `${(viewCount / 1000).toFixed(1)}k`;
     } else if (viewCount < 10000000) {
         return `${(viewCount / 1000000).toFixed(1)}m`;
     } else if (viewCount > 1000000000) {
@@ -629,26 +629,37 @@ function determineThreadStatusLink(threadStatusElement) {
     }
 };
 
-function reformatThreadRows(threadRows) {
+function reformatThreadRows(threadRows, includesForumColumn = false) {
+    let repliesColumnIndex = 3;
+    let viewsColumnIndex = 4;
+    let lastPostColumnIndex = 5;
+    if (includesForumColumn) {
+        repliesColumnIndex++;// 4;
+        viewsColumnIndex++;// 5;
+        lastPostColumnIndex++;// 6;
+    }
+    //
     threadRows.forEach((row) => {
         // Get content from new thread row
         const threadStatusIcon = row.querySelector('td:nth-child(1) > span.thread_status');
         threadStatusIcon.style.width = "30px";
         threadStatusIcon.style.height = "30px";
         threadStatusIcon.style.fontSize = "28px";
-        const repliesCount = row.querySelector('td:nth-child(3) > a');
-        const viewsCount = row.querySelector('td:nth-child(4) > span')?.innerHTML || row.querySelector('td:nth-child(4)')?.innerHTML; // ForumDisplay or UserCP
+        const repliesCount = row.querySelector(`td:nth-child(${repliesColumnIndex}) > a`);
+        const forumColumn = row.querySelector(`td:nth-child(3) > a`);
+        const viewsCount = row.querySelector(`td:nth-child(${viewsColumnIndex}) > span`)?.innerHTML || row.querySelector(`td:nth-child(${viewsColumnIndex})`)?.innerHTML; // ForumDisplay or UserCP
         // Recent threads use smart time to show relative timestamps
-        const recentLastPost = row.querySelector('td:nth-child(5) > span.smalltext > span.smart-time');
+        const recentLastPost = row.querySelector(`td:nth-child(${lastPostColumnIndex}) > span.smalltext > span.smart-time`);
         const recentLastPostSeconds = recentLastPost && recentLastPost.getAttribute('data-timestamp');
         // Old threads use string to show absolute timestamp
-        const oldLastPost = row.querySelector('td:nth-child(5) > span.smalltext').firstChild;
-        const oldLastPostText = oldLastPost.textContent;
+        const oldLastPost = row.querySelector(`td:nth-child(${lastPostColumnIndex}) > span.smalltext`)?.firstChild;
+        const oldLastPostText = oldLastPost?.textContent;
         const oldLastPostSeconds = reformatDumbDate(oldLastPostText);
         // Use whichever timestamp exists (recent vs old)
         const lastPostTimestamp = recentLastPostSeconds || oldLastPostSeconds;
         const mobileColumn = row.querySelector('td:nth-child(2) > div.mobile-link > div.mobile-link-truncate') || row.querySelector('td:nth-child(2)');
-        const threadTitle = mobileColumn.querySelector('span > span:not(.prefix)') || mobileColumn.querySelector('a:not([title="Go to first unread post"])');
+        const threadTitle = mobileColumn.querySelector('span > span:not(.prefix):not(.smalltext)') || mobileColumn.querySelector('a:not([title="Go to first unread post"])');
+        console.log(threadTitle)
         const threadLink = threadTitle && threadTitle.querySelector('a')?.getAttribute('href') || threadTitle?.getAttribute('href');
         const threadPrefix = mobileColumn.querySelector('span.prefix');
         const author = mobileColumn.querySelector('div.author > a') || mobileColumn.querySelector('span.smalltext > a');
@@ -683,6 +694,7 @@ function reformatThreadRows(threadRows) {
         // Adv details row
         const advDetailsRow = document.createElement('div');
         threadPrefix && advDetailsRow.append(threadPrefix);
+        includesForumColumn && forumColumn && advDetailsRow.append(forumColumn);
         // Add thread title/author row to thread column
         const newThreadColumn = document.createElement('td');
         newThreadColumn.setAttribute("colspan", 4);
@@ -699,7 +711,7 @@ function reformatThreadRows(threadRows) {
         const threadStatusLink = document.createElement('a');
         threadStatusLink.setAttribute('href', `/${threadLink}${determineThreadStatusLink(threadStatusIcon)}`);
         threadStatusLink.append(threadStatusIcon);
-        newStatusColumn.append(threadStatusLink); // TODO: append to <a> rather than newStatusColumn
+        newStatusColumn.append(threadStatusLink);
         // Add status column to thread row
         row.append(newStatusColumn);
     });
@@ -726,6 +738,21 @@ function injectMobileThreadListsUserCP() {
         const threadRows = Array.from(rows).filter((row, index) => index > 1); // First and second row are not thread rows
         return savedThreadRows.concat(threadRows)
     }, []);
-    console.log(desiredRows)
     reformatThreadRows(desiredRows);
+};
+
+function injectMobileThreadListsSearch() {
+    if (screen.width > 768) return; // Minimum screen width to trigger script
+
+    const desiredTableHeaderTitles = ['Search Results'];
+
+    const content = document.querySelector("#content");
+    const desiredTableHeaders = Array.from(content.querySelectorAll('strong')).filter(el => desiredTableHeaderTitles.some((text) => text === el.textContent));
+    const desiredTables = desiredTableHeaders.map((tableHeader) => tableHeader.parentElement.parentElement.parentElement.parentElement);
+    const desiredRows = desiredTables.reduce((savedThreadRows, table) => {
+        const rows = table.querySelectorAll('tr');
+        const threadRows = Array.from(rows).filter((row, index) => index > 1); // First and second row are not thread rows
+        return savedThreadRows.concat(threadRows)
+    }, []);
+    reformatThreadRows(desiredRows, true);
 };
