@@ -26,6 +26,7 @@
 // v0.0.2: Experimenting with settings library
 // v0.0.1: Initial commit
 // ------------------------------ Dev Notes -----------------------------
+// Add /index.php and /forumdisplay.php?fid= to MobileThreadList
 // If new update is available, prompt user (hideUpdateModal in configuration if they dont want to update)
 // Features to add:
 // List View Swipe Actions (Thread: short to quicklove, long to quote) - https://demo.mobiscroll.com/jquery/listview/swipe-actions
@@ -33,7 +34,6 @@
 // Expanded profile sections
 // Character Counter
 // PM From Post postbit button
-// Redesign forum thread list (remove pagination and replace with action=lastpost/action=newpost)
 // Theme changer (accent color + mosaic + logo)
 // ------------------------------ SETTINGS ------------------------------
 const debug = false;
@@ -634,9 +634,9 @@ function reformatThreadRows(threadRows, includesForumColumn = false) {
     let viewsColumnIndex = 4;
     let lastPostColumnIndex = 5;
     if (includesForumColumn) {
-        repliesColumnIndex++;// 4;
-        viewsColumnIndex++;// 5;
-        lastPostColumnIndex++;// 6;
+        repliesColumnIndex++;// = 4;
+        viewsColumnIndex++;// = 5;
+        lastPostColumnIndex++;// = 6;
     }
     //
     threadRows.forEach((row) => {
@@ -659,7 +659,6 @@ function reformatThreadRows(threadRows, includesForumColumn = false) {
         const lastPostTimestamp = recentLastPostSeconds || oldLastPostSeconds;
         const mobileColumn = row.querySelector('td:nth-child(2) > div.mobile-link > div.mobile-link-truncate') || row.querySelector('td:nth-child(2)');
         const threadTitle = mobileColumn.querySelector('span > span:not(.prefix):not(.smalltext)') || mobileColumn.querySelector('a:not([title="Go to first unread post"])');
-        console.log(threadTitle)
         const threadLink = threadTitle && threadTitle.querySelector('a')?.getAttribute('href') || threadTitle?.getAttribute('href');
         const threadPrefix = mobileColumn.querySelector('span.prefix');
         const author = mobileColumn.querySelector('div.author > a') || mobileColumn.querySelector('span.smalltext > a');
