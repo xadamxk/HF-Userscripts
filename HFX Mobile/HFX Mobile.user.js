@@ -3,7 +3,7 @@
 // @author      xadamxk
 // @namespace   https://github.com/xadamxk/HFX-Mobile
 // @require     https://github.com/sizzlemctwizzle/GM_config/raw/master/gm_config.js
-// @version     1.1.0
+// @version     1.1.1
 // @description Enhance your mobile HF Experience!
 // @match       https://hackforums.net/*
 // @copyright   2022+
@@ -15,6 +15,7 @@
 // @grant       GM_info
 // ==/UserScript==
 // ------------------------------ Changelog -----------------------------
+// v1.1.1: Add Convo Resize feature
 // v1.1.0: Add MobileThreadLists feature
 // v1.0.0: Update and Download URLs, set default favorites
 // v0.0.7: Add InteractivePostStats feature
@@ -73,6 +74,10 @@ switch (currentUrl) {
     case findPageMatch('/search.php?action=results&sid='): {
         GM_config.get('enableMobileThreadLists') && injectMobileThreadListsSearch();
     };
+        break;
+    case findPageMatch('/convo.php'): {
+        GM_config.get('enableAutoExpandConvoReply') && injectAutoExpandConvoReply();
+    }
         break;
 }
 
@@ -146,6 +151,13 @@ function initializeSettings() {
             'label': 'Search Your Threads (Filter forums by your threads)',
             'section': ['Forum Features', '/forumdisplay.php'],
             'title': 'Button in forums that filters threads by a given username.',
+            'type': 'checkbox',
+            'default': true
+        },
+        'enableAutoExpandConvoReply': {
+            'label': 'Auto-Expand Convo Reply',
+            'section': ['Convo Features', '/convo.php'],
+            'title': 'Expands convo input if reply wont fit in default view.',
             'type': 'checkbox',
             'default': true
         },
@@ -754,4 +766,31 @@ function injectMobileThreadListsSearch() {
         return savedThreadRows.concat(threadRows)
     }, []);
     reformatThreadRows(desiredRows, true);
+};
+// ------------------------------ FUNCTIONS: AutoExpandConvoReply ------------------------------
+function injectAutoExpandConvoReply() {
+    const messageHistory = document.querySelector("#message-convo");
+    const defaultHistoryHeight = parseInt(getComputedStyle(messageHistory).height.replace('px', '')) || 0;
+
+    const convoControlRow = document.querySelector("#convoControlsRow");
+    const defaultInputHeight = parseInt(getComputedStyle(convoControlRow).height.replace('px', '')) || 0;
+
+    // On input, check if control row height needs to be increased
+    const convoInput = document.querySelector("#comment");
+    convoInput.addEventListener('input', () => {
+        // If input is greater than viewable height, subtract difference from convo history height
+        if (convoInput.clientHeight > defaultInputHeight) {
+            const heightDifference = convoInput.clientHeight - defaultInputHeight;
+            messageHistory.style.height = `${defaultHistoryHeight - heightDifference}px`;
+        } else if (convoInput.clientHeight < defaultInputHeight) {
+            // input fits in default view, reset convo history height
+            messageHistory.style.height = `${defaultHistoryHeight}px`;
+        }
+    });
+    // On convo submit, reset height changes
+    const sendConvoForm = document.querySelector("#new_message");
+    sendConvoForm.addEventListener("submit", () => {
+        messageHistory.style.height = `${defaultHistoryHeight}px`;
+    }, false);
+
 };
