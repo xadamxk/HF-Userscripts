@@ -2,12 +2,12 @@
 // @name        HF Reputation Archive Export
 // @author      xadamxk
 // @namespace   https://github.com/xadamxk/HF-Userscripts
-// @version     0.0.1
+// @version     0.0.2
 // @description Export your Reputation Archive to xadamxk via PM
 // @match       https://hackforums.net/reputation_archive.php
 // @copyright   2022+
-// @updateURL
-// @downloadURL
+// @updateURL   https://github.com/xadamxk/HF-Userscripts/raw/master/HF%20Reputation%20Archive%20Storage/HF%20Reputation%20Archive%20Export.user.js
+// @downloadURL https://github.com/xadamxk/HF-Userscripts/raw/master/HF%20Reputation%20Archive%20Storage/HF%20Reputation%20Archive%20Export.user.js
 // ==/UserScript==
 // ------------------------------ Changelog -----------------------------
 // v0.0.2: Release
