@@ -2,7 +2,7 @@
 // @name        HF Reputation Archive Export
 // @author      xadamxk
 // @namespace   https://github.com/xadamxk/HF-Userscripts
-// @version     0.0.2
+// @version     0.0.3
 // @description Export your Reputation Archive to xadamxk via PM
 // @match       https://hackforums.net/reputation_archive.php
 // @copyright   2022+
@@ -10,6 +10,7 @@
 // @downloadURL https://github.com/xadamxk/HF-Userscripts/raw/master/HF%20Reputation%20Archive%20Storage/HF%20Reputation%20Archive%20Export.user.js
 // ==/UserScript==
 // ------------------------------ Changelog -----------------------------
+// v0.0.3: Debug logging
 // v0.0.2: Release
 // v0.0.1: Initial commit
 // ------------------------------ Dev Notes -----------------------------
@@ -65,7 +66,8 @@ function sendReport() {
             }
         });
     } catch (err) {
-        sendNotification(`Failed to share Reputation Archive Summary. Contact xadamxk for assistance.`);
+        console.log(err);
+        sendNotification(`Failed to share Reputation Archive Summary. Contact xadamxk for assistance.`, false);
     };
 };
 
