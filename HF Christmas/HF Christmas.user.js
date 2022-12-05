@@ -1,16 +1,16 @@
 // ==UserScript==
-// @name       HF Christmas
-// @author xadamxk
-// @namespace  https://github.com/xadamxk/HF-Scripts
-// @version    0.0.1
+// @name        HF Christmas
+// @author      xadamxk
+// @namespace   https://github.com/xadamxk/HF-Scripts
+// @version     1.0.0
 // @description Adds christmas lights to posts
 // @require     https://code.jquery.com/jquery-3.1.1.js
 // @require     https://raw.githubusercontent.com/xadamxk/HF-Userscripts/master/JS%20Libraries/snowfall.jquery.js
-// @match      *://hackforums.net/*
-// @copyright  2022+
-// @updateURL 
-// @downloadURL 
-// @iconURL https://raw.githubusercontent.com/xadamxk/HF-Userscripts/master/scripticon.jpg
+// @match       *://hackforums.net/*
+// @copyright   2022+
+// @updateURL   https://github.com/xadamxk/HF-Userscripts/raw/master/HF%20Christmas/HF%20Christmas.user.js
+// @downloadURL https://github.com/xadamxk/HF-Userscripts/raw/master/HF%20Christmas/HF%20Christmas.user.js
+// @iconURL     https://raw.githubusercontent.com/xadamxk/HF-Userscripts/master/scripticon.jpg
 // ==/UserScript==
 // ------------------------------ Changelog -----------------------------
 // v 1.0.0: Added UpdateURL to script meta tag
@@ -22,20 +22,12 @@ const enableChristmasLightsOnPosts = true;
 const enableSnow = true;
 // ------------------------------- SCRIPT -------------------------------
 
-if(enableChristmasLightsOnPosts){
+if (enableChristmasLightsOnPosts) {
     $(".post").each((index, post) => {
-        $(post).css({"padding-top":"50px", "background-image":"url(https://i.imgur.com/ml35Tvu.gif)", "background-repeat":"repeat-x"})
+        $(post).css({ "padding-top": "50px", "background-image": "url(https://i.imgur.com/ml35Tvu.gif)", "background-repeat": "repeat-x" })
     });
 }
 
-if(enableSnow){
-    $("#container").snowfall({flakeCount:400, maxSpeed : 5, round: true, minSize: 2, maxSize: 3});
+if (enableSnow) {
+    $("#container").snowfall({ flakeCount: 400, maxSpeed: 5, round: true, minSize: 2, maxSize: 3 });
 }
-
-
-//$("#panel").append("<div style='height:50px;background-image: url(https://i.imgur.com/ml35Tvu.gif);background-repeat: repeat-x;'></div>")
-
-/**
-background-image: url(https://i.imgur.com/ml35Tvu.gif);
-background-repeat: repeat-x;
-*/
