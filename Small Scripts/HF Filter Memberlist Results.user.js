@@ -13,6 +13,11 @@
 // ------------------------------ Change Log ----------------------------
 // version 1.0.0: Release
 // ------------------------------ Dev Notes -----------------------------
+// Navigate to adv member search: https://hackforums.net/memberlist.php?action=search
+// Select "Normal" user group
+// Change results to 100 per page
+// Sort results by registration date and click search
+// Navigate to the last page (ascending) and work your way forward
 const closedUsergroup = "group38";
 const normalUsergroup = "group2";
 const minimumPostCount = 1;
