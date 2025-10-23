@@ -6,8 +6,8 @@
 // @description Reformats thread lists for mobile devices.
 // @match       https://hackforums.net/*
 // @copyright   2025+
-// @updateURL
-// @downloadURL
+// @updateURL   https://github.com/xadamxk/HF-Userscripts/raw/refs/heads/master/HF%20Mobile%20Thread%20Lists/HFMobileThreadListsLite.user.js
+// @downloadURL https://github.com/xadamxk/HF-Userscripts/raw/refs/heads/master/HF%20Mobile%20Thread%20Lists/HFMobileThreadListsLite.user.js
 // ==/UserScript==
 // ------------------------------ Changelog -----------------------------
 // v0.0.1: Initial commit
