@@ -2,7 +2,7 @@
 // @name        HF Mobile Thread Lists Lite
 // @author      xadamxk
 // @namespace   https://github.com/xadamxk/HF-Userscripts
-// @version     0.0.1
+// @version     1.0.0
 // @description Reformats thread lists for mobile devices.
 // @match       https://hackforums.net/*
 // @copyright   2025+
@@ -10,6 +10,7 @@
 // @downloadURL https://github.com/xadamxk/HF-Userscripts/raw/refs/heads/master/HF%20Mobile%20Thread%20Lists/HFMobileThreadListsLite.user.js
 // ==/UserScript==
 // ------------------------------ Changelog -----------------------------
+// v1.0.0: Add update and download URLs
 // v0.0.1: Initial commit
 // ------------------------------ SETTINGS ------------------------------
 const currentUrl = window.location.href;
@@ -122,7 +123,7 @@ function injectMobileThreadListsUserCP(){
 
     const desiredTableHeaderTitles = ['Thread Subscriptions With New Posts', 'Threads'];
 
-    const summaryPanel = document.querySelector("#content > div.wrapper > div.oc-container > div.oc-item:nth-child(2)");
+    const summaryPanel = document.querySelector("#content > div.wrapper-content > div.oc-container > div.oc-item:nth-child(2)");
     const desiredTableHeaders = Array.from(summaryPanel.querySelectorAll('strong')).filter(el => desiredTableHeaderTitles.some((text) => text === el.textContent));
     const desiredTables = desiredTableHeaders.map((tableHeader) => tableHeader.parentElement.parentElement.parentElement.parentElement);
     const desiredRows = desiredTables.reduce((savedThreadRows, table) => {
