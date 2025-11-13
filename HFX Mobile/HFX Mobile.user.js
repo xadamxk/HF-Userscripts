@@ -2,7 +2,7 @@
 // @name        HFX Mobile
 // @author      xadamxk
 // @namespace   https://github.com/xadamxk/HFX-Mobile
-// @version     2.0.0
+// @version     2.1.0
 // @description Enhance your mobile HF Experience!
 // @match       https://hackforums.net/*
 // @copyright   2022+
@@ -10,6 +10,7 @@
 // @downloadURL https://github.com/xadamxk/HF-Userscripts/blob/master/HFX%20Mobile/HFX%20Mobile.user.js
 // ==/UserScript==
 // ------------------------------ Changelog -----------------------------
+// v2.1.0: Add Convo Timestamps and Group Management features, fix mobile thread lists on search pages
 // v2.0.0: Remove all configuration, update features from HFX 3.x
 // v1.1.1: Add Convo Resize feature
 // v1.1.0: Add MobileThreadLists feature
@@ -37,6 +38,7 @@ const debug = false;
 const useSizeThreshold = false;
 const favoritesKey = "HFXM_FAVORITES";
 const banReasonsKey = "HFXM_BAN_REASONS";
+const groupManagementKey = "HFXM_GROUP_MANAGEMENT";
 // ------------------------------ SCRIPT ------------------------------
 const currentUrl = window.location.href;
 dPrint(`Current URL: ${currentUrl}`);
@@ -80,12 +82,19 @@ switch (currentUrl) {
   case findPageMatch("/convo.php"):
     {
       injectAutoExpandConvoReply();
+      injectConvoTimestamps();
     }
     break;
   case findPageMatch("/member.php?action=profile"):
     {
       injectBanReason();
       injectExpandProfileSections();
+      injectGroupManagementProfiles();
+    }
+    break;
+  case findPageMatch("/showgroups.php"):
+    {
+      injectGroupManagementShowGroups();
     }
     break;
 }
@@ -100,6 +109,273 @@ function findPageMatch(term) {
   if (currentUrl && currentUrl.includes(term)) {
     return currentUrl;
   }
+}
+// ----------------------------- FUNCTIONS: GroupManagement -----------------------------
+function retrieveGroupManagement() {
+  try {
+    return JSON.parse(localStorage.getItem(groupManagementKey)) || [];
+  } catch (err) {
+    dPrint("retrieveGroupManagement: failed to parse group management.");
+    return [];
+  }
+}
+function injectGroupManagementProfiles() {
+  const managedGroups = retrieveGroupManagement();
+  if (Array.isArray(managedGroups) && managedGroups.length > 0) {
+    appendGroupManagementButtons(managedGroups);
+  }
+}
+
+function injectGroupManagementShowGroups() {
+  const groupTable = document.querySelector("#content > div > table");
+  if (!groupTable) return;
+  const tableHeader = groupTable.querySelector("tbody > tr > td");
+  if (!tableHeader) return;
+
+  const button = document.createElement("button");
+  button.type = "button";
+  button.textContent = "HFX: Update Managed Groups";
+  button.setAttribute(
+    "style",
+    "margin-left: 8px; padding: 4px 10px; font-size: 12px; cursor: pointer;"
+  );
+  // Leave click handler null for now
+  button.onclick = handleUpdateManagedGroups;
+
+  tableHeader.appendChild(button);
+}
+
+async function handleUpdateManagedGroups() {
+  const managedGroups = await parseManagedGroups();
+  if (Array.isArray(managedGroups) && managedGroups.length > 0) {
+    localStorage.setItem(groupManagementKey, JSON.stringify(managedGroups));
+    alert("HFX: Managed groups updated successfully");
+  } else {
+    alert("HFX: No managed groups found");
+  }
+}
+
+async function parseManagedGroups() {
+  try {
+    const container = document.querySelector(".groupContainer");
+    if (!container) {
+      return [];
+    }
+
+    const managedGroups = [];
+
+    const children = Array.from(container.children);
+    for (const child of children) {
+      const manageAnchor = child.querySelector(".groupControls > a");
+
+      if (!manageAnchor) {
+        continue;
+      }
+
+      const href = manageAnchor.getAttribute("href") || "";
+      let groupId = null;
+      try {
+        const absolute = new URL(href, "https://hackforums.net/");
+        const gidStr = absolute.searchParams.get("gid");
+        if (gidStr) {
+          groupId = parseInt(gidStr, 10);
+        }
+      } catch (_) {
+        const parts = href.split("gid=");
+        if (parts.length > 1) {
+          const gidStr = parts[1].split("&")[0];
+          const parsed = parseInt(gidStr, 10);
+          if (!isNaN(parsed)) {
+            groupId = parsed;
+          }
+        }
+      }
+
+      if (groupId === null || isNaN(groupId)) {
+        continue;
+      }
+
+      const nameEl = child.querySelector(".groupName");
+      if (!nameEl) {
+        continue;
+      }
+      const rawText = (nameEl.textContent || "").trim();
+      const groupName =
+        rawText
+          .split("\n")
+          .map((t) => t.trim())
+          .filter((t) => t.length > 0)[0] || "";
+
+      if (!groupName) {
+        continue;
+      }
+
+      managedGroups.push({ groupId, groupName });
+    }
+
+    return managedGroups;
+  } catch (e) {
+    return [];
+  }
+}
+
+function appendGroupManagementButtons(managedGroups) {
+  const existing = document.getElementById("hfx-managed-groups");
+  if (existing) return;
+
+  const container = document.querySelector(".pro-adv-content-info");
+  if (!container) return;
+
+  const firstCard = container.querySelector(":scope > .pro-adv-card");
+
+  const card = document.createElement("div");
+  card.id = "hfx-managed-groups";
+  const separator = document.createElement("hr");
+  separator.style.margin = "10px 0px";
+  card.appendChild(separator);
+
+  const titleRow = document.createElement("div");
+  titleRow.setAttribute(
+    "style",
+    "padding: 4px 12px; margin-top: 5px; color: #fff;"
+  );
+  titleRow.innerHTML = "<span><strong>HFX Group Management</strong></span>";
+  card.appendChild(titleRow);
+
+  for (const group of managedGroups) {
+    const isMember = isMemberOfGroup(group.groupName);
+    const row = document.createElement("div");
+    row.setAttribute("style", "padding: 4px 12px;");
+    const safeName = (group.groupName || "")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;");
+
+    const nameEl = document.createElement("strong");
+    nameEl.textContent = `${safeName}:`;
+    row.appendChild(nameEl);
+
+    const toggleMembershipButton = document.createElement("button");
+    toggleMembershipButton.type = "button";
+    toggleMembershipButton.textContent = isMember ? "Remove User" : "Add User";
+    toggleMembershipButton.setAttribute(
+      "style",
+      "margin-left: 10px; padding: 2px 8px; font-size: 12px; cursor: pointer;"
+    );
+    toggleMembershipButton.addEventListener("click", () => {
+      if (isMember) removeGroupMember(group.groupId);
+      else addGroupMember(group.groupId);
+    });
+    row.appendChild(toggleMembershipButton);
+
+    const blacklistButton = document.createElement("button");
+    blacklistButton.type = "button";
+    blacklistButton.textContent = "Blacklist User";
+    blacklistButton.setAttribute(
+      "style",
+      "margin-left: 10px; padding: 2px 8px; font-size: 12px; cursor: pointer;"
+    );
+    blacklistButton.addEventListener("click", () => {
+      if (isMember)
+        alert(
+          "HFX: User is already a member of the group. Please remove them before blacklisting."
+        );
+      else blacklistGroupUser(group.groupId);
+    });
+    row.appendChild(blacklistButton);
+
+    card.appendChild(row);
+  }
+
+  if (firstCard) {
+    firstCard.append(card, firstCard.nextSibling);
+  }
+}
+
+function isMemberOfGroup(groupName) {
+  const container = document.querySelector(".pro-adv-groups-group");
+  if (!container) return false;
+
+  const spans = container.querySelectorAll("span");
+  for (const span of Array.from(spans)) {
+    const img = span.querySelector("img");
+    if (!img) continue;
+    const title = img.getAttribute("title") || "";
+    if (title.toLowerCase() === groupName.toLowerCase()) return true;
+  }
+
+  return false;
+}
+
+function addGroupMember(groupId) {
+  const postKey = getUserPostKey();
+  const profileUsername = getProfileUsername();
+  const body = new URLSearchParams({
+    my_post_key: postKey,
+    action: "do_add",
+    gid: String(groupId),
+    username: profileUsername,
+  });
+
+  fetch("/managegroup.php", {
+    method: "POST",
+    headers: { "Content-Type": "application/x-www-form-urlencoded" },
+    credentials: "same-origin",
+    body,
+  })
+    .then((res) => {
+      if (!res.ok) throw new Error("Request failed");
+      return res.text();
+    })
+    .then(() => location.reload())
+    .catch(console.error);
+}
+
+function removeGroupMember(groupId) {
+  const profileUserId = getProfileUserId();
+  const postKey = getUserPostKey();
+  const body = new URLSearchParams();
+  body.set("my_post_key", postKey);
+  body.set("action", "do_manageusers");
+  body.set("gid", String(groupId));
+  body.append(`removeuser[${profileUserId}]`, String(profileUserId));
+
+  fetch("/managegroup.php", {
+    method: "POST",
+    headers: { "Content-Type": "application/x-www-form-urlencoded" },
+    credentials: "same-origin",
+    body,
+  })
+    .then((res) => {
+      if (!res.ok) throw new Error("Request failed");
+      return res.text();
+    })
+    .then(() => location.reload())
+    .catch(console.error);
+}
+
+function blacklistGroupUser(groupId) {
+  const postKey = getUserPostKey();
+  const profileUsername = getProfileUsername();
+
+  const body = new URLSearchParams({
+    my_post_key: postKey,
+    action: "do_blacklist_add",
+    gid: String(groupId),
+    username: profileUsername,
+  });
+
+  fetch("/managegroup.php", {
+    method: "POST",
+    headers: { "Content-Type": "application/x-www-form-urlencoded" },
+    credentials: "same-origin",
+    body,
+  })
+    .then((res) => {
+      if (!res.ok) throw new Error("Request failed");
+      return res.text();
+    })
+    .then(() => location.reload())
+    .catch(console.error);
 }
 // ------------------------------ FUNCTIONS: CompactPosts ------------------------------
 function injectCompactPosts() {
@@ -584,7 +860,7 @@ function reformatDumbDate(dateStr) {
       .replace("th", "");
     return new Date(newDateStr).getTime() / 1000;
   } catch (err) {
-    console.log(err);
+    console.error(err);
     return;
   }
 }
@@ -647,27 +923,40 @@ function reformatThreadRows(threadRows, includesForumColumn = false) {
       row.querySelector(
         "td:nth-child(2) > div.mobile-link > div.mobile-link-truncate"
       ) || row.querySelector("td:nth-child(2)");
-    // Prefer the explicit subject span if present, otherwise fall back to the anchor
-    const subjectSpan =
-      mobileColumn.querySelector("span[id^='tid_']") ||
+    // Prefer explicit subject anchors; fall back to span wrappers if present
+    const subjectElement =
+      mobileColumn.querySelector('a[id^="tid_"]') ||
+      mobileColumn.querySelector("a.subject_old") ||
+      mobileColumn.querySelector("a.subject_new") ||
+      mobileColumn.querySelector('span[id^="tid_"]') ||
       mobileColumn.querySelector("span.subject_old") ||
       mobileColumn.querySelector("span.subject_new");
+    // Choose the proper thread anchor; exclude unread/action links
     const threadAnchor =
-      subjectSpan?.querySelector("a") ||
-      mobileColumn.querySelector('a[href*="showthread.php?tid="]') ||
-      mobileColumn.querySelector('a:not([title="Go to first unread post"])');
-    const threadTitle = threadAnchor || subjectSpan;
+      (subjectElement && subjectElement.tagName === "A"
+        ? subjectElement
+        : subjectElement?.querySelector("a")) ||
+      mobileColumn.querySelector(
+        'a[href*="showthread.php?tid="]:not([title="Go to first unread post"]):not([href*="action="])'
+      ) ||
+      mobileColumn.querySelector(
+        'a[href*="showthread.php?tid="]:not([title="Go to first unread post"])'
+      ) ||
+      mobileColumn.querySelector(
+        'a[href*="showthread.php?tid="]:not([href*="action="])'
+      );
+    const threadTitle = threadAnchor || subjectElement;
     const threadLink = threadAnchor?.getAttribute("href");
     // Capture optional prefix: support .prefix or sibling span before subject (e.g., group classes like group7)
     const threadPrefix =
       mobileColumn.querySelector("span.prefix") ||
       (() => {
-        const wrapper = subjectSpan?.parentElement;
+        const wrapper = subjectElement?.parentElement;
         if (!wrapper) return null;
         const candidate = Array.from(wrapper.children).find(
           (el) =>
             el.tagName === "SPAN" &&
-            el !== subjectSpan &&
+            el !== subjectElement &&
             !el.classList.contains("smalltext")
         );
         return candidate || null;
@@ -729,10 +1018,11 @@ function reformatThreadRows(threadRows, includesForumColumn = false) {
     const newStatusColumn = document.createElement("td");
     newStatusColumn.classList.add("trow2");
     const threadStatusLink = document.createElement("a");
-    threadStatusLink.setAttribute(
-      "href",
-      `/${threadLink}${determineThreadStatusLink(threadStatusIcon)}`
-    );
+    const statusHref =
+      threadLink && /[?&]action=/.test(threadLink)
+        ? `/${threadLink}`
+        : `/${threadLink}${determineThreadStatusLink(threadStatusIcon)}`;
+    threadStatusLink.setAttribute("href", statusHref);
     threadStatusLink.append(threadStatusIcon);
     newStatusColumn.append(threadStatusLink);
     // Add status column to thread row
@@ -833,21 +1123,185 @@ function injectAutoExpandConvoReply() {
     false
   );
 }
+// ------------------------------ FUNCTIONS: ConvoTimestamps ------------------------------
+function injectConvoTimestamps() {
+  const container = document.getElementById("message-convo");
+  if (!container) return;
+
+  const processedAttr = "data-hfx-timestamp";
+
+  const getWrapperAndUid = (bubble) => {
+    const wrapper = bubble.closest(".message-convo-left, .message-convo-right");
+    const uid = wrapper ? wrapper.getAttribute("data-uid") : null;
+    return { wrapper, uid };
+  };
+
+  const getMinuteKey = (tooltip) => (tooltip ? tooltip.trim() : null);
+
+  const removeTimestampAfter = (b) => {
+    const sibling = b.nextSibling;
+    if (
+      sibling &&
+      sibling instanceof HTMLElement &&
+      sibling.classList.contains("message-bubble-timestamp")
+    ) {
+      sibling.remove();
+    }
+  };
+
+  const addTimestampAfter = (b, text) => {
+    removeTimestampAfter(b);
+    const timestampEl = document.createElement("div");
+    timestampEl.className = "message-bubble-timestamp";
+    timestampEl.textContent = text;
+    timestampEl.style.display = "block";
+    timestampEl.style.fontSize = "12px";
+    timestampEl.style.color = "#9e9e9e";
+    timestampEl.style.margin = "2px 0 2px 6px";
+    timestampEl.style.clear = "both";
+    const parent = b.parentElement;
+    if (parent) {
+      if (b.nextSibling) parent.insertBefore(timestampEl, b.nextSibling);
+      else parent.appendChild(timestampEl);
+    }
+  };
+
+  const processBubble = (bubble) => {
+    if (!(bubble instanceof HTMLElement)) return;
+
+    const tooltip = bubble.getAttribute("data-convotooltip");
+    if (!tooltip) return;
+
+    // Mark as seen to indicate we've evaluated this bubble at least once
+    if (!bubble.getAttribute(processedAttr)) {
+      bubble.setAttribute(processedAttr, "1");
+    }
+
+    const { wrapper, uid } = getWrapperAndUid(bubble);
+    const currentKey = getMinuteKey(tooltip);
+    if (!currentKey) return;
+
+    const prevSameSenderBubble = findNearestSameSenderBubble(
+      wrapper,
+      uid,
+      "prev"
+    );
+    const prevTooltip = prevSameSenderBubble
+      ? prevSameSenderBubble.getAttribute("data-convotooltip")
+      : null;
+    const prevKey = getMinuteKey(prevTooltip);
+    const sameMinuteAsPrev = Boolean(prevKey && prevKey === currentKey);
+
+    // If previous same-sender message is in the same minute, ensure its timestamp is removed
+    if (sameMinuteAsPrev && prevSameSenderBubble) {
+      removeTimestampAfter(prevSameSenderBubble);
+    }
+
+    // If a next same-sender message in the same minute exists, don't add now (it will belong to the last message)
+    const nextSameSenderBubble = findNearestSameSenderBubble(
+      wrapper,
+      uid,
+      "next"
+    );
+    const nextTooltip = nextSameSenderBubble
+      ? nextSameSenderBubble.getAttribute("data-convotooltip")
+      : null;
+    const nextKey = getMinuteKey(nextTooltip);
+    const sameMinuteAsNext = Boolean(nextKey && nextKey === currentKey);
+
+    if (sameMinuteAsNext) {
+      // If we somehow already have a timestamp under this bubble (from a prior run), remove it
+      removeTimestampAfter(bubble);
+      return;
+    }
+
+    addTimestampAfter(bubble, tooltip);
+  };
+
+  const processAll = () => {
+    const bubbles = container.querySelectorAll(".message-bubble-message");
+    bubbles.forEach(processBubble);
+  };
+
+  // Initial pass
+  processAll();
+
+  // Observe for new messages / DOM updates
+  const observer = new MutationObserver((mutations) => {
+    for (const mutation of mutations) {
+      if (mutation.type === "childList") {
+        mutation.addedNodes.forEach((node) => {
+          if (!(node instanceof HTMLElement)) return;
+          if (node.matches && node.matches(".message-bubble-message")) {
+            processBubble(node);
+          } else if (node.querySelectorAll) {
+            node
+              .querySelectorAll(".message-bubble-message")
+              .forEach(processBubble);
+          }
+        });
+      } else if (
+        mutation.type === "attributes" &&
+        mutation.target instanceof HTMLElement &&
+        mutation.target.matches(".message-bubble-message")
+      ) {
+        processBubble(mutation.target);
+      }
+    }
+  });
+
+  observer.observe(container, {
+    childList: true,
+    subtree: true,
+    attributes: true,
+    attributeFilter: ["data-convotooltip"],
+  });
+}
+
+function findNearestSameSenderBubble(wrapper, uid, direction) {
+  if (!wrapper || !uid) return null;
+  let el =
+    direction === "prev"
+      ? wrapper.previousElementSibling
+      : wrapper.nextElementSibling;
+  while (el) {
+    if (el instanceof HTMLElement) {
+      if (el.matches(".message-convo-left, .message-convo-right")) {
+        const elUid = el.getAttribute("data-uid");
+        if (elUid === uid) {
+          const bubbles = el.querySelectorAll(".message-bubble-message");
+          if (bubbles.length > 0) {
+            return direction === "prev"
+              ? bubbles[bubbles.length - 1]
+              : bubbles[0];
+          }
+          // continue scanning if no bubbles found
+        } else {
+          // Different sender encountered; stop scanning
+          break;
+        }
+      }
+    }
+    el =
+      direction === "prev" ? el.previousElementSibling : el.nextElementSibling;
+  }
+  return null;
+}
 // ------------------------------ FUNCTIONS: BanReason ------------------------------
 async function injectBanReason() {
   const storedReasons = retrieveStoredBanReasons();
   const profileUserId = getProfileUserId();
   const isBanned = isUserBanned();
   if (!isBanned) {
-    console.log(`User ${profileUserId} is not banned`);
+    dPrint(`User ${profileUserId} is not banned`);
     return;
   }
   const banReason = storedReasons[profileUserId];
   if (banReason) {
-    console.log(`Ban reason found in cache for user ${profileUserId}`);
+    dPrint(`Ban reason found in cache for user ${profileUserId}`);
     appendBanReason(banReason);
   } else {
-    console.log(
+    dPrint(
       `Ban reason not found in cache for user ${profileUserId}, querying...`
     );
     const banReasons = await queryBanReasons();
@@ -1054,6 +1508,18 @@ function getProfileUserId() {
       10
     ) || 0
   );
+}
+
+function getProfileUsername() {
+  const container = document.querySelector(".pro-adv-content-info");
+  if (!container) return null;
+
+  const firstCard = container.querySelector(":scope > .pro-adv-card");
+  if (!firstCard) return null;
+
+  const nameEl = firstCard.querySelector(".largetext");
+  const text = nameEl?.textContent?.trim() || "";
+  return text || null;
 }
 
 // ------------------------------ FUNCTIONS: ExpandProfileSections ------------------------------
