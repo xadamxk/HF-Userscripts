@@ -655,7 +655,7 @@ function reformatThreadRows(threadRows, includesForumColumn = false) {
       subjectSpan?.querySelector("a") ||
       mobileColumn.querySelector('a[href*="showthread.php?tid="]') ||
       mobileColumn.querySelector('a:not([title="Go to first unread post"])');
-    const threadTitle = subjectSpan || threadAnchor;
+    const threadTitle = threadAnchor || subjectSpan;
     const threadLink = threadAnchor?.getAttribute("href");
     // Capture optional prefix: support .prefix or sibling span before subject (e.g., group classes like group7)
     const threadPrefix =
@@ -717,7 +717,7 @@ function reformatThreadRows(threadRows, includesForumColumn = false) {
     includesForumColumn && forumColumn && advDetailsRow.append(forumColumn);
     // Add thread title/author row to thread column
     const newThreadColumn = document.createElement("td");
-    newThreadColumn.setAttribute("colspan", 4);
+    newThreadColumn.setAttribute("colspan", includesForumColumn ? 5 : 4); // Depends on if forum column is included
     newThreadColumn.classList.add("trow2");
     newThreadColumn.append(advDetailsRow);
     newThreadColumn.append(threadTitle);
@@ -726,7 +726,6 @@ function reformatThreadRows(threadRows, includesForumColumn = false) {
     row.append(newThreadColumn);
     // Add thread status to status column
     const newStatusColumn = document.createElement("td");
-    newThreadColumn.colspan = 1;
     newStatusColumn.classList.add("trow2");
     const threadStatusLink = document.createElement("a");
     threadStatusLink.setAttribute(
@@ -777,6 +776,7 @@ function injectMobileThreadListsUserCP() {
 }
 
 function injectMobileThreadListsSearch() {
+  // TODO: prefix broken
   if (window.innerWidth > 768) return; // Minimum screen width to trigger script
 
   const desiredTableHeaderTitles = ["Search Results"];
