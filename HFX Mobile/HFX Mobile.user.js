@@ -2,7 +2,7 @@
 // @name        HFX Mobile
 // @author      xadamxk
 // @namespace   https://github.com/xadamxk/HFX-Mobile
-// @version     1.2.0
+// @version     2.0.0
 // @description Enhance your mobile HF Experience!
 // @match       https://hackforums.net/*
 // @copyright   2022+
@@ -10,7 +10,7 @@
 // @downloadURL https://github.com/xadamxk/HF-Userscripts/blob/master/HFX%20Mobile/HFX%20Mobile.user.js
 // ==/UserScript==
 // ------------------------------ Changelog -----------------------------
-// v1.2.0: Remove GM_config dependencies
+// v2.0.0: Remove all configuration, update features from HFX 3.x
 // v1.1.1: Add Convo Resize feature
 // v1.1.0: Add MobileThreadLists feature
 // v1.0.0: Update and Download URLs, set default favorites
@@ -33,7 +33,7 @@
 // PM From Post postbit button
 // Theme changer (accent color + mosaic + logo)
 // ------------------------------ SETTINGS ------------------------------
-const debug = true;
+const debug = false;
 const favoritesKey = "HFXM_FAVORITES";
 const banReasonsKey = "HFXM_BAN_REASONS";
 // ------------------------------ SCRIPT ------------------------------
