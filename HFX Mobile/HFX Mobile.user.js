@@ -849,7 +849,9 @@ async function injectBanReason() {
     );
     const banReasons = await queryBanReasons();
     storeBanReasons(banReasons);
-    appendBanReason(banReasons);
+    if (profileUserId in banReasons) {
+      appendBanReason(banReasons[profileUserId]);
+    }
   }
 }
 
@@ -927,8 +929,8 @@ async function queryBanReasons() {
         .querySelector("td:nth-child(5)")
         ?.textContent?.trim();
 
-      const bannedAt = this.formatBanDateString(bannedAtRaw || "");
-      const expiresAt = this.formatUnbanDateString(unbanRaw || "");
+      const bannedAt = formatBanDateString(bannedAtRaw || "");
+      const expiresAt = formatUnbanDateString(unbanRaw || "");
 
       banMap[uid] = {
         banReason: banReasonText,
@@ -941,7 +943,7 @@ async function queryBanReasons() {
 
     return banMap;
   } catch (e) {
-    Logger.error("Failed to parse ban reasons");
+    console.error("Failed to parse ban reasons");
     return {};
   }
 }
@@ -971,7 +973,7 @@ function appendBanReason(banReason) {
   wrapper.appendChild(title);
 
   const reasonEl = document.createElement("div");
-  reasonEl.innerHTML = `<strong>Reason:</strong> ${this.escapeHtml(
+  reasonEl.innerHTML = `<strong>Reason:</strong> ${escapeHtml(
     banReason.banReason
   )}`;
   wrapper.appendChild(reasonEl);
@@ -980,19 +982,19 @@ function appendBanReason(banReason) {
   const bannedByLink = banReason.bannedByUID
     ? `<a href="https://hackforums.net/member.php?action=profile&uid=${
         banReason.bannedByUID
-      }">${this.escapeHtml(banReason.bannedByUsername)}</a>`
-    : this.escapeHtml(banReason.bannedByUsername || "");
+      }">${escapeHtml(banReason.bannedByUsername)}</a>`
+    : escapeHtml(banReason.bannedByUsername || "");
   bannedByEl.innerHTML = `<strong>Banned By:</strong> ${bannedByLink}`;
   wrapper.appendChild(bannedByEl);
 
   const bannedAtEl = document.createElement("div");
-  bannedAtEl.innerHTML = `<strong>Ban Date:</strong> ${this.escapeHtml(
+  bannedAtEl.innerHTML = `<strong>Ban Date:</strong> ${escapeHtml(
     banReason.bannedAt || ""
   )}`;
   wrapper.appendChild(bannedAtEl);
 
   const unbanEl = document.createElement("div");
-  unbanEl.innerHTML = `<strong>Unban Date:</strong> ${this.escapeHtml(
+  unbanEl.innerHTML = `<strong>Unban Date:</strong> ${escapeHtml(
     banReason.expiresAt || ""
   )}`;
   wrapper.appendChild(unbanEl);
