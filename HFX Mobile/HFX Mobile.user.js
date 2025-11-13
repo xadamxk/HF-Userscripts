@@ -34,6 +34,7 @@
 // Theme changer (accent color + mosaic + logo)
 // ------------------------------ SETTINGS ------------------------------
 const debug = false;
+const useSizeThreshold = false;
 const favoritesKey = "HFXM_FAVORITES";
 const banReasonsKey = "HFXM_BAN_REASONS";
 // ------------------------------ SCRIPT ------------------------------
@@ -102,7 +103,7 @@ function findPageMatch(term) {
 }
 // ------------------------------ FUNCTIONS: CompactPosts ------------------------------
 function injectCompactPosts() {
-  if (window.innerWidth > 530) return; // Minimum screen width to trigger script
+  if (useSizeThreshold && window.innerWidth > 530) return; // Minimum screen width to trigger script
 
   const posts = document.getElementsByClassName("post");
   for (const post of posts) {
@@ -740,7 +741,7 @@ function reformatThreadRows(threadRows, includesForumColumn = false) {
 }
 
 function injectMobileThreadListsForumDisplay() {
-  if (window.innerWidth > 768) return; // Minimum screen width to trigger script
+  if (useSizeThreshold && window.innerWidth > 768) return; // Minimum screen width to trigger script
 
   const content = document.querySelector("#content");
   const threadRows = content.querySelectorAll("tr.inline_row");
@@ -748,7 +749,7 @@ function injectMobileThreadListsForumDisplay() {
 }
 
 function injectMobileThreadListsUserCP() {
-  if (window.innerWidth > 768) return; // Minimum screen width to trigger script
+  if (useSizeThreshold && window.innerWidth > 768) return; // Minimum screen width to trigger script
 
   const desiredTableHeaderTitles = [
     "Thread Subscriptions With New Posts",
@@ -777,7 +778,7 @@ function injectMobileThreadListsUserCP() {
 
 function injectMobileThreadListsSearch() {
   // TODO: prefix broken
-  if (window.innerWidth > 768) return; // Minimum screen width to trigger script
+  if (useSizeThreshold && window.innerWidth > 768) return; // Minimum screen width to trigger script
 
   const desiredTableHeaderTitles = ["Search Results"];
 
