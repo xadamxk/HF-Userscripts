@@ -52,6 +52,7 @@ switch (currentUrl) {
       injectPostsOnThread();
       injectThreadMentions();
       injectQuickUnsubscribe();
+      injectGivePopularityPostbit();
     }
     break;
   case findPageMatch("/forumdisplay.php?"):
@@ -1271,5 +1272,34 @@ function appendVisitorProfile(selector, type) {
         profile.appendChild(visitorProperty);
       }
     }
+  });
+}
+
+// ------------------------------ FUNCTIONS: GivePopularityPostbit ------------------------------
+function injectGivePopularityPostbit() {
+  const reputationAnchors = document.querySelectorAll(
+    "div.author_wrapper a[href*='reputation.php?uid=']"
+  );
+  reputationAnchors.forEach((anchor) => {
+    const uid = new URL(
+      anchor.getAttribute("href"),
+      location.origin
+    ).searchParams.get("uid");
+    if (!uid) return;
+
+    const rate = document.createElement("a");
+    rate.className = "hfx-give-popularity";
+    rate.href = `javascript:MyBB.reputation(${uid})`;
+    rate.title = "Give Popularity";
+
+    const icon = document.createElement("i");
+    icon.className = "fa fa-plus-circle";
+    icon.style.color = "#4CAF50";
+    icon.setAttribute("aria-hidden", "true");
+
+    rate.appendChild(icon);
+
+    const parent = anchor.parentElement;
+    if (parent) parent.insertBefore(rate, parent.firstChild);
   });
 }
