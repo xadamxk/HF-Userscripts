@@ -83,6 +83,7 @@ switch (currentUrl) {
   case findPageMatch("/member.php?action=profile"):
     {
       injectBanReason();
+      injectExpandProfileSections();
     }
     break;
 }
@@ -1051,4 +1052,224 @@ function getProfileUserId() {
       10
     ) || 0
   );
+}
+
+// ------------------------------ FUNCTIONS: ExpandProfileSections ------------------------------
+function injectExpandProfileSections() {
+  const profileUsername = (
+    document.querySelector(".Aligner .largetext")?.textContent || ""
+  ).trim();
+  const profileUserId = getProfileUserId();
+
+  // Comrades
+  appendProfileCard(
+    ".pro-adv-buddy-group",
+    "Comrades",
+    profileUsername,
+    "hfxComradeCard"
+  );
+  appendVisitorProfile("#hfxComradeCard > div", "name");
+
+  // Awards
+  appendAwardCard(".pro-adv-awards-group", profileUsername, profileUserId);
+
+  // Groups
+  appendProfileCard(
+    ".pro-adv-groups-group",
+    "Groups",
+    profileUsername,
+    "hfxGroupsCard"
+  );
+
+  // Profile visitors
+  appendProfileCard(
+    ".pro-adv-visitor-group",
+    "Profile Visitors",
+    profileUsername,
+    "hfxProfileVisitors"
+  );
+  // Visitor names
+  appendVisitorProfile("#hfxProfileVisitors > div", "name");
+  // Visitor times
+  appendVisitorProfile("#hfxProfileVisitors > div", "time");
+
+  // Remove original section
+  document.querySelectorAll(".pro-adv-visitor-group").forEach((el) => {
+    const grandParent = el.parentElement && el.parentElement.parentElement;
+    if (grandParent) grandParent.style.display = "none";
+  });
+}
+
+function appendProfileCard(containerSelector, title, username, id) {
+  const containerEl = document.querySelector(containerSelector);
+  if (!containerEl) return;
+
+  const elements = Array.from(containerEl.children).map((el) =>
+    el.cloneNode(true)
+  );
+
+  const card = document.createElement("div");
+  card.className = "pro-adv-card pro-adv-card-p-5";
+  card.id = id;
+
+  const strong = document.createElement("strong");
+  strong.textContent = `${username} ${title}`;
+  card.appendChild(strong);
+
+  const sep = document.createElement("div");
+  sep.style.margin = "5px";
+  sep.style.marginBottom = "10px";
+  sep.appendChild(document.createElement("hr"));
+  card.appendChild(sep);
+
+  elements.forEach((el) => card.appendChild(el));
+
+  const target = containerEl.parentElement?.parentElement;
+  if (target && target.parentNode) {
+    target.parentNode.insertBefore(card, target.nextSibling);
+  }
+}
+
+function appendAwardCard(awardsContainerSelector, username, uid) {
+  const containerEl = document.querySelector(awardsContainerSelector);
+  if (!containerEl) return;
+
+  const awardSprites = Array.from(
+    containerEl.querySelectorAll(".award_sprite")
+  );
+  const awardCount = awardSprites.length;
+
+  const card = document.createElement("div");
+  card.className = "pro-adv-card pro-adv-card-p-5";
+  card.style.maxHeight = "450px";
+  card.style.overflowY = "scroll";
+
+  const table = document.createElement("table");
+  table.className = "tborder";
+  table.style.width = "100%";
+  table.setAttribute("border", "0");
+  table.setAttribute("cellspacing", "0");
+  table.setAttribute("cellpadding", "5");
+
+  const tbody = document.createElement("tbody");
+  tbody.id = "epsAwardTbody";
+
+  // Header row (title)
+  {
+    const tr = document.createElement("tr");
+    const td = document.createElement("td");
+    td.className = "thead";
+    td.setAttribute("colspan", "3");
+
+    const strong = document.createElement("strong");
+    const a = document.createElement("a");
+    a.href = `https://hackforums.net/myawards.php?uid=${uid}`;
+    a.textContent = `${username} Awards (${awardCount})`;
+
+    strong.appendChild(a);
+    td.appendChild(strong);
+    tr.appendChild(td);
+    tbody.appendChild(tr);
+  }
+
+  // Column headers
+  {
+    const tr = document.createElement("tr");
+
+    const tdAward = document.createElement("td");
+    tdAward.className = "tcat";
+    tdAward.setAttribute("width", "15%");
+    tdAward.appendChild(document.createElement("strong")).textContent = "Award";
+
+    const tdName = document.createElement("td");
+    tdName.className = "tcat";
+    tdName.setAttribute("width", "25%");
+    tdName.appendChild(document.createElement("strong")).textContent = "Name";
+
+    const tdReason = document.createElement("td");
+    tdReason.className = "tcat";
+    tdReason.appendChild(document.createElement("strong")).textContent =
+      "Reason";
+
+    tr.append(tdAward, tdName, tdReason);
+    tbody.appendChild(tr);
+  }
+
+  // Rows for each award
+  awardSprites.forEach((sprite) => {
+    const awardTitle = sprite.getAttribute("title") || "";
+    const className = sprite.className || "";
+    const idMatch = className.match(/award_(\d+)/);
+    const awardId = idMatch ? idMatch[1] : "";
+
+    const dashIndex = awardTitle.indexOf("-");
+    const name =
+      dashIndex >= 0
+        ? awardTitle.slice(0, dashIndex).trim()
+        : awardTitle.trim();
+    const description =
+      dashIndex >= 0 ? awardTitle.slice(dashIndex + 1).trim() : "";
+
+    const tr = document.createElement("tr");
+
+    const tdIcon = document.createElement("td");
+    tdIcon.className = "tcat trow1";
+    tdIcon.appendChild(sprite); // move existing node
+
+    const tdName = document.createElement("td");
+    tdName.className = "tcat trow1";
+    const strongName = document.createElement("strong");
+    const link = document.createElement("a");
+    link.href = `/myawards.php?awid=${awardId}`;
+    link.textContent = name;
+    strongName.appendChild(link);
+    tdName.appendChild(strongName);
+
+    const tdReason = document.createElement("td");
+    tdReason.className = "tcat trow1";
+    tdReason.appendChild(document.createElement("strong")).textContent =
+      description;
+
+    tr.append(tdIcon, tdName, tdReason);
+    tbody.appendChild(tr);
+  });
+
+  table.appendChild(tbody);
+  card.appendChild(table);
+
+  const target = containerEl.parentElement?.parentElement;
+  if (target && target.parentNode) {
+    target.parentNode.insertBefore(card, target.nextSibling);
+  }
+}
+
+/**
+ * Appends a visitor profile to the profile page.
+ * @param {string} selector - The selector to find the profile containers.
+ * @param {"name" | "time"} type - The type of profile to append.
+ */
+function appendVisitorProfile(selector, type) {
+  const containers = document.querySelectorAll(selector);
+  if (!containers.length) return;
+
+  containers.forEach((profileContainer, index) => {
+    if (index !== 0) {
+      const profile = profileContainer.querySelector("a");
+      if (!profile) return;
+
+      const profileTitle = profile.getAttribute("title") || ""; // "USERNAME visited: Oct 14, 8:32 am"
+      const [profileName, profileTime] = profileTitle.split("visited:");
+      const visitorProperty = document.createElement("div");
+      visitorProperty.style.textAlign = "center";
+      visitorProperty.style.fontWeight = "bold";
+      visitorProperty.style.fontSize = "10px";
+      if (type === "name") {
+        visitorProperty.textContent = profileName;
+        profile.prepend(visitorProperty);
+      } else if (type === "time") {
+        visitorProperty.textContent = profileTime;
+        profile.appendChild(visitorProperty);
+      }
+    }
+  });
 }
