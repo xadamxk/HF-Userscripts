@@ -6,8 +6,8 @@
 // @description Enhance your mobile HF Experience!
 // @match       https://hackforums.net/*
 // @copyright   2022+
-// @updateURL   https://github.com/xadamxk/HF-Userscripts/blob/master/HFX%20Mobile/HFX%20Mobile.user.js
-// @downloadURL https://github.com/xadamxk/HF-Userscripts/blob/master/HFX%20Mobile/HFX%20Mobile.user.js
+// @updateURL   https://github.com/xadamxk/HF-Userscripts/raw/refs/heads/master/HFX%20Mobile/HFX%20Mobile.user.js
+// @downloadURL https://github.com/xadamxk/HF-Userscripts/raw/refs/heads/master/HFX%20Mobile/HFX%20Mobile.user.js
 // ==/UserScript==
 // ------------------------------ Changelog -----------------------------
 // v2.1.0: Add Convo Timestamps and Group Management features, fix mobile thread lists on search pages
