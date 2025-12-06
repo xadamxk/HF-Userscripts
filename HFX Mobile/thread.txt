@@ -1,0 +1,76 @@
+[align=center][size=x-large][b]HFX Mobile[/b][/size][/align]
+
+[size=large][b]About[/b][/size]
+Many users primarily browse HF from their mobile devices and the mobile experience isn't as smooth as accessing the site via desktop.
+I created [b]HFX Mobile[/b] in an attempt to improve your HF mobile browsing experience, along with porting features from the [url=https://hackforums.net/showthread.php?tid=6312252]desktop browser extension, HFX[/url].
+Check out how to install this script to your phone along with current features below.
+
+Please post if you are interested, plan to install, or enjoy the extension!
+
+[size=large][b]How to Install[/b][/size][list=1]
+[*] Download and install the app "[url=https://apps.apple.com/us/app/stay-for-safari/id1591620171][b]Stay for Safari[/b][/url]"
+[*] Enable the extension in Safari by navigating to "[b]Settings > Apps > Safari > General > Extensions > Stay[/b]". Enable "Allow Extension".
+[*] Install this extension by opening the following link in Safari and tap "Install":
+[code]
+https://github.com/xadamxk/HF-Userscripts/raw/refs/heads/master/HFX%20Mobile/HFX%20Mobile.user.js
+[/code]
+[url=https://github.com/xadamxk/HF-Userscripts/raw/refs/heads/master/HFX%20Mobile/HFX%20Mobile.user.js]Click here if you are on your phone[/url]
+[*] Activate the "HFX Mobile" script so it will be enabled the next time you visit HF in Safari
+[*] That's it - open up HF and enjoy!
+[/list]
+
+[size=large][b]Features[/b][/size]
+[list]
+[*][b]Favorites[/b]: Add any HF page shortcut to your HF header with 1 click
+[spoiler=Example]
+[img]https://github.com/xadamxk/HF-Userscripts/blob/master/HFX%20Mobile/Favorites.PNG?raw=true[/img]
+[/spoiler]
+[*][b]Compact Postbits[/b]: Compacts a user's profile assets, statistics, and awards on posts, making it easier to browse threads.
+[spoiler=Example]
+[img]https://github.com/xadamxk/HF-Userscripts/blob/master/HFX%20Mobile/CompactPostbit.png?raw=true[/img]
+[/spoiler]
+[*][b]Mobile Thread Lists[/b]: Redesigns thread lists on UserCP, Forums, and Search to be mobile friendly.
+[spoiler=Example]
+[img]https://github.com/xadamxk/HF-Userscripts/blob/master/HFX%20Mobile/MobileThreadList.png?raw=true[/img]
+[/spoiler]
+[*][b]Convo Timestamps[/b]: Adds timestamps to convo messages.
+[spoiler=Example]
+[img]https://github.com/xadamxk/HF-Userscripts/blob/master/HFX%20Mobile/ConvoTimestamps.PNG?raw=true[/img]
+[/spoiler]
+[*][b]Interactive Post Stats[/b]: Makes all of the statistics on a user's posts clickable.
+[spoiler=Example]
+[img]https://github.com/xadamxk/HF-Userscripts/blob/master/HFX%20Mobile/InteractivePostStats.PNG?raw=true[/img]
+[/spoiler]
+[*][b]Give Popularity from Posts[/b]: Adds a button to user's popularity stats to give them popularity with 1 click.
+[spoiler=Example]
+[img]https://github.com/xadamxk/HF-Userscripts/blob/master/HFX%20Mobile/GivePopularityPostbit.PNG?raw=true[/img]
+[/spoiler]
+[*][b]Ban Reasons on Profiles[/b]: Adds the reason users were banned to their profiles.
+[spoiler=Example]
+[img]https://github.com/xadamxk/HF-Userscripts/blob/master/HFX%20Mobile/BanReason.PNG?raw=true[/img]
+[/spoiler]
+[*][b]Expand Profile Sections[/b]: Automatically expands profile sections and makes profiles views & awards easier to read.
+[spoiler=Example]
+[img]https://github.com/xadamxk/HF-Userscripts/blob/master/HFX%20Mobile/ExpandProfileSections.PNG?raw=true[/img]
+[/spoiler]
+[*][b]Posts on Thread[/b]: Adds a button to posts to view all of that user's posts on the current thread.
+[spoiler=Example]
+[img]https://github.com/xadamxk/HF-Userscripts/blob/master/HFX%20Mobile/PostsOnThread.PNG?raw=true[/img]
+[/spoiler]
+[*][b]Search Your Threads[/b]: Search for your threads in a forum with 1 click.
+[spoiler=Example]
+[img]https://github.com/xadamxk/HF-Userscripts/blob/master/HFX%20Mobile/SearchYourThreads.png?raw=true[/img]
+[/spoiler]
+[*][b]Thread Mentions[/b]: Mention a user in the thread Quick Reply with 1 click.
+[spoiler=Example]
+[img]https://github.com/xadamxk/HF-Userscripts/blob/master/HFX%20Mobile/ThreadMentions.PNG?raw=true[/img]
+[/spoiler]
+[*][b]Group Management[/b]: Add, Remove, and Blacklist users from groups you lead directly from their profile. To activate, navigate to [url=https://hackforums.net/showgroups.php]showgroups.php[/url] and click the "HFX: Update Managed Groups" button.
+[spoiler=Example]
+[img]https://github.com/xadamxk/HF-Userscripts/blob/master/HFX%20Mobile/GroupManagement.PNG?raw=true[/img]
+[/spoiler]
+[*][b]Quick Unsubscribe[/b]: Unsubscribe from threads with 1 click.
+[spoiler=Example]
+[img]https://github.com/xadamxk/HF-Userscripts/blob/master/HFX%20Mobile/QuickUnsubscribe.PNG?raw=true[/img]
+[/spoiler]
+[/list]
