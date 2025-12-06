@@ -2,7 +2,7 @@
 // @name        HFX Mobile
 // @author      xadamxk
 // @namespace   https://github.com/xadamxk/HFX-Mobile
-// @version     2.1.0
+// @version     2.1.1
 // @description Enhance your mobile HF Experience!
 // @match       https://hackforums.net/*
 // @copyright   2022+
@@ -10,6 +10,7 @@
 // @downloadURL https://github.com/xadamxk/HF-Userscripts/raw/refs/heads/master/HFX%20Mobile/HFX%20Mobile.user.js
 // ==/UserScript==
 // ------------------------------ Changelog -----------------------------
+// v2.1.1: Fix Group Management feature to work with group owner and non-owner users
 // v2.1.0: Add Convo Timestamps and Group Management features, fix mobile thread lists on search pages
 // v2.0.0: Remove all configuration, update features from HFX 3.x
 // v1.1.1: Add Convo Resize feature
@@ -166,7 +167,9 @@ async function parseManagedGroups() {
 
     const children = Array.from(container.children);
     for (const child of children) {
-      const manageAnchor = child.querySelector(".groupControls > a");
+      const manageAnchor = child.querySelector(
+        '.groupControls > a[data-tooltip="Manage Group"]'
+      );
 
       if (!manageAnchor) {
         continue;
